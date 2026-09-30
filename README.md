@@ -1,1 +1,0 @@
-# EQUB-PLATFORM-With-REACT
