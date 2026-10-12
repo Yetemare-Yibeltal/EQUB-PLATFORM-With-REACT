@@ -8,6 +8,8 @@ import mongoose from "mongoose";
 import config from "./config/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { apiLimiter } from "./middleware/rateLimiter.js";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import logger from "./utils/logger.js";
 
 const app = express();
@@ -71,6 +73,9 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api", apiLimiter);
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
