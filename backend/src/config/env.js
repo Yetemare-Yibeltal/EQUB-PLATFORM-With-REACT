@@ -5,6 +5,16 @@ dotenv.config();
 
 const optionalString = Joi.string().allow("").default("");
 
+const duration = (fallback) =>
+  Joi.string()
+    .trim()
+    .pattern(/^\d+(ms|s|m|h|d|w|y)$/)
+    .default(fallback)
+    .messages({
+      "string.pattern.base":
+        "{{#label}} must be a number followed by a unit such as 15m, 12h, or 7d",
+    });
+
 const schema = Joi.object({
   NODE_ENV: Joi.string()
     .valid("development", "production", "test")
@@ -17,9 +27,9 @@ const schema = Joi.object({
     .required(),
 
   JWT_ACCESS_SECRET: Joi.string().min(32).required(),
-  JWT_ACCESS_EXPIRES_IN: Joi.string().default("15m"),
+  JWT_ACCESS_EXPIRES_IN: duration("15m"),
   JWT_REFRESH_SECRET: Joi.string().min(32).required(),
-  JWT_REFRESH_EXPIRES_IN: Joi.string().default("7d"),
+  JWT_REFRESH_EXPIRES_IN: duration("7d"),
 
   BCRYPT_SALT_ROUNDS: Joi.number().integer().min(10).max(15).default(12),
 
