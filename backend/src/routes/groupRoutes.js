@@ -24,6 +24,7 @@ import {
 } from "../validators/groupValidator.js";
 import cycleRoutes from "./cycleRoutes.js";
 import groupContributionRoutes from "./groupContributionRoutes.js";
+import groupTransactionRoutes from "./groupTransactionRoutes.js";
 import memberRoutes from "./memberRoutes.js";
 
 const router = Router();
@@ -84,5 +85,6 @@ router.post(
 router.use("/:groupId/members", memberRoutes);
 router.use("/:groupId/cycles", cycleRoutes);
 router.use("/:groupId/contributions", groupContributionRoutes);
+router.use("/:groupId/transactions", groupTransactionRoutes);
 
 export default router;
