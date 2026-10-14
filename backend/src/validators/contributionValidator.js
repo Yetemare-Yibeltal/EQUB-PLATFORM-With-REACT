@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { CONTRIBUTION_STATUS_VALUES } from "../constants/contributionStatuses.js";
-import { PAYMENT_METHOD_VALUES } from "../constants/paymentMethods.js";
+import { MANUAL_PAYMENT_METHOD_VALUES } from "../constants/paymentMethods.js";
 
 const objectId = Joi.string().hex().length(24);
 
@@ -34,7 +34,7 @@ export const listMyContributionsQuerySchema = Joi.object({
 
 export const recordContributionSchema = Joi.object({
   paymentMethod: Joi.string()
-    .valid(...PAYMENT_METHOD_VALUES)
+    .valid(...MANUAL_PAYMENT_METHOD_VALUES)
     .required(),
   reference: Joi.string().trim().max(100).allow(""),
   note: Joi.string().trim().max(500).allow(""),
