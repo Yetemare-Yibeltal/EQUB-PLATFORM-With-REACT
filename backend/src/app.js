@@ -12,6 +12,7 @@ import authRoutes from "./routes/authRoutes.js";
 import contributionRoutes from "./routes/contributionRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import payoutRoutes from "./routes/payoutRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import logger from "./utils/logger.js";
@@ -92,6 +93,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/contributions", contributionRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/payouts", payoutRoutes);
 app.use("/api/transactions", transactionRoutes);
 
 app.use(notFoundHandler);
