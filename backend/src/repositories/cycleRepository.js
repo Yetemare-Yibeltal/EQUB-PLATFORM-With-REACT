@@ -37,3 +37,24 @@ export const markCollected = (id, { session } = {}) =>
     { $set: { status: CYCLE_STATUSES.COLLECTED, collectedAt: new Date() } },
     { new: true, session },
   ).exec();
+
+export const assignRecipient = (id, memberId, { session } = {}) =>
+  Cycle.findOneAndUpdate(
+    { _id: id, status: CYCLE_STATUSES.COLLECTED, recipient: null },
+    { $set: { recipient: memberId } },
+    { new: true, session },
+  ).exec();
+
+export const markCompleted = (id, { session } = {}) =>
+  Cycle.findOneAndUpdate(
+    { _id: id, status: CYCLE_STATUSES.COLLECTED, recipient: { $ne: null } },
+    { $set: { status: CYCLE_STATUSES.COMPLETED, completedAt: new Date() } },
+    { new: true, session },
+  ).exec();
+
+export const activateNext = (groupId, number, { session } = {}) =>
+  Cycle.findOneAndUpdate(
+    { group: groupId, number, status: CYCLE_STATUSES.UPCOMING },
+    { $set: { status: CYCLE_STATUSES.COLLECTING } },
+    { new: true, session },
+  ).exec();
