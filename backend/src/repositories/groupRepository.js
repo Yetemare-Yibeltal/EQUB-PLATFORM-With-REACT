@@ -36,6 +36,13 @@ export const activate = (id, memberCount, { session } = {}) =>
     { new: true, runValidators: true, session },
   ).exec();
 
+export const complete = (id, { session } = {}) =>
+  Group.findOneAndUpdate(
+    { _id: id, status: GROUP_STATUSES.ACTIVE },
+    { $set: { status: GROUP_STATUSES.COMPLETED } },
+    { new: true, session },
+  ).exec();
+
 export const incrementMemberCount = (id, { session } = {}) =>
   Group.findOneAndUpdate(
     {
