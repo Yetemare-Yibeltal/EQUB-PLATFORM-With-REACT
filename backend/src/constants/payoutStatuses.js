@@ -1,9 +1,8 @@
-export const PAYMENT_STATUSES = Object.freeze({
+export const PAYOUT_STATUSES = Object.freeze({
   PENDING: "pending",
-  SUCCESS: "success",
-  FAILED: "failed",
+  PAID: "paid",
 });
 
-export const PAYMENT_STATUS_VALUES = Object.freeze(
-  Object.values(PAYMENT_STATUSES),
+export const PAYOUT_STATUS_VALUES = Object.freeze(
+  Object.values(PAYOUT_STATUSES),
 );
