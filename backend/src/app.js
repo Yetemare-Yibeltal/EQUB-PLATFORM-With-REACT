@@ -11,6 +11,8 @@ import { apiLimiter } from "./middleware/rateLimiter.js";
 import authRoutes from "./routes/authRoutes.js";
 import contributionRoutes from "./routes/contributionRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import transactionRoutes from "./routes/transactionRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import logger from "./utils/logger.js";
 
@@ -36,7 +38,16 @@ app.use(
 );
 
 app.use(compression());
-app.use(express.json({ limit: "10kb" }));
+app.use(
+  express.json({
+    limit: "10kb",
+    verify: (req, res, buffer) => {
+      if (req.originalUrl.startsWith("/api/payments/webhook")) {
+        req.rawBody = buffer;
+      }
+    },
+  }),
+);
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 app.use(mongoSanitize());
@@ -80,6 +91,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/contributions", contributionRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
