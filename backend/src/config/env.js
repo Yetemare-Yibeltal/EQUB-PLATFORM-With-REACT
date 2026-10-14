@@ -21,6 +21,11 @@ const schema = Joi.object({
     .default("development"),
   PORT: Joi.number().port().default(5000),
   CLIENT_URL: Joi.string().default("http://localhost:5173"),
+  API_PUBLIC_URL: Joi.string()
+    .trim()
+    .uri({ scheme: ["http", "https"] })
+    .allow("")
+    .default(""),
 
   MONGODB_URI: Joi.string()
     .pattern(/^mongodb(\+srv)?:\/\//)
@@ -87,6 +92,7 @@ const config = Object.freeze({
   isTest: value.NODE_ENV === "test",
   isDevelopment: value.NODE_ENV === "development",
   port: value.PORT,
+  apiPublicUrl: value.API_PUBLIC_URL,
   clientOrigins: value.CLIENT_URL.split(",")
     .map((origin) => origin.trim())
     .filter(Boolean),
