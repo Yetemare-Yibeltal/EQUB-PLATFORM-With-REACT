@@ -29,6 +29,13 @@ export const updateOpenGroup = (id, update, { filter = {}, session } = {}) =>
     },
   ).exec();
 
+export const activate = (id, memberCount, { session } = {}) =>
+  Group.findOneAndUpdate(
+    { _id: id, status: GROUP_STATUSES.OPEN, memberCount },
+    { $set: { status: GROUP_STATUSES.ACTIVE, maxMembers: memberCount } },
+    { new: true, runValidators: true, session },
+  ).exec();
+
 export const incrementMemberCount = (id, { session } = {}) =>
   Group.findOneAndUpdate(
     {
