@@ -26,6 +26,12 @@ export const findByUser = (userId, { statuses, role } = {}) => {
   return Member.find(filter).exec();
 };
 
+export const listActiveByGroup = (groupId, { session } = {}) =>
+  Member.find({ group: groupId, status: MEMBER_STATUSES.ACTIVE })
+    .sort({ joinedAt: 1, _id: 1 })
+    .session(session || null)
+    .exec();
+
 export const transitionStatus = (id, fromStatuses, update, { session } = {}) =>
   Member.findOneAndUpdate({ _id: id, status: { $in: fromStatuses } }, update, {
     new: true,
