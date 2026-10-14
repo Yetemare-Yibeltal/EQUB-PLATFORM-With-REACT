@@ -23,7 +23,9 @@ import {
   updateGroupSchema,
 } from "../validators/groupValidator.js";
 import cycleRoutes from "./cycleRoutes.js";
+import drawRoutes from "./drawRoutes.js";
 import groupContributionRoutes from "./groupContributionRoutes.js";
+import groupPayoutRoutes from "./groupPayoutRoutes.js";
 import groupTransactionRoutes from "./groupTransactionRoutes.js";
 import memberRoutes from "./memberRoutes.js";
 
@@ -86,5 +88,7 @@ router.use("/:groupId/members", memberRoutes);
 router.use("/:groupId/cycles", cycleRoutes);
 router.use("/:groupId/contributions", groupContributionRoutes);
 router.use("/:groupId/transactions", groupTransactionRoutes);
+router.use("/:groupId/draws", drawRoutes);
+router.use("/:groupId/payouts", groupPayoutRoutes);
 
 export default router;
