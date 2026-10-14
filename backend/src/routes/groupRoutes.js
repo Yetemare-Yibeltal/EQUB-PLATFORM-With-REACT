@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { startGroup } from "../controllers/cycleController.js";
 import {
   cancelGroup,
   createGroup,
@@ -21,6 +22,8 @@ import {
   listGroupsQuerySchema,
   updateGroupSchema,
 } from "../validators/groupValidator.js";
+import cycleRoutes from "./cycleRoutes.js";
+import groupContributionRoutes from "./groupContributionRoutes.js";
 import memberRoutes from "./memberRoutes.js";
 
 const router = Router();
@@ -72,7 +75,14 @@ router.post(
   validateRequest({ params: groupIdParamSchema }),
   leaveGroup,
 );
+router.post(
+  "/:groupId/start",
+  validateRequest({ params: groupIdParamSchema }),
+  startGroup,
+);
 
 router.use("/:groupId/members", memberRoutes);
+router.use("/:groupId/cycles", cycleRoutes);
+router.use("/:groupId/contributions", groupContributionRoutes);
 
 export default router;
