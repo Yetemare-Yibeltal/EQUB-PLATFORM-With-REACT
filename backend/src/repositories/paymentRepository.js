@@ -48,4 +48,11 @@ export const transition = (id, fromStatuses, update, { session } = {}) =>
     session,
   }).exec();
 
+export const resolveReview = (id, reviewNote, { session } = {}) =>
+  Payment.findOneAndUpdate(
+    { _id: id, requiresReview: true },
+    { $set: { requiresReview: false, reviewNote } },
+    { new: true, session },
+  ).exec();
+
 export const list = (filter, options) => paginate(Payment, filter, options);
