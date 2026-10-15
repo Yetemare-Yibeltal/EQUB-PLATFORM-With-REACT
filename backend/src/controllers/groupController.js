@@ -1,4 +1,5 @@
 import * as groupService from "../services/groupService.js";
+import * as notificationEventService from "../services/notificationEventService.js";
 import { sendCreated, sendSuccess } from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -58,6 +59,8 @@ export const cancelGroup = asyncHandler(async (req, res) => {
     req.params.groupId,
     req.body.reason,
   );
+
+  await notificationEventService.notifyGroupCancelled(req.params.groupId);
 
   return sendSuccess(res, {
     message: "Group cancelled successfully",
