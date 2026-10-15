@@ -1,4 +1,5 @@
 import * as drawService from "../services/drawService.js";
+import * as notificationEventService from "../services/notificationEventService.js";
 import { sendCreated, sendSuccess } from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -8,6 +9,8 @@ export const performDraw = asyncHandler(async (req, res) => {
     req.params.groupId,
     req.body.cycleId,
   );
+
+  await notificationEventService.notifyDrawCompleted(result.draw.id);
 
   return sendCreated(res, {
     message: "Draw completed successfully",
