@@ -29,7 +29,6 @@ const auditLogSchema = new mongoose.Schema(
     },
     entityId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
     },
     metadata: {
       type: mongoose.Schema.Types.Mixed,
@@ -52,6 +51,7 @@ const auditLogSchema = new mongoose.Schema(
 auditLogSchema.index({ group: 1, createdAt: -1 });
 auditLogSchema.index({ actor: 1, createdAt: -1 });
 auditLogSchema.index({ entityType: 1, entityId: 1 });
+auditLogSchema.index({ action: 1, createdAt: -1 });
 
 const AuditLog =
   mongoose.models.AuditLog || mongoose.model("AuditLog", auditLogSchema);
