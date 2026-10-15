@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import ApiError from "../utils/apiError.js";
 import logger from "../utils/logger.js";
 import contributionReminderJob from "./contributionReminder.job.js";
 import drawReminderJob from "./drawReminder.job.js";
@@ -19,6 +20,14 @@ const running = new Set();
 let tasks = [];
 
 export const jobNames = () => jobs.map((job) => job.name);
+
+export const listJobs = () =>
+  jobs.map((job) => ({
+    name: job.name,
+    schedule: job.schedule,
+    timezone: TIMEZONE,
+    running: running.has(job.name),
+  }));
 
 const execute = async (job) => {
   if (running.has(job.name)) {
@@ -70,8 +79,18 @@ export const runJobNow = async (name) => {
   const job = jobs.find((entry) => entry.name === name);
 
   if (!job) {
-    throw new Error(`Unknown job: ${name}`);
+    throw ApiError.notFound(`Unknown job: ${name}`);
   }
 
-  return job.run(new Date());
+  if (running.has(name)) {
+    throw ApiError.conflict(`Job ${name} is already running`);
+  }
+
+  running.add(name);
+
+  try {
+    return await job.run(new Date());
+  } finally {
+    running.delete(name);
+  }
 };
