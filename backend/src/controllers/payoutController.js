@@ -1,3 +1,4 @@
+import * as notificationEventService from "../services/notificationEventService.js";
 import * as payoutService from "../services/payoutService.js";
 import { sendSuccess } from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -49,6 +50,8 @@ export const recordPayout = asyncHandler(async (req, res) => {
     req.params.payoutId,
     req.body,
   );
+
+  await notificationEventService.notifyPayoutPaid(result.payout.id);
 
   return sendSuccess(res, {
     message: "Payout recorded successfully",
