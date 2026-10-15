@@ -11,6 +11,7 @@ import { apiLimiter } from "./middleware/rateLimiter.js";
 import authRoutes from "./routes/authRoutes.js";
 import contributionRoutes from "./routes/contributionRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import payoutRoutes from "./routes/payoutRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
@@ -95,6 +96,7 @@ app.use("/api/contributions", contributionRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/payouts", payoutRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
