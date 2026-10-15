@@ -13,6 +13,7 @@ import withTransaction from "../utils/transaction.js";
 import * as chapaService from "./chapaService.js";
 import { applyResolution } from "./contributionService.js";
 import { canManage, requireAccess } from "./groupService.js";
+import * as notificationEventService from "./notificationEventService.js";
 
 const SORTABLE_FIELDS = ["createdAt", "amount", "verifiedAt"];
 const SETTLEABLE_STATUSES = [PAYMENT_STATUSES.PENDING, PAYMENT_STATUSES.FAILED];
@@ -87,8 +88,12 @@ const settleSuccess = async (payment, verification) => {
     failureReason: "",
   };
 
+  let applied = false;
+
   try {
     await withTransaction(async (session) => {
+      applied = false;
+
       const claimed = await paymentRepository.transition(
         payment._id,
         SETTLEABLE_STATUSES,
@@ -121,11 +126,15 @@ const settleSuccess = async (payment, verification) => {
           occurredAt: now,
         },
       });
+
+      applied = true;
     });
   } catch (error) {
     if (!(error instanceof ApiError) || error.statusCode !== 409) {
       throw error;
     }
+
+    applied = false;
 
     await paymentRepository.transition(payment._id, SETTLEABLE_STATUSES, {
       $set: {
@@ -137,6 +146,12 @@ const settleSuccess = async (payment, verification) => {
         ),
       },
     });
+  }
+
+  if (applied) {
+    await notificationEventService.notifyContributionResolved(
+      payment.contribution,
+    );
   }
 
   return paymentRepository.findById(payment._id);
