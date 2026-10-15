@@ -1,9 +1,12 @@
 import * as cycleService from "../services/cycleService.js";
+import * as notificationEventService from "../services/notificationEventService.js";
 import { sendSuccess } from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const startGroup = asyncHandler(async (req, res) => {
   const result = await cycleService.startGroup(req.user, req.params.groupId);
+
+  await notificationEventService.notifyGroupStarted(req.params.groupId);
 
   return sendSuccess(res, {
     message: "Group started successfully",
