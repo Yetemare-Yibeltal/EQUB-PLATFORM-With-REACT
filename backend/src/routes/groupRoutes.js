@@ -24,8 +24,10 @@ import {
 } from "../validators/groupValidator.js";
 import cycleRoutes from "./cycleRoutes.js";
 import drawRoutes from "./drawRoutes.js";
+import groupAuditRoutes from "./groupAuditRoutes.js";
 import groupContributionRoutes from "./groupContributionRoutes.js";
 import groupPayoutRoutes from "./groupPayoutRoutes.js";
+import groupReportRoutes from "./groupReportRoutes.js";
 import groupTransactionRoutes from "./groupTransactionRoutes.js";
 import memberRoutes from "./memberRoutes.js";
 
@@ -90,5 +92,7 @@ router.use("/:groupId/contributions", groupContributionRoutes);
 router.use("/:groupId/transactions", groupTransactionRoutes);
 router.use("/:groupId/draws", drawRoutes);
 router.use("/:groupId/payouts", groupPayoutRoutes);
+router.use("/:groupId/reports", groupReportRoutes);
+router.use("/:groupId/audit-logs", groupAuditRoutes);
 
 export default router;
