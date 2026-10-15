@@ -20,6 +20,15 @@ export const findCurrent = (groupId) =>
     .sort({ number: 1 })
     .exec();
 
+export const findAwaitingDraw = (before) =>
+  Cycle.find({
+    status: CYCLE_STATUSES.COLLECTED,
+    recipient: null,
+    collectedAt: { $lte: before },
+  })
+    .populate({ path: "group", select: "name status createdBy" })
+    .exec();
+
 export const recordResolution = (id, collectedAmount, { session } = {}) =>
   Cycle.findOneAndUpdate(
     { _id: id, status: CYCLE_STATUSES.COLLECTING },
