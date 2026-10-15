@@ -1,0 +1,27 @@
+export const NOTIFICATION_TYPES = Object.freeze({
+  GROUP_STARTED: "group_started",
+  GROUP_COMPLETED: "group_completed",
+  GROUP_CANCELLED: "group_cancelled",
+  MEMBER_JOINED: "member_joined",
+  MEMBER_LEFT: "member_left",
+  MEMBER_REMOVED: "member_removed",
+  MEMBERSHIP_REQUEST: "membership_request",
+  MEMBERSHIP_APPROVED: "membership_approved",
+  MEMBERSHIP_REJECTED: "membership_rejected",
+  CONTRIBUTION_DUE: "contribution_due",
+  CONTRIBUTION_REMINDER: "contribution_reminder",
+  CONTRIBUTION_OVERDUE: "contribution_overdue",
+  CONTRIBUTION_RECEIVED: "contribution_received",
+  CONTRIBUTION_WAIVED: "contribution_waived",
+  OVERDUE_SUMMARY: "overdue_summary",
+  CYCLE_COLLECTED: "cycle_collected",
+  DRAW_COMPLETED: "draw_completed",
+  DRAW_WON: "draw_won",
+  DRAW_REMINDER: "draw_reminder",
+  PAYOUT_PAID: "payout_paid",
+  PAYOUT_REMINDER: "payout_reminder",
+});
+
+export const NOTIFICATION_TYPE_VALUES = Object.freeze(
+  Object.values(NOTIFICATION_TYPES),
+);
