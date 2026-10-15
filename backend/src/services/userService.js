@@ -1,8 +1,11 @@
+import { AUDIT_ACTIONS } from "../constants/auditActions.js";
 import { USER_STATUSES } from "../constants/userStatuses.js";
 import * as userRepository from "../repositories/userRepository.js";
 import ApiError from "../utils/apiError.js";
 import { parsePagination, parseSort } from "../utils/pagination.js";
 import { normalizePhone } from "../utils/phone.js";
+import withTransaction from "../utils/transaction.js";
+import * as auditService from "./auditService.js";
 
 const SORTABLE_FIELDS = ["createdAt", "fullName", "lastLoginAt"];
 
@@ -88,11 +91,36 @@ export const updateUserStatus = async (actorId, targetId, status) => {
     throw ApiError.badRequest("You cannot change your own account status");
   }
 
-  const user = await userRepository.updateById(targetId, { $set: { status } });
+  const existing = await userRepository.findById(targetId);
 
-  if (!user) {
+  if (!existing) {
     throw ApiError.notFound("User not found");
   }
+
+  const user = await withTransaction(async (session) => {
+    const updated = await userRepository.updateById(
+      targetId,
+      { $set: { status } },
+      { session },
+    );
+
+    if (!updated) {
+      throw ApiError.notFound("User not found");
+    }
+
+    await auditService.record(
+      {
+        actorId,
+        action: AUDIT_ACTIONS.USER_STATUS_CHANGED,
+        entityType: "User",
+        entityId: updated._id,
+        metadata: { from: existing.status, to: status },
+      },
+      { session },
+    );
+
+    return updated;
+  });
 
   if (status === USER_STATUSES.SUSPENDED) {
     await userRepository.clearRefreshTokens(targetId);
@@ -106,11 +134,34 @@ export const updateUserRole = async (actorId, targetId, role) => {
     throw ApiError.badRequest("You cannot change your own role");
   }
 
-  const user = await userRepository.updateById(targetId, { $set: { role } });
+  const existing = await userRepository.findById(targetId);
 
-  if (!user) {
+  if (!existing) {
     throw ApiError.notFound("User not found");
   }
 
-  return user;
+  return withTransaction(async (session) => {
+    const updated = await userRepository.updateById(
+      targetId,
+      { $set: { role } },
+      { session },
+    );
+
+    if (!updated) {
+      throw ApiError.notFound("User not found");
+    }
+
+    await auditService.record(
+      {
+        actorId,
+        action: AUDIT_ACTIONS.USER_ROLE_CHANGED,
+        entityType: "User",
+        entityId: updated._id,
+        metadata: { from: existing.role, to: role },
+      },
+      { session },
+    );
+
+    return updated;
+  });
 };
