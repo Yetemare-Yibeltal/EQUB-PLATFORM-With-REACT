@@ -1,13 +1,22 @@
+import { MEMBER_STATUSES } from "../constants/memberStatuses.js";
 import * as memberService from "../services/memberService.js";
+import * as notificationEventService from "../services/notificationEventService.js";
 import { sendCreated, sendSuccess } from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const joinGroup = asyncHandler(async (req, res) => {
   const result = await memberService.joinGroup(req.user, req.body.inviteCode);
-  const message =
-    result.membership.status === "pending"
-      ? "Membership request sent, awaiting organizer approval"
-      : "Joined group successfully";
+  const isPending = result.membership.status === MEMBER_STATUSES.PENDING;
+
+  await notificationEventService.notifyMembershipRequested({
+    groupId: result.group.id,
+    applicantId: req.user.id,
+    status: result.membership.status,
+  });
+
+  const message = isPending
+    ? "Membership request sent, awaiting organizer approval"
+    : "Joined group successfully";
 
   return sendCreated(res, { message, data: result });
 });
@@ -33,6 +42,11 @@ export const approveMember = asyncHandler(async (req, res) => {
     req.params.memberId,
   );
 
+  await notificationEventService.notifyMembershipReviewed(
+    req.params.memberId,
+    true,
+  );
+
   return sendSuccess(res, {
     message: "Member approved successfully",
     data: { member },
@@ -44,6 +58,11 @@ export const rejectMember = asyncHandler(async (req, res) => {
     req.user,
     req.params.groupId,
     req.params.memberId,
+  );
+
+  await notificationEventService.notifyMembershipReviewed(
+    req.params.memberId,
+    false,
   );
 
   return sendSuccess(res, {
@@ -59,11 +78,21 @@ export const removeMember = asyncHandler(async (req, res) => {
     req.params.memberId,
   );
 
+  await notificationEventService.notifyMemberRemoved(
+    req.params.groupId,
+    req.params.memberId,
+  );
+
   return sendSuccess(res, { message: "Member removed successfully" });
 });
 
 export const leaveGroup = asyncHandler(async (req, res) => {
   await memberService.leaveGroup(req.user, req.params.groupId);
+
+  await notificationEventService.notifyMemberLeft(
+    req.params.groupId,
+    req.user.id,
+  );
 
   return sendSuccess(res, { message: "You have left the group" });
 });
