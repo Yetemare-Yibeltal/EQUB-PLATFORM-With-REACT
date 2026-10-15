@@ -1,4 +1,5 @@
 import * as contributionService from "../services/contributionService.js";
+import * as notificationEventService from "../services/notificationEventService.js";
 import { sendSuccess } from "../utils/apiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -37,6 +38,8 @@ export const recordContribution = asyncHandler(async (req, res) => {
     req.body,
   );
 
+  await notificationEventService.notifyContributionResolved(contribution.id);
+
   return sendSuccess(res, {
     message: "Contribution recorded successfully",
     data: { contribution },
@@ -50,6 +53,8 @@ export const waiveContribution = asyncHandler(async (req, res) => {
     req.params.contributionId,
     req.body.reason,
   );
+
+  await notificationEventService.notifyContributionResolved(contribution.id);
 
   return sendSuccess(res, {
     message: "Contribution waived successfully",
