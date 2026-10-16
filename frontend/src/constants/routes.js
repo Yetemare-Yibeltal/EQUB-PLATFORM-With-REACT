@@ -8,4 +8,19 @@ export const ROUTES = Object.freeze({
   NOTIFICATIONS: "/notifications",
   PROFILE: "/profile",
   SETTINGS: "/settings",
+  GROUPS: "/groups",
+  GROUP_CREATE: "/groups/new",
+  GROUP_JOIN: "/groups/join",
+  CONTRIBUTIONS: "/contributions",
+  PAYMENTS: "/payments",
+  PAYOUTS: "/payouts",
+  ADMIN: "/admin",
+  ADMIN_USERS: "/admin/users",
+  ADMIN_GROUPS: "/admin/groups",
+  ADMIN_PAYMENTS: "/admin/payments",
+  ADMIN_AUDIT: "/admin/audit-logs",
+  ADMIN_JOBS: "/admin/jobs",
 });
+
+export const groupPath = (groupId, section = "") =>
+  `/groups/${groupId}${section ? `/${section}` : ""}`;
