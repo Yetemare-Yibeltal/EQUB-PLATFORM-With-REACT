@@ -1,0 +1,14 @@
+export const SOCKET_EVENTS = Object.freeze({
+  NOTIFICATION_NEW: "notification:new",
+  UNREAD_COUNT: "notification:unread-count",
+  GET_UNREAD: "notifications:get-unread",
+  MARK_READ: "notifications:mark-read",
+  GROUP_SUBSCRIBE: "group:subscribe",
+  GROUP_UNSUBSCRIBE: "group:unsubscribe",
+  GROUP_UPDATED: "group:updated",
+  MEMBERS_CHANGED: "members:changed",
+  CONTRIBUTION_UPDATED: "contribution:updated",
+  CYCLE_UPDATED: "cycle:updated",
+  DRAW_COMPLETED: "draw:completed",
+  PAYOUT_PAID: "payout:paid",
+});
