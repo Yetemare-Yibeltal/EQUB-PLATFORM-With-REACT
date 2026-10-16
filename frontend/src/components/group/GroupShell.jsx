@@ -31,7 +31,7 @@ export default function GroupShell () {
     () => groupService.get(groupId),
     [groupId, version]
   )
-  const { data, loading, error, reload } = useAsyncData(loader)
+const { data, error, reload } = useAsyncData(loader)
 
   const group = data && data.id === groupId ? data : null
   const membership = group?.membership ?? null
