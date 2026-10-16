@@ -19,6 +19,36 @@ const PATHS = {
       <path d='M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1' />
     </>
   ),
+  users: (
+    <>
+      <circle cx='9' cy='8' r='3.5' />
+      <path d='M2.5 20v-1a5 5 0 0 1 5-5h3a5 5 0 0 1 5 5v1' />
+      <circle cx='17.5' cy='9' r='2.5' />
+      <path d='M17 14.2a4.5 4.5 0 0 1 4.5 4.3V20' />
+    </>
+  ),
+  wallet: (
+    <>
+      <path d='M3 7v11a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-3' />
+      <path d='M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3' />
+      <path d='M21 11h-4a2 2 0 0 0 0 4h4z' />
+    </>
+  ),
+  card: (
+    <>
+      <rect x='2' y='5' width='20' height='14' rx='2' />
+      <path d='M2 10h20' />
+    </>
+  ),
+  gift: (
+    <>
+      <rect x='3' y='8' width='18' height='4' rx='1' />
+      <path d='M12 8v13' />
+      <path d='M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7' />
+      <path d='M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5' />
+    </>
+  ),
+  shield: <path d='M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z' />,
   settings: (
     <>
       <path d='M4 6h8M16 6h4M4 12h4M12 12h8M4 18h10M18 18h2' />
