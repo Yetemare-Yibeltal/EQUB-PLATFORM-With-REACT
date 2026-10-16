@@ -1,11 +1,17 @@
 import { NavLink } from 'react-router-dom'
-import { NAV_ITEMS } from '../../constants/navigation'
+import { ADMIN_NAV_ITEM, NAV_ITEMS } from '../../constants/navigation'
+import { useAuth } from '../../hooks/useAuth'
 import Icon from '../common/Icon'
 
 export default function MobileNav () {
+  const { isAdmin } = useAuth()
+  const items = NAV_ITEMS.filter(item => item.mobile)
+
+  if (isAdmin) items.push(ADMIN_NAV_ITEM)
+
   return (
     <nav className='mobile-nav' aria-label='Main navigation'>
-      {NAV_ITEMS.map(item => (
+      {items.map(item => (
         <NavLink
           key={item.to}
           to={item.to}
