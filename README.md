@@ -1,79 +1,64 @@
 # Equb Platform
 
-A digital equb (rotating savings) platform. Groups of members contribute a fixed amount each cycle, and one member receives the full pot per round, chosen by an auditable draw.
+A web platform for running equbs, the rotating savings groups common in Ethiopia. Organizers create groups, members contribute on a schedule, a verifiable draw selects each cycle's recipient, and payouts are tracked in an immutable ledger. Contributions can be recorded in person or paid online through Chapa.
+
+## Features
+
+- Accounts with short-lived access tokens and rotating refresh tokens
+- Groups with invite codes, optional approval, and organizer controls
+- One cycle per member, created when the group starts
+- Contribution ledger with late penalties and waivers
+- Online payments through Chapa with verification and a signed webhook
+- Auditable draws: stored seed, recomputed verification, or a fixed order
+- Payout tracking that opens the next cycle and completes the group
+- Real-time and scheduled notifications
+- Admin area with reports, audit logs, payment review and job control
 
 ## Stack
 
-- Backend: Node.js, Express 4, Mongoose, MongoDB (replica set), Socket.IO, node-cron
-- Frontend: React, Vite
-- Infrastructure: Docker Compose, GitHub Actions
+- Backend: Node 20, Express, Mongoose, MongoDB replica set, Socket.IO, node-cron
+- Frontend: React 18, Vite, React Router, zustand
+- Tests: Jest and supertest
+- Delivery: Docker, nginx, GitHub Actions
 
-## Repository layout
+## Quick start
 
 ```
-backend/    REST API, sockets, scheduled jobs, tests
-frontend/   React single-page application
-database/   Seeders and backup output
-docs/       Architecture, API, business rules, deployment
-scripts/    Utility scripts
+npm --prefix backend install
+npm --prefix frontend install
+cp backend/.env.example backend/.env
+npm --prefix backend run dev
+npm --prefix frontend run dev
 ```
 
-## Requirements
-
-- Node.js 20 or newer
-- Docker with Docker Compose
-
-## Getting started
-
-1. Copy the environment templates:
-
-```bash
-   cp .env.example .env
-   cp backend/.env.example backend/.env
-```
-
-2. Start MongoDB as a single-node replica set (required for transactions):
-
-```bash
-   docker compose up -d mongo
-```
-
-3. Install and run the backend:
-
-```bash
-   npm --prefix backend install
-   npm run dev:backend
-```
-
-4. Verify the API:
-
-```bash
-   curl http://localhost:5000/api/health
-```
-
-## Running everything in containers
-
-```bash
-docker compose up -d --build
-docker compose --profile full up -d --build
-```
-
-The first command starts MongoDB and the backend. The second also starts the frontend.
+Edit `backend/.env` first. MongoDB must be a replica set. The full walkthrough is in [docs/deployment/INSTALLATION.md](docs/deployment/INSTALLATION.md).
 
 ## Scripts
 
-| Command                | Purpose                          |
-| ---------------------- | -------------------------------- |
-| `npm run dev:backend`  | Start the API with file watching |
-| `npm run dev:frontend` | Start the Vite dev server        |
-| `npm run test:backend` | Run backend tests                |
-| `npm run docker:up`    | Build and start containers       |
-| `npm run docker:down`  | Stop containers                  |
-
-## Money handling
-
-All monetary amounts are stored as integers in the smallest currency unit (santim). Floating point values are never used for money.
+| Command                                     | Purpose                                    |
+| ------------------------------------------- | ------------------------------------------ |
+| `npm --prefix backend run dev`              | Start the API with reload                  |
+| `npm --prefix frontend run dev`             | Start the web app                          |
+| `npm --prefix backend run test:unit`        | Unit tests                                 |
+| `npm --prefix backend run test:integration` | Integration tests, need a `_test` database |
+| `npm --prefix frontend run lint`            | Lint the frontend                          |
+| `npm --prefix frontend run build`           | Production build                           |
 
 ## Documentation
 
-See the `docs/` directory for architecture, API reference, business rules, and deployment guides.
+Start at [docs/README.md](docs/README.md): architecture, API reference, database, business rules, security and deployment.
+
+## Project layout
+
+```
+backend/    API, models, services, jobs, sockets, tests
+frontend/   React application
+database/   Migrations, seeders, backups
+docs/       Documentation
+scripts/    Smoke test scripts
+.github/    CI and deployment workflows
+```
+
+## Security
+
+Never commit `.env` files or paste secrets into chats or issues. See [docs/security/SECURITY.md](docs/security/SECURITY.md).
