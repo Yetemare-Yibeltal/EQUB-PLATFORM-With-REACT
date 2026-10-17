@@ -13,11 +13,8 @@ afterAll(stopDatabase);
 
 describe("creating a group", () => {
   test("makes the creator the organizer and first member", async () => {
-const { organizer, inviteCode } = await createEqub({
-  size: 2,
-  start: false,
-  overrides: { maxMembers: 3 },
-});    const response = await as(organizer).post("/api/groups", {
+    const organizer = await registerUser("Organizer");
+    const response = await as(organizer).post("/api/groups", {
       name: "Family Equb",
       contributionAmount: 100000,
       frequency: "weekly",
@@ -71,6 +68,7 @@ describe("joining a group", () => {
     const { organizer, inviteCode } = await createEqub({
       size: 2,
       start: false,
+      overrides: { maxMembers: 3 },
     });
     const visitor = await registerUser("Visitor");
     const response = await as(visitor).get(`/api/groups/preview/${inviteCode}`);
@@ -138,8 +136,6 @@ describe("approval flow", () => {
       size: 2,
       start: false,
       overrides: { requireApproval: true, maxMembers: 3 },
-    }).catch(async () => {
-      throw new Error("Approval group could not be prepared");
     });
     const applicant = await registerUser("Applicant");
 
