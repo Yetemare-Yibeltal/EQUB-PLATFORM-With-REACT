@@ -5,7 +5,7 @@ Prefix: `/api/auth`
 | Method | Path               | Auth           | Purpose                                               |
 | ------ | ------------------ | -------------- | ----------------------------------------------------- |
 | POST   | `/register`        | none           | Create an account                                     |
-| POST   | `/login`           | none           | Log in with phone and password                        |
+| POST   | `/login`           | none           | Log in with phone or email and password               |
 | POST   | `/refresh`         | refresh cookie | Rotate the refresh token and issue a new access token |
 | POST   | `/logout`          | refresh cookie | Revoke the current refresh token                      |
 | POST   | `/logout-all`      | access token   | Revoke every refresh token of the user                |
@@ -23,11 +23,12 @@ Authentication routes use the strict rate limit.
 {
   "fullName": "Abebe Kebede",
   "phone": "0911223344",
+  "email": "abebe@example.com",
   "password": "Secret123"
 }
 ```
 
-Response `201`: the user and an access token, with the refresh token set as an httpOnly cookie.
+`email` is optional. Response `201`: the user and an access token, with the refresh token set as an httpOnly cookie.
 
 | Status | Reason                                |
 | ------ | ------------------------------------- |
@@ -38,12 +39,19 @@ Response `201`: the user and an access token, with the refresh token set as an h
 
 `POST /api/auth/login`
 
-Send the phone number and password. Response `200` has the same shape as register.
+```json
+{
+  "identifier": "0911223344",
+  "password": "Secret123"
+}
+```
 
-| Status     | Reason                                                             |
-| ---------- | ------------------------------------------------------------------ |
-| 401        | Wrong credentials. The message is identical for an unknown account |
-| 423 or 429 | Account locked after five failed attempts                          |
+`identifier` is the phone number or the email address. Response `200` has the same shape as register.
+
+| Status | Reason                                                                             |
+| ------ | ---------------------------------------------------------------------------------- |
+| 401    | Wrong credentials. The message is identical for an unknown account                 |
+| 429    | Too many requests, or the account is temporarily locked after five failed attempts |
 
 ## Refresh
 
@@ -60,7 +68,14 @@ Send the phone number and password. Response `200` has the same shape as registe
 
 ## Change password
 
-`POST /api/auth/change-password` requires the current and the new password.
+`POST /api/auth/change-password`
+
+```json
+{
+  "currentPassword": "Secret123",
+  "newPassword": "NewSecret456"
+}
+```
 
 | Status | Reason                                                                      |
 | ------ | --------------------------------------------------------------------------- |
@@ -68,14 +83,29 @@ Send the phone number and password. Response `200` has the same shape as registe
 
 ## Forgot and reset password
 
-`POST /api/auth/forgot-password` always responds the same way, whether or not the account exists.
+`POST /api/auth/forgot-password`
 
-`POST /api/auth/reset-password` accepts the reset token and a new password. A reset token works once.
+```json
+{ "identifier": "0911223344" }
+```
+
+The response is the same whether or not the account exists.
+
+`POST /api/auth/reset-password`
+
+```json
+{
+  "token": "<64 character hex reset token>",
+  "newPassword": "NewSecret456"
+}
+```
+
+A reset token works once.
 
 ## Example
 
 ```
-curl -i -X POST http://localhost:5000/api/auth/login -H "Content-Type: application/json" -c cookies.txt -d '{"phone":"0911223344","password":"Secret123"}'
+curl -i -X POST http://localhost:5000/api/auth/login -H "Content-Type: application/json" -c cookies.txt -d '{"identifier":"0911223344","password":"Secret123"}'
 curl http://localhost:5000/api/users/me -H "Authorization: Bearer <accessToken>"
 curl -i -X POST http://localhost:5000/api/auth/refresh -b cookies.txt -c cookies.txt
 ```
