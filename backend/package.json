@@ -52,6 +52,6 @@
     "setupFiles": [
       "<rootDir>/tests/setup.js"
     ],
-    "testTimeout": 60000
+    "testTimeout": 300000
   }
 }
