@@ -1,60 +1,59 @@
-# Security Architecture
+# Security Practices
 
-This document describes the security design. Operational practices are in [../security/SECURITY.md](../security/SECURITY.md).
-
-## Authentication
-
-- Passwords are hashed with bcryptjs and never returned by the API.
-- Access tokens are short-lived JWTs (15 minutes by default).
-- Refresh tokens are long-lived, stored hashed in the database, and delivered in an httpOnly, SameSite cookie scoped to `/api/auth`.
-- Refresh tokens rotate on every use. Replaying an old token revokes every session for that user.
-- Logout revokes the current token; logout-all revokes every token.
-- An account locks after five failed login attempts.
-- Login and password reset responses are identical for unknown and known accounts, so accounts cannot be enumerated.
-
-## Authorization
-
-- `authenticate` verifies the access token on every private route.
-- `requireAdmin` guards the admin API.
-- Group access is membership based. Non-members receive 404 for a group, so its existence is not revealed.
-- Organizer-only actions (edit, start, cancel, approve, record contributions, run draws, pay payouts) are checked in the service layer.
-- Phone numbers are visible only to the organizer and the owner.
-- The invite code is visible only to the organizer.
-
-## Input and output
-
-- Every request body, query and parameter is validated with Joi; unknown fields are rejected.
-- MongoDB operators in input are rejected to prevent operator injection.
-- Responses use explicit projections so internal fields do not leak.
-
-## Transport and headers
-
-- helmet sets a strict Content-Security-Policy, HSTS, `X-Content-Type-Options`, frame and referrer policies.
-- CORS allows only the configured client origin with credentials.
-- Terminate TLS at the proxy in production.
-
-## Rate limiting
-
-- A general limiter applies to `/api`.
-- Authentication routes use a much stricter limiter.
-
-## Payments
-
-- Checkout creates a pending payment with an exact server-computed amount.
-- The result is confirmed by calling the Chapa verify API; redirects are never trusted.
-- Webhooks must carry a valid HMAC signature, otherwise nothing changes.
-- A mismatched amount, or a payment for an already recorded contribution, is flagged for admin review instead of being applied.
-- Settlement is idempotent: one payment produces one ledger entry.
-
-## Integrity and audit
-
-- Money is stored as integers.
-- Draw seeds and inputs are stored; the result is recomputed and checked on every read.
-- Ledger transactions are append-only.
-- Sensitive actions write audit log entries viewable by admins and by group organizers for their group.
+Operational security guidance for developers and operators. The design is described in [../architecture/SECURITY.md](../architecture/SECURITY.md).
 
 ## Secrets
 
-- Secrets come only from environment variables and are validated at start-up.
-- `.env` files are ignored by git; only `.env.example` files are committed.
-- Rotate any credential that was shared outside the deployment environment.
+- Generate each JWT secret with at least 48 random bytes:
+
+```
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+```
+
+- Store the output on a single line. Terminal wrapping can truncate a copied secret and the API will refuse to start if it is shorter than 32 characters.
+- Use different values for `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET`.
+- Never commit `.env` files. Never paste connection strings, passwords or tokens into chats, tickets or logs.
+- Rotate a credential immediately if it was exposed, including database passwords and Chapa keys.
+
+## Database
+
+- Use a dedicated database user with the least privileges needed.
+- Restrict network access to the database to the API host.
+- Keep tests on a database whose name ends in `_test`. The test helpers refuse any other name.
+- Take regular backups and test restoring them.
+
+## Accounts
+
+- Passwords require a minimum strength enforced by the validators.
+- Five failed logins lock an account for a cooling-off period.
+- Admin accounts should be few, named, and protected with strong unique passwords.
+
+## Payments
+
+- Configure the Chapa webhook secret and keep the webhook URL on HTTPS.
+- Never mark a payment as paid from a browser redirect. Settlement happens only after the verify API or a valid signed webhook.
+- Review payments flagged for review in the admin area promptly. Flags mean an amount mismatch or a payment for an already recorded contribution.
+
+## Operations checklist
+
+- [ ] `NODE_ENV=production`
+- [ ] TLS terminates at the proxy and HSTS is active
+- [ ] `CLIENT_URL` is the exact production origin
+- [ ] Strong, unique JWT secrets set
+- [ ] Database not reachable from the public internet
+- [ ] Chapa live keys and webhook secret set
+- [ ] Log files and backups are access controlled
+- [ ] Dependencies audited with `npm audit` and updated on a schedule
+
+## Dependency hygiene
+
+Run an audit regularly and review advisories before applying forced upgrades.
+
+```
+npm --prefix backend audit
+npm --prefix frontend audit
+```
+
+## Reporting a vulnerability
+
+Report suspected vulnerabilities privately to the project maintainers. Do not open a public issue with exploit details.
