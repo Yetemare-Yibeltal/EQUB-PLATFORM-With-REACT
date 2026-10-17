@@ -5,6 +5,9 @@ import express from "express";
 import mongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
 import mongoose from "mongoose";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import config from "./config/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { apiLimiter } from "./middleware/rateLimiter.js";
@@ -21,6 +24,13 @@ import userRoutes from "./routes/userRoutes.js";
 import logger from "./utils/logger.js";
 
 const app = express();
+
+const clientDist = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../frontend/dist",
+);
+const clientIndex = path.join(clientDist, "index.html");
+const servesClient = config.env === "production" && fs.existsSync(clientIndex);
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
@@ -101,6 +111,21 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/admin", adminRoutes);
+
+if (servesClient) {
+  app.use(
+    "/assets",
+    express.static(path.join(clientDist, "assets"), {
+      maxAge: "1y",
+      immutable: true,
+    }),
+  );
+  app.use(express.static(clientDist, { index: false, maxAge: "1h" }));
+  app.get(/^\/(?!api(\/|$)|socket\.io(\/|$)).*/, (req, res) => {
+    res.set("Cache-Control", "no-cache");
+    res.sendFile(clientIndex);
+  });
+}
 
 app.use(notFoundHandler);
 app.use(errorHandler);
