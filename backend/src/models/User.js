@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
     avatarUrl: {
       type: String,
       trim: true,
@@ -94,6 +98,14 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
+    emailVerificationTokenHash: {
+      type: String,
+      select: false,
+    },
+    emailVerificationExpiresAt: {
+      type: Date,
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -106,6 +118,8 @@ const userSchema = new mongoose.Schema(
         delete ret.refreshTokens;
         delete ret.passwordResetTokenHash;
         delete ret.passwordResetExpiresAt;
+        delete ret.emailVerificationTokenHash;
+        delete ret.emailVerificationExpiresAt;
         delete ret.failedLoginAttempts;
         delete ret.lockUntil;
         return ret;
