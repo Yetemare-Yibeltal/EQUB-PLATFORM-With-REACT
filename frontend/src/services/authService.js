@@ -22,4 +22,10 @@ export const authService = {
 
   resetPassword: (payload) =>
     api.post("/auth/reset-password", payload).then(unwrap),
+
+  verifyEmail: (payload) =>
+    api.post("/auth/verify-email", payload).then(unwrap),
+
+  resendVerification: () =>
+    api.post("/auth/resend-verification", {}).then(unwrap),
 };
