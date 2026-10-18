@@ -43,11 +43,15 @@ export default function ForgotPasswordForm () {
         <p className='alert alert-success' role='status'>
           {result.message}
         </p>
+        <p className='muted'>
+          If your account has an email address, check your inbox for a reset
+          link. The link expires in 15 minutes.
+        </p>
         {result.resetToken && (
           <p className='alert alert-info'>
-            Development mode: no SMS is sent yet.{' '}
+            Development mode:{' '}
             <Link to={`${ROUTES.RESET_PASSWORD}?token=${result.resetToken}`}>
-              Continue to reset your password
+              continue to reset your password
             </Link>
           </p>
         )}
@@ -72,7 +76,7 @@ export default function ForgotPasswordForm () {
         required
       />
       <Button type='submit' fullWidth loading={submitting}>
-        Send reset code
+        Send reset link
       </Button>
     </form>
   )
