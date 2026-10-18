@@ -131,4 +131,31 @@ export const resetPasswordByToken = (tokenHash, passwordHash) =>
     { new: true },
   ).exec();
 
+export const setEmailVerificationToken = (id, tokenHash, expiresAt) =>
+  User.updateOne(
+    { _id: id },
+    {
+      $set: {
+        emailVerificationTokenHash: tokenHash,
+        emailVerificationExpiresAt: expiresAt,
+      },
+    },
+  ).exec();
+
+export const verifyEmailByToken = (tokenHash) =>
+  User.findOneAndUpdate(
+    {
+      emailVerificationTokenHash: tokenHash,
+      emailVerificationExpiresAt: { $gt: new Date() },
+    },
+    {
+      $set: { emailVerified: true },
+      $unset: {
+        emailVerificationTokenHash: "",
+        emailVerificationExpiresAt: "",
+      },
+    },
+    { new: true },
+  ).exec();
+
 export const list = (filter, options) => paginate(User, filter, options);
