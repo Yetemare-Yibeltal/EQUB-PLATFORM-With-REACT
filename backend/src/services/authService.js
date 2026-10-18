@@ -9,11 +9,14 @@ import {
   signRefreshToken,
   verifyRefreshToken,
 } from "../utils/generateToken.js";
+import logger from "../utils/logger.js";
 import { comparePassword, hashPassword } from "../utils/password.js";
+import * as emailService from "./emailService.js";
 
 const MAX_FAILED_LOGIN_ATTEMPTS = 5;
 const LOCK_DURATION_MS = 15 * 60 * 1000;
 const PASSWORD_RESET_TTL_MS = 15 * 60 * 1000;
+const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
 
 let dummyHashPromise = null;
 
@@ -26,6 +29,24 @@ const truncate = (value, max) => String(value || "").slice(0, max);
 
 const invalidCredentials = () =>
   ApiError.unauthorized("Invalid phone, email, or password");
+
+const deliver = (promise) => {
+  promise.catch((error) =>
+    logger.error(`Email delivery failed: ${error.message}`),
+  );
+};
+
+const issueEmailVerification = async (user) => {
+  const token = generateRandomToken(32);
+
+  await userRepository.setEmailVerificationToken(
+    user._id,
+    hashToken(token),
+    new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS),
+  );
+
+  deliver(emailService.sendVerificationEmail({ user, token }));
+};
 
 const issueTokens = async (user, meta = {}) => {
   const accessToken = signAccessToken(user);
@@ -81,6 +102,12 @@ export const register = async (
     passwordHash,
   });
   const tokens = await issueTokens(user, meta);
+
+  if (user.email) {
+    await issueEmailVerification(user).catch((error) =>
+      logger.error(`Email verification setup failed: ${error.message}`),
+    );
+  }
 
   return { user, ...tokens };
 };
@@ -236,6 +263,10 @@ export const requestPasswordReset = async (identifier) => {
     new Date(Date.now() + PASSWORD_RESET_TTL_MS),
   );
 
+  if (user.email) {
+    deliver(emailService.sendPasswordResetEmail({ user, token: resetToken }));
+  }
+
   return { user, resetToken };
 };
 
@@ -248,6 +279,36 @@ export const resetPassword = async ({ token, newPassword }) => {
 
   if (!user) {
     throw ApiError.badRequest("Reset token is invalid or has expired");
+  }
+
+  return user;
+};
+
+export const resendVerification = async (userId) => {
+  const user = await userRepository.findById(userId);
+
+  if (!user) {
+    throw ApiError.notFound("User not found");
+  }
+
+  if (!user.email) {
+    throw ApiError.badRequest(
+      "Add an email address to your profile before requesting verification",
+    );
+  }
+
+  if (user.emailVerified) {
+    throw ApiError.badRequest("Your email address is already verified");
+  }
+
+  await issueEmailVerification(user);
+};
+
+export const verifyEmail = async ({ token }) => {
+  const user = await userRepository.verifyEmailByToken(hashToken(token));
+
+  if (!user) {
+    throw ApiError.badRequest("Verification link is invalid or has expired");
   }
 
   return user;
