@@ -7,7 +7,9 @@ import {
   logoutAll,
   refresh,
   register,
+  resendVerification,
   resetPassword,
+  verifyEmail,
 } from "../controllers/authController.js";
 import { authenticate } from "../middleware/authMiddleware.js";
 import {
@@ -22,6 +24,7 @@ import {
   refreshTokenSchema,
   registerSchema,
   resetPasswordSchema,
+  verifyEmailSchema,
 } from "../validators/authValidator.js";
 
 const router = Router();
@@ -59,6 +62,18 @@ router.post(
   authLimiter,
   validateRequest({ body: resetPasswordSchema }),
   resetPassword,
+);
+router.post(
+  "/verify-email",
+  authLimiter,
+  validateRequest({ body: verifyEmailSchema }),
+  verifyEmail,
+);
+router.post(
+  "/resend-verification",
+  authenticate,
+  sensitiveActionLimiter,
+  resendVerification,
 );
 
 export default router;
