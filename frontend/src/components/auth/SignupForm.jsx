@@ -95,10 +95,11 @@ export default function SignupForm () {
         required
       />
       <Input
-        label='Email (optional)'
+        label='Email (recommended)'
         name='email'
         type='email'
         autoComplete='email'
+        hint='Needed to reset your password by email and to receive account messages'
         value={values.email}
         onChange={handleChange}
         error={errors.email}
