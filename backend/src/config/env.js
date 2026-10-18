@@ -56,6 +56,14 @@ const schema = Joi.object({
   CHAPA_BASE_URL: Joi.string().uri().default("https://api.chapa.co/v1"),
   CHAPA_SECRET_KEY: optionalString,
   CHAPA_WEBHOOK_SECRET: optionalString,
+
+  EMAIL_API_KEY: optionalString,
+  EMAIL_FROM: Joi.string()
+    .trim()
+    .email({ tlds: { allow: false } })
+    .allow("")
+    .default(""),
+  EMAIL_FROM_NAME: Joi.string().trim().max(100).default("Equb Platform"),
 });
 
 const { value, error } = schema.validate(process.env, {
@@ -125,6 +133,11 @@ const config = Object.freeze({
     baseUrl: value.CHAPA_BASE_URL,
     secretKey: value.CHAPA_SECRET_KEY,
     webhookSecret: value.CHAPA_WEBHOOK_SECRET,
+  }),
+  email: Object.freeze({
+    apiKey: value.EMAIL_API_KEY,
+    fromAddress: value.EMAIL_FROM,
+    fromName: value.EMAIL_FROM_NAME,
   }),
 });
 
