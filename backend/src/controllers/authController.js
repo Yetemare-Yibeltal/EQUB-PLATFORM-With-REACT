@@ -121,3 +121,15 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
   return sendSuccess(res, { message: "Password has been reset successfully" });
 });
+
+export const verifyEmail = asyncHandler(async (req, res) => {
+  await authService.verifyEmail(req.body);
+
+  return sendSuccess(res, { message: "Email verified successfully" });
+});
+
+export const resendVerification = asyncHandler(async (req, res) => {
+  await authService.resendVerification(req.user.id);
+
+  return sendSuccess(res, { message: "Verification email sent" });
+});
