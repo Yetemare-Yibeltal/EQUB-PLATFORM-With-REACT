@@ -20,6 +20,7 @@ import ForgotPassword from './pages/auth/ForgotPassword'
 import Login from './pages/auth/Login'
 import ResetPassword from './pages/auth/ResetPassword'
 import Signup from './pages/auth/Signup'
+import VerifyEmail from './pages/auth/VerifyEmail'
 import Contributions from './pages/contributions/Contributions'
 import CycleHistory from './pages/cycles/CycleHistory'
 import DrawPage from './pages/draws/DrawPage'
@@ -47,6 +48,7 @@ export const router = createBrowserRouter([
   },
   { path: ROUTES.FORGOT_PASSWORD, element: <ForgotPassword /> },
   { path: ROUTES.RESET_PASSWORD, element: <ResetPassword /> },
+  { path: ROUTES.VERIFY_EMAIL, element: <VerifyEmail /> },
   {
     element: <ProtectedRoute />,
     children: [
