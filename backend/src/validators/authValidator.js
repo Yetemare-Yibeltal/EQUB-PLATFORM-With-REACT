@@ -79,3 +79,9 @@ export const resetPasswordSchema = Joi.object({
   token: Joi.string().hex().length(64).required(),
   newPassword: passwordField.required(),
 });
+
+
+// Validate the email verification token.
+export const verifyEmailSchema = Joi.object({
+  token: Joi.string().trim().min(1).max(2048).required(),
+});
