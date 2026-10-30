@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom'
 import { MEMBER_ROLE_LABELS } from '../../constants/roles'
 import { groupPath } from '../../constants/routes'
 import { FREQUENCY_LABELS, GROUP_STATUS_LABELS } from '../../constants/statuses'
+import { useLanguage } from '../../hooks/useLanguage'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 import StatusBadge from '../common/StatusBadge'
 
 export default function GroupCard ({ group }) {
+  const { t } = useLanguage()
   const membership = group.membership
   const pending = membership?.status === 'pending'
 
@@ -35,24 +37,24 @@ export default function GroupCard ({ group }) {
       </div>
       <dl className='detail-list'>
         <div>
-          <dt>Contribution</dt>
+          <dt>{t('Contribution')}</dt>
           <dd>
             {formatMoney(group.contributionAmount)} ·{' '}
-            {FREQUENCY_LABELS[group.frequency]}
+            {t(FREQUENCY_LABELS[group.frequency])}
           </dd>
         </div>
         <div>
-          <dt>Members</dt>
+          <dt>{t('Members')}</dt>
           <dd>
             {group.memberCount} / {group.maxMembers}
           </dd>
         </div>
         <div>
-          <dt>Pot</dt>
+          <dt>{t('Pot')}</dt>
           <dd>{formatMoney(group.potAmount)}</dd>
         </div>
         <div>
-          <dt>Starts</dt>
+          <dt>{t('Starts')}</dt>
           <dd>{formatDate(group.startDate)}</dd>
         </div>
       </dl>
