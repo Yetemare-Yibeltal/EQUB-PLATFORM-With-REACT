@@ -1,3 +1,5 @@
+import { useLanguage } from '../../hooks/useLanguage'
+
 const TONES = {
   active: 'success',
   paid: 'success',
@@ -28,11 +30,12 @@ const humanize = value =>
     .replace(/^./, character => character.toUpperCase())
 
 export default function StatusBadge ({ status, labels, tone }) {
+  const { t } = useLanguage()
   const resolved = tone ?? TONES[status] ?? 'neutral'
 
   return (
     <span className={`status-badge status-badge-${resolved}`}>
-      {labels?.[status] ?? humanize(status)}
+      {t(labels?.[status] ?? humanize(status))}
     </span>
   )
 }
