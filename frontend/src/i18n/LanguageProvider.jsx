@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { setCurrentLanguage } from './currentLanguage'
 import { LanguageContext } from './languageContext'
 import { DEFAULT_LANGUAGE, LANGUAGE_CODES, STORAGE_KEY } from './languages'
 import { translate } from './translate'
@@ -14,6 +15,8 @@ const readStoredLanguage = () => {
 
 export default function LanguageProvider ({ children }) {
   const [language, setLanguageState] = useState(readStoredLanguage)
+
+  setCurrentLanguage(language)
 
   useEffect(() => {
     document.documentElement.lang = language
