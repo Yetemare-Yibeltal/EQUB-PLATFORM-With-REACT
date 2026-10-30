@@ -1,4 +1,5 @@
 import { forwardRef, useId } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 
 const Select = forwardRef(function Select (
   {
@@ -14,8 +15,10 @@ const Select = forwardRef(function Select (
   },
   ref
 ) {
+  const { t } = useLanguage()
   const generatedId = useId()
   const selectId = id || generatedId
+  const translate = value => (typeof value === 'string' ? t(value) : value)
   const describedBy = error
     ? `${selectId}-error`
     : hint
@@ -30,7 +33,7 @@ const Select = forwardRef(function Select (
     >
       {label && (
         <label htmlFor={selectId} className='field-label'>
-          {label}
+          {translate(label)}
           {required && <span aria-hidden='true'> *</span>}
         </label>
       )}
@@ -43,20 +46,22 @@ const Select = forwardRef(function Select (
         required={required}
         {...rest}
       >
-        {placeholder !== undefined && <option value=''>{placeholder}</option>}
+        {placeholder !== undefined && (
+          <option value=''>{translate(placeholder)}</option>
+        )}
         {options.map(option => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {translate(option.label)}
           </option>
         ))}
       </select>
       {error ? (
         <p id={`${selectId}-error`} className='field-error' role='alert'>
-          {error}
+          {translate(error)}
         </p>
       ) : hint ? (
         <p id={`${selectId}-hint`} className='field-hint'>
-          {hint}
+          {translate(hint)}
         </p>
       ) : null}
     </div>
