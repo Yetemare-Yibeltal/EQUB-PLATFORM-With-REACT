@@ -6,9 +6,21 @@ export default {
   "Hide password": "የይለፍ ቃል ደብቅ",
   "just now": "አሁን",
 
+  Confirm: "አረጋግጥ",
+  Cancel: "ሰርዝ",
+  Close: "ዝጋ",
+  Submit: "ላክ",
+  Reason: "ምክንያት",
+  "Enter at least {min} characters": "ቢያንስ {min} ቁምፊዎች ያስገቡ",
+  Pagination: "የገጽ አሰሳ",
+  Previous: "ቀዳሚ",
+  Next: "ቀጣይ",
+  "Page {page} of {total}": "ገጽ {page} ከ{total}",
+
   Active: "ንቁ",
   Paid: "ተከፍሏል",
   Success: "ተሳክቷል",
+  Successful: "ተሳክቷል",
   Completed: "ተጠናቋል",
   Verified: "ተረጋግጧል",
   Approved: "ጸድቋል",
@@ -27,4 +39,10 @@ export default {
   Upcoming: "የሚመጣ",
   Waived: "ተነስቷል",
   Left: "ወጥቷል",
+
+  Weekly: "ሳምንታዊ",
+  "Every two weeks": "በየሁለት ሳምንቱ",
+  Monthly: "ወርሃዊ",
+  "Random draw": "በዕጣ",
+  "Order of joining": "በመቀላቀል ቅደም ተከተል",
 };
