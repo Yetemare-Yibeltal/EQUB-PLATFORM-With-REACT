@@ -2,15 +2,20 @@ import { Link } from 'react-router-dom'
 import ForgotPasswordForm from '../../components/auth/ForgotPasswordForm'
 import AuthLayout from '../../components/layout/AuthLayout'
 import { ROUTES } from '../../constants/routes'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function ForgotPassword () {
+  const { t } = useLanguage()
+
   return (
     <AuthLayout
-      title='Forgot your password?'
-      subtitle='Enter your phone number or email and we will issue a reset code'
+      title={t('Forgot your password?')}
+      subtitle={t(
+        'Enter your phone number or email and we will send you a reset link'
+      )}
       footer={
         <p>
-          Remembered it? <Link to={ROUTES.LOGIN}>Log in</Link>
+          {t('Remembered it?')} <Link to={ROUTES.LOGIN}>{t('Log in')}</Link>
         </p>
       }
     >
