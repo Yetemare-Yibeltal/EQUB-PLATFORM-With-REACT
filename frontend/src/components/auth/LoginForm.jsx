@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
+import { useLanguage } from '../../hooks/useLanguage'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
 import { hasErrors, validateIdentifier } from '../../utils/validators'
 import Button from '../common/Button'
@@ -10,6 +11,7 @@ import Input from '../common/Input'
 
 export default function LoginForm () {
   const { login } = useAuth()
+  const { t } = useLanguage()
   const location = useLocation()
   const [values, setValues] = useState({ identifier: '', password: '' })
   const [errors, setErrors] = useState({})
@@ -53,35 +55,35 @@ export default function LoginForm () {
     <form className='form' onSubmit={handleSubmit} noValidate>
       {notice && (
         <p className='alert alert-success' role='status'>
-          {notice}
+          {t(notice)}
         </p>
       )}
-      <ErrorMessage message={submitError} />
+      <ErrorMessage message={t(submitError)} />
       <Input
-        label='Phone number or email'
+        label={t('Phone number or email')}
         name='identifier'
         autoComplete='username'
         placeholder='0911223344'
         value={values.identifier}
         onChange={handleChange}
-        error={errors.identifier}
+        error={t(errors.identifier)}
         required
       />
       <Input
-        label='Password'
+        label={t('Password')}
         name='password'
         type='password'
         autoComplete='current-password'
         value={values.password}
         onChange={handleChange}
-        error={errors.password}
+        error={t(errors.password)}
         required
       />
       <div className='form-row'>
-        <Link to={ROUTES.FORGOT_PASSWORD}>Forgot password?</Link>
+        <Link to={ROUTES.FORGOT_PASSWORD}>{t('Forgot password?')}</Link>
       </div>
       <Button type='submit' fullWidth loading={submitting}>
-        Log in
+        {t('Log in')}
       </Button>
     </form>
   )
