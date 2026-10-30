@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap');
+
+html[lang='am'] body,
+html[lang='am'] button,
+html[lang='am'] input,
+html[lang='am'] select,
+html[lang='am'] textarea {
+  font-family: 'Noto Sans Ethiopic', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+.language-switcher {
+  position: relative;
+  display: inline-flex;
+}
+
+.language-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.language-trigger:hover,
+.language-trigger:focus-visible {
+  border-color: var(--primary, #0f766e);
+  color: var(--primary, #0f766e);
+}
+
+.language-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 60;
+  min-width: 150px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.language-option {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.language-option:hover,
+.language-option:focus-visible {
+  background: rgba(128, 128, 128, 0.14);
+}
+
+.language-option-active {
+  color: var(--primary, #0f766e);
+  font-weight: 700;
+}
