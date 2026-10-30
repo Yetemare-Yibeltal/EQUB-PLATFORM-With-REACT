@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 import { getErrorMessage } from '../../utils/errors'
 import Button from './Button'
 import Modal from './Modal'
@@ -19,10 +20,12 @@ export default function ReasonModal ({
   onSubmit,
   onClose
 }) {
+  const { t } = useLanguage()
   const formId = useId()
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const translate = value => (typeof value === 'string' ? t(value) : value)
 
   useEffect(() => {
     if (open) {
@@ -37,7 +40,7 @@ export default function ReasonModal ({
     const value = reason.trim()
 
     if (required && value.length < minLength) {
-      setError(`Enter at least ${minLength} characters`)
+      setError(t('Enter at least {min} characters', { min: minLength }))
       return
     }
 
@@ -62,7 +65,7 @@ export default function ReasonModal ({
       footer={
         <>
           <Button variant='secondary' onClick={onClose} disabled={submitting}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             type='submit'
@@ -70,13 +73,13 @@ export default function ReasonModal ({
             variant={variant}
             loading={submitting}
           >
-            {submitLabel}
+            {translate(submitLabel)}
           </Button>
         </>
       }
     >
       <form id={formId} className='form' onSubmit={handleSubmit} noValidate>
-        {description && <p>{description}</p>}
+        {description && <p>{translate(description)}</p>}
         <Textarea
           label={label}
           value={reason}
