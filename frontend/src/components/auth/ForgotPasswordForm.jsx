@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
+import { useLanguage } from '../../hooks/useLanguage'
 import { authService } from '../../services/authService'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
 import { validateIdentifier } from '../../utils/validators'
@@ -9,6 +10,7 @@ import ErrorMessage from '../common/ErrorMessage'
 import Input from '../common/Input'
 
 export default function ForgotPasswordForm () {
+  const { t } = useLanguage()
   const [identifier, setIdentifier] = useState('')
   const [error, setError] = useState('')
   const [submitError, setSubmitError] = useState('')
@@ -41,11 +43,12 @@ export default function ForgotPasswordForm () {
     return (
       <div className='form'>
         <p className='alert alert-success' role='status'>
-          {result.message}
+          {t(result.message)}
         </p>
         <p className='muted'>
-          If your account has an email address, check your inbox for a reset
-          link. The link expires in 15 minutes.
+          {t(
+            'If your account has an email address, check your inbox for a reset link. The link expires in 15 minutes.'
+          )}
         </p>
         {result.resetToken && (
           <p className='alert alert-info'>
@@ -55,16 +58,16 @@ export default function ForgotPasswordForm () {
             </Link>
           </p>
         )}
-        <Link to={ROUTES.LOGIN}>Back to log in</Link>
+        <Link to={ROUTES.LOGIN}>{t('Back to log in')}</Link>
       </div>
     )
   }
 
   return (
     <form className='form' onSubmit={handleSubmit} noValidate>
-      <ErrorMessage message={submitError} />
+      <ErrorMessage message={t(submitError)} />
       <Input
-        label='Phone number or email'
+        label={t('Phone number or email')}
         name='identifier'
         autoComplete='username'
         value={identifier}
@@ -72,11 +75,11 @@ export default function ForgotPasswordForm () {
           setIdentifier(event.target.value)
           setError('')
         }}
-        error={error}
+        error={t(error)}
         required
       />
       <Button type='submit' fullWidth loading={submitting}>
-        Send reset link
+        {t('Send reset link')}
       </Button>
     </form>
   )
