@@ -17,6 +17,7 @@ export default function LanguageProvider ({ children }) {
 
   useEffect(() => {
     document.documentElement.lang = language
+    document.title = translate(language, 'brand.name')
   }, [language])
 
   const setLanguage = useCallback(next => {
