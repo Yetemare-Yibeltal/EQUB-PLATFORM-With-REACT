@@ -1,10 +1,13 @@
 export default {
   "brand.name": "Kidane Mihret Equb Mahber",
+  "brand.short": "Kidane Mihret",
+  "brand.group": "Equb Mahber",
   "brand.tagline": "A trusted rotating savings community",
 
   "language.label": "Language",
   "language.change": "Change language",
 
+  "nav.main": "Main navigation",
   "nav.dashboard": "Dashboard",
   "nav.groups": "My equbs",
   "nav.contributions": "Contributions",
@@ -33,6 +36,7 @@ export default {
   "common.no": "No",
   "common.retry": "Try again",
   "common.viewAll": "View all",
+  "common.continue": "Continue",
 
   "footer.about":
     "A digital platform for rotating savings groups. Create an equb, collect contributions, run a verifiable draw and pay out members, with every step recorded.",
