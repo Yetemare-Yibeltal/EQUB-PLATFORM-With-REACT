@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
+import { useLanguage } from '../../hooks/useLanguage'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
 import {
   hasErrors,
@@ -23,6 +24,7 @@ const INITIAL_VALUES = {
 
 export default function SignupForm () {
   const { register } = useAuth()
+  const { t } = useLanguage()
   const [values, setValues] = useState(INITIAL_VALUES)
   const [errors, setErrors] = useState({})
   const [submitError, setSubmitError] = useState('')
@@ -72,61 +74,65 @@ export default function SignupForm () {
 
   return (
     <form className='form' onSubmit={handleSubmit} noValidate>
-      <ErrorMessage message={submitError} />
+      <ErrorMessage message={t(submitError)} />
       <Input
-        label='Full name'
+        label={t('Full name')}
         name='fullName'
         autoComplete='name'
         value={values.fullName}
         onChange={handleChange}
-        error={errors.fullName}
+        error={t(errors.fullName)}
         required
       />
       <Input
-        label='Phone number'
+        label={t('Phone number')}
         name='phone'
         type='tel'
         autoComplete='tel'
         placeholder='0911223344'
-        hint='Ethiopian mobile number, for example 0911223344 or +251911223344'
+        hint={t(
+          'Ethiopian mobile number, for example 0911223344 or +251911223344'
+        )}
         value={values.phone}
         onChange={handleChange}
-        error={errors.phone}
+        error={t(errors.phone)}
         required
       />
       <Input
-        label='Email (recommended)'
+        label={t('Email (recommended)')}
         name='email'
         type='email'
         autoComplete='email'
-        hint='Needed to reset your password by email and to receive account messages'
+        hint={t(
+          'Needed to reset your password by email and to receive account messages'
+        )}
         value={values.email}
         onChange={handleChange}
-        error={errors.email}
+        error={t(errors.email)}
       />
       <Input
-        label='Password'
+        label={t('Password')}
         name='password'
         type='password'
         autoComplete='new-password'
-        hint='At least 8 characters with a letter and a number'
+        hint={t('At least 8 characters with a letter and a number')}
         value={values.password}
         onChange={handleChange}
-        error={errors.password}
+        error={t(errors.password)}
         required
       />
       <Input
-        label='Confirm password'
+        label={t('Confirm password')}
         name='confirmPassword'
         type='password'
         autoComplete='new-password'
         value={values.confirmPassword}
         onChange={handleChange}
-        error={errors.confirmPassword}
+        error={t(errors.confirmPassword)}
         required
       />
       <Button type='submit' fullWidth loading={submitting}>
-        Create account
+        {t('Create account')}
       </Button>
     </form>
   )
