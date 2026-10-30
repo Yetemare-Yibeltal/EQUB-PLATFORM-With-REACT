@@ -1,4 +1,5 @@
 import { forwardRef, useId, useState } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 
 const Input = forwardRef(function Input (
   {
@@ -13,10 +14,12 @@ const Input = forwardRef(function Input (
   },
   ref
 ) {
+  const { t } = useLanguage()
   const generatedId = useId()
   const inputId = id || generatedId
   const [visible, setVisible] = useState(false)
   const isPassword = type === 'password'
+  const translate = value => (typeof value === 'string' ? t(value) : value)
   const describedBy = error
     ? `${inputId}-error`
     : hint
@@ -31,7 +34,7 @@ const Input = forwardRef(function Input (
     >
       {label && (
         <label htmlFor={inputId} className='field-label'>
-          {label}
+          {translate(label)}
           {required && <span aria-hidden='true'> *</span>}
         </label>
       )}
@@ -51,19 +54,19 @@ const Input = forwardRef(function Input (
             type='button'
             className='field-toggle'
             onClick={() => setVisible(current => !current)}
-            aria-label={visible ? 'Hide password' : 'Show password'}
+            aria-label={visible ? t('Hide password') : t('Show password')}
           >
-            {visible ? 'Hide' : 'Show'}
+            {visible ? t('Hide') : t('Show')}
           </button>
         )}
       </div>
       {error ? (
         <p id={`${inputId}-error`} className='field-error' role='alert'>
-          {error}
+          {translate(error)}
         </p>
       ) : hint ? (
         <p id={`${inputId}-hint`} className='field-hint'>
-          {hint}
+          {translate(hint)}
         </p>
       ) : null}
     </div>
