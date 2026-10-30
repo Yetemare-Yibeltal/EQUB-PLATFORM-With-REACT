@@ -10,6 +10,7 @@ import CycleTimeline from '../../components/cycle/CycleTimeline'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useAuth } from '../../hooks/useAuth'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { usePayOnline } from '../../hooks/usePayOnline'
 import { contributionService } from '../../services/contributionService'
 import { cycleService } from '../../services/cycleService'
@@ -17,6 +18,7 @@ import { formatMoney } from '../../utils/formatCurrency'
 
 export default function CycleHistory () {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const { group, isOrganizer, version, refresh } = useGroup()
   const { pay, payingId, error: payError } = usePayOnline()
   const [selectedId, setSelectedId] = useState(null)
@@ -67,14 +69,14 @@ export default function CycleHistory () {
   const handleRecord = async payload => {
     await contributionService.record(group.id, recordTarget.id, payload)
     setRecordTarget(null)
-    setNotice('Contribution recorded')
+    setNotice(t('Contribution recorded'))
     refresh()
   }
 
   const handleWaive = async reason => {
     await contributionService.waive(group.id, waiveTarget.id, reason)
     setWaiveTarget(null)
-    setNotice('Contribution waived')
+    setNotice(t('Contribution waived'))
     refresh()
   }
 
@@ -130,12 +132,16 @@ export default function CycleHistory () {
 
       <RecordPaymentModal
         open={Boolean(recordTarget)}
-        title='Record contribution'
+        title={t('Record contribution')}
         summary={
           recordTarget
-            ? `${recordTarget.user?.fullName} owes ${formatMoney(
-                recordTarget.amountOutstanding
-              )}. A late penalty is added automatically if the payment time is after the grace period.`
+            ? t(
+                '{name} owes {amount}. A late penalty is added automatically if the payment time is after the grace period.',
+                {
+                  name: recordTarget.user?.fullName,
+                  amount: formatMoney(recordTarget.amountOutstanding)
+                }
+              )
             : null
         }
         onSubmit={handleRecord}
@@ -145,9 +151,10 @@ export default function CycleHistory () {
       <ReasonModal
         open={Boolean(waiveTarget)}
         title='Waive contribution'
-        description={`${
-          waiveTarget?.user?.fullName ?? 'This member'
-        } will not pay for this cycle. The pot becomes smaller.`}
+        description={t(
+          '{name} will not pay for this cycle. The pot becomes smaller.',
+          { name: waiveTarget?.user?.fullName ?? t('This member') }
+        )}
         label='Reason'
         submitLabel='Waive contribution'
         onSubmit={handleWaive}
