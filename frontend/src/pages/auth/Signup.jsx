@@ -2,15 +2,19 @@ import { Link } from 'react-router-dom'
 import SignupForm from '../../components/auth/SignupForm'
 import AuthLayout from '../../components/layout/AuthLayout'
 import { ROUTES } from '../../constants/routes'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function Signup () {
+  const { t } = useLanguage()
+
   return (
     <AuthLayout
-      title='Create your account'
-      subtitle='Join or organize an equb in minutes'
+      title={t('Create your account')}
+      subtitle={t('Join or organize an equb in minutes')}
       footer={
         <p>
-          Already have an account? <Link to={ROUTES.LOGIN}>Log in</Link>
+          {t('Already have an account?')}{' '}
+          <Link to={ROUTES.LOGIN}>{t('Log in')}</Link>
         </p>
       }
     >
