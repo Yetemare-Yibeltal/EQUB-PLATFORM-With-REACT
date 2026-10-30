@@ -1,5 +1,6 @@
 import { MEMBER_ROLE_LABELS } from '../../constants/roles'
 import { MEMBER_STATUS_LABELS } from '../../constants/statuses'
+import { useLanguage } from '../../hooks/useLanguage'
 import { formatDate } from '../../utils/formatDate'
 import Button from '../common/Button'
 import DataTable from '../common/DataTable'
@@ -15,6 +16,8 @@ export default function MemberList ({
   onReject,
   onRemove
 }) {
+  const { t } = useLanguage()
+
   const columns = [
     {
       key: 'name',
@@ -64,8 +67,10 @@ export default function MemberList ({
       key: 'payout',
       header: 'Payout',
       render: member => {
-        if (member.hasReceivedPayout) return 'Received'
-        return member.payoutPosition ? `Cycle ${member.payoutPosition}` : '—'
+        if (member.hasReceivedPayout) return t('Received')
+        return member.payoutPosition
+          ? t('Cycle {number}', { number: member.payoutPosition })
+          : '—'
       }
     }
   ]
@@ -84,7 +89,7 @@ export default function MemberList ({
                 onClick={() => onApprove(member)}
                 loading={busyId === member.id}
               >
-                Approve
+                {t('Approve')}
               </Button>
               <Button
                 size='sm'
@@ -92,7 +97,7 @@ export default function MemberList ({
                 onClick={() => onReject(member)}
                 disabled={busyId === member.id}
               >
-                Reject
+                {t('Reject')}
               </Button>
             </>
           )}
@@ -103,7 +108,7 @@ export default function MemberList ({
               onClick={() => onRemove(member)}
               disabled={busyId === member.id}
             >
-              Remove
+              {t('Remove')}
             </Button>
           )}
         </div>
