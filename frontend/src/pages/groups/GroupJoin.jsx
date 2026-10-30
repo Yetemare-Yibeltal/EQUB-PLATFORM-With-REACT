@@ -10,6 +10,7 @@ import {
   GROUP_STATUS_LABELS,
   PAYOUT_ORDER_LABELS
 } from '../../constants/statuses'
+import { useLanguage } from '../../hooks/useLanguage'
 import { groupService } from '../../services/groupService'
 import { getErrorMessage } from '../../utils/errors'
 import { formatMoney } from '../../utils/formatCurrency'
@@ -19,6 +20,7 @@ const CODE_PATTERN = /^[A-Za-z0-9-]{6,16}$/
 
 export default function GroupJoin () {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const [searchParams] = useSearchParams()
   const [code, setCode] = useState(searchParams.get('code') ?? '')
   const [fieldError, setFieldError] = useState('')
@@ -75,13 +77,15 @@ export default function GroupJoin () {
     return (
       <div className='page'>
         <section className='card'>
-          <h1>Request sent</h1>
+          <h1>{t('Request sent')}</h1>
           <p>
-            The organizer of {preview?.name} must approve your request. You will
-            get a notification when they decide.
+            {t(
+              'The organizer of {name} must approve your request. You will get a notification when they decide.',
+              { name: preview?.name }
+            )}
           </p>
           <Link to={ROUTES.GROUPS} className='btn btn-primary btn-md'>
-            Back to my equbs
+            {t('Back to my equbs')}
           </Link>
         </section>
       </div>
@@ -92,11 +96,11 @@ export default function GroupJoin () {
     <div className='page'>
       <header className='page-header'>
         <p>
-          <Link to={ROUTES.GROUPS}>My equbs</Link>
+          <Link to={ROUTES.GROUPS}>{t('My equbs')}</Link>
         </p>
-        <h1>Join an equb</h1>
+        <h1>{t('Join an equb')}</h1>
         <p className='muted'>
-          Enter the invite code the organizer shared with you
+          {t('Enter the invite code the organizer shared with you')}
         </p>
       </header>
 
@@ -117,7 +121,7 @@ export default function GroupJoin () {
             required
           />
           <Button type='submit' loading={looking}>
-            Look up equb
+            {t('Look up equb')}
           </Button>
         </form>
       </section>
@@ -135,50 +139,55 @@ export default function GroupJoin () {
           )}
           <dl className='detail-list'>
             <div>
-              <dt>Organizer</dt>
+              <dt>{t('Organizer')}</dt>
               <dd>{preview.organizer.fullName ?? '—'}</dd>
             </div>
             <div>
-              <dt>Contribution</dt>
+              <dt>{t('Contribution')}</dt>
               <dd>
                 {formatMoney(preview.contributionAmount)} ·{' '}
-                {FREQUENCY_LABELS[preview.frequency]}
+                {t(FREQUENCY_LABELS[preview.frequency])}
               </dd>
             </div>
             <div>
-              <dt>Members</dt>
+              <dt>{t('Members')}</dt>
               <dd>
-                {preview.memberCount} / {preview.maxMembers} (
-                {preview.spotsLeft} spots left)
+                {t('{count} / {max} ({spots} spots left)', {
+                  count: preview.memberCount,
+                  max: preview.maxMembers,
+                  spots: preview.spotsLeft
+                })}
               </dd>
             </div>
             <div>
-              <dt>Starts</dt>
+              <dt>{t('Starts')}</dt>
               <dd>{formatDate(preview.startDate)}</dd>
             </div>
             <div>
-              <dt>Late penalty</dt>
+              <dt>{t('Late penalty')}</dt>
               <dd>
                 {preview.latePenaltyAmount > 0
                   ? formatMoney(preview.latePenaltyAmount)
-                  : 'None'}
+                  : t('None')}
                 {preview.gracePeriodDays > 0 &&
-                  ` after ${preview.gracePeriodDays} grace days`}
+                  ` ${t('after {days} grace days', {
+                    days: preview.gracePeriodDays
+                  })}`}
               </dd>
             </div>
             <div>
-              <dt>Payout order</dt>
-              <dd>{PAYOUT_ORDER_LABELS[preview.payoutOrderMethod]}</dd>
+              <dt>{t('Payout order')}</dt>
+              <dd>{t(PAYOUT_ORDER_LABELS[preview.payoutOrderMethod])}</dd>
             </div>
           </dl>
           {preview.requireApproval && (
             <p className='alert alert-info'>
-              The organizer must approve your request to join.
+              {t('The organizer must approve your request to join.')}
             </p>
           )}
           {!preview.canJoin && (
             <p className='alert alert-error'>
-              This group is full or no longer accepting members.
+              {t('This group is full or no longer accepting members.')}
             </p>
           )}
           <Button
@@ -186,7 +195,9 @@ export default function GroupJoin () {
             loading={joining}
             disabled={!preview.canJoin}
           >
-            {preview.requireApproval ? 'Request to join' : 'Join this equb'}
+            {preview.requireApproval
+              ? t('Request to join')
+              : t('Join this equb')}
           </Button>
         </section>
       )}
