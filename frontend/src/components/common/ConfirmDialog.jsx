@@ -1,3 +1,4 @@
+import { useLanguage } from '../../hooks/useLanguage'
 import Button from './Button'
 import Modal from './Modal'
 
@@ -14,6 +15,9 @@ export default function ConfirmDialog ({
   onConfirm,
   onCancel
 }) {
+  const { t } = useLanguage()
+  const translate = value => (typeof value === 'string' ? t(value) : value)
+
   return (
     <Modal
       open={open}
@@ -23,15 +27,15 @@ export default function ConfirmDialog ({
       footer={
         <>
           <Button variant='secondary' onClick={onCancel} disabled={loading}>
-            {cancelLabel}
+            {translate(cancelLabel)}
           </Button>
           <Button variant={variant} onClick={onConfirm} loading={loading}>
-            {confirmLabel}
+            {translate(confirmLabel)}
           </Button>
         </>
       }
     >
-      <p>{message}</p>
+      <p>{translate(message)}</p>
     </Modal>
   )
 }
