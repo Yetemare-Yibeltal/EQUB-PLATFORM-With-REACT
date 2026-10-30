@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function Modal ({
   open,
@@ -9,6 +10,7 @@ export default function Modal ({
   footer,
   size = 'md'
 }) {
+  const { t } = useLanguage()
   const titleId = useId()
   const dialogRef = useRef(null)
   const closeRef = useRef(onClose)
@@ -55,12 +57,12 @@ export default function Modal ({
         tabIndex={-1}
       >
         <div className='modal-header'>
-          <h2 id={titleId}>{title}</h2>
+          <h2 id={titleId}>{typeof title === 'string' ? t(title) : title}</h2>
           <button
             type='button'
             className='icon-button'
             onClick={onClose}
-            aria-label='Close'
+            aria-label={t('common.close')}
           >
             ×
           </button>
