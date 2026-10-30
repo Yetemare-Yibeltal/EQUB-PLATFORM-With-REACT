@@ -1,7 +1,7 @@
 process.env.NODE_ENV = "test";
 process.env.MONGODB_URI =
   process.env.TEST_MONGODB_URI ||
-  "mongodb://localhost:27018/equb_test?directConnection=true";
+  "mongodb://127.0.0.1:27017/equb_test?directConnection=true";
 process.env.JWT_ACCESS_SECRET =
   "test-access-secret-with-at-least-32-characters";
 process.env.JWT_REFRESH_SECRET =
