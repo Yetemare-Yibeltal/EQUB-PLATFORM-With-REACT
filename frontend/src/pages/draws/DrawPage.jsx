@@ -7,12 +7,14 @@ import Loader from '../../components/common/Loader'
 import DrawCard from '../../components/draw/DrawCard'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { cycleService } from '../../services/cycleService'
 import { drawService } from '../../services/drawService'
 import { getErrorMessage } from '../../utils/errors'
 import { formatMoney } from '../../utils/formatCurrency'
 
 export default function DrawPage () {
+  const { t } = useLanguage()
   const { group, isOrganizer, version, refresh } = useGroup()
   const [target, setTarget] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -43,9 +45,13 @@ export default function DrawPage () {
     try {
       const result = await drawService.perform(group.id, target.id)
       setNotice(
-        `${result.draw.winnerUser?.fullName ?? 'A member'} won the cycle ${
-          result.draw.cycleNumber
-        } draw. Record the payout from the Payouts tab.`
+        t(
+          '{name} won the cycle {number} draw. Record the payout from the Payouts tab.',
+          {
+            name: result.draw.winnerUser?.fullName ?? t('A member'),
+            number: result.draw.cycleNumber
+          }
+        )
       )
       refresh()
     } catch (requestError) {
@@ -71,17 +77,24 @@ export default function DrawPage () {
 
       {awaiting.map(cycle => (
         <section key={cycle.id} className='card'>
-          <h2>Cycle {cycle.number} is ready for the draw</h2>
+          <h2>
+            {t('Cycle {number} is ready for the draw', {
+              number: cycle.number
+            })}
+          </h2>
           <p>
-            Every contribution is in. The winner receives{' '}
-            {formatMoney(cycle.collectedAmount)}.
+            {t('Every contribution is in. The winner receives {amount}.', {
+              amount: formatMoney(cycle.collectedAmount)
+            })}
           </p>
           {isOrganizer ? (
             <div>
-              <Button onClick={() => setTarget(cycle)}>Perform draw</Button>
+              <Button onClick={() => setTarget(cycle)}>
+                {t('Perform draw')}
+              </Button>
             </div>
           ) : (
-            <p className='muted'>The organizer performs the draw.</p>
+            <p className='muted'>{t('The organizer performs the draw.')}</p>
           )}
         </section>
       ))}
@@ -99,7 +112,9 @@ export default function DrawPage () {
 
       <ConfirmDialog
         open={Boolean(target)}
-        title={`Perform the cycle ${target?.number ?? ''} draw?`}
+        title={t('Perform the cycle {number} draw?', {
+          number: target?.number ?? ''
+        })}
         message='The winner is chosen by the server from members who have not received a payout yet. This cannot be repeated or undone.'
         confirmLabel='Perform draw'
         loading={busy}
