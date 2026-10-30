@@ -1,20 +1,26 @@
+import { useLanguage } from '../../hooks/useLanguage'
 import Button from './Button'
 
 export default function Pagination ({ meta, onPageChange, disabled = false }) {
+  const { t } = useLanguage()
+
   if (!meta || meta.totalPages <= 1) return null
 
   return (
-    <nav className='pagination' aria-label='Pagination'>
+    <nav className='pagination' aria-label={t('Pagination')}>
       <Button
         variant='secondary'
         size='sm'
         disabled={disabled || !meta.hasPreviousPage}
         onClick={() => onPageChange(meta.page - 1)}
       >
-        Previous
+        {t('Previous')}
       </Button>
       <span className='muted'>
-        Page {meta.page} of {meta.totalPages}
+        {t('Page {page} of {total}', {
+          page: meta.page,
+          total: meta.totalPages
+        })}
       </span>
       <Button
         variant='secondary'
@@ -22,7 +28,7 @@ export default function Pagination ({ meta, onPageChange, disabled = false }) {
         disabled={disabled || !meta.hasNextPage}
         onClick={() => onPageChange(meta.page + 1)}
       >
-        Next
+        {t('Next')}
       </Button>
     </nav>
   )
