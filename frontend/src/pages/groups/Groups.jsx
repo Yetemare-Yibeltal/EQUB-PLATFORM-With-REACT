@@ -7,6 +7,7 @@ import Pagination from '../../components/common/Pagination'
 import GroupCard from '../../components/group/GroupCard'
 import { ROUTES } from '../../constants/routes'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { groupService } from '../../services/groupService'
 
 const FILTERS = [
@@ -18,6 +19,7 @@ const FILTERS = [
 ]
 
 export default function Groups () {
+  const { t } = useLanguage()
   const [status, setStatus] = useState('')
   const [page, setPage] = useState(1)
 
@@ -36,20 +38,24 @@ export default function Groups () {
     <div className='page'>
       <header className='page-header page-header-row'>
         <div>
-          <h1>My equbs</h1>
-          <p className='muted'>Groups you organize or belong to</p>
+          <h1>{t('My equbs')}</h1>
+          <p className='muted'>{t('Groups you organize or belong to')}</p>
         </div>
         <div className='inline-actions'>
           <Link to={ROUTES.GROUP_JOIN} className='btn btn-secondary btn-md'>
-            Join with code
+            {t('Join with code')}
           </Link>
           <Link to={ROUTES.GROUP_CREATE} className='btn btn-primary btn-md'>
-            Create equb
+            {t('Create equb')}
           </Link>
         </div>
       </header>
 
-      <div className='tabs' role='tablist' aria-label='Group status filter'>
+      <div
+        className='tabs'
+        role='tablist'
+        aria-label={t('Group status filter')}
+      >
         {FILTERS.map(filter => (
           <button
             key={filter.value || 'all'}
@@ -59,7 +65,7 @@ export default function Groups () {
             className={status === filter.value ? 'tab active' : 'tab'}
             onClick={() => changeFilter(filter.value)}
           >
-            {filter.label}
+            {t(filter.label)}
           </button>
         ))}
       </div>
@@ -73,7 +79,7 @@ export default function Groups () {
           description='Create a new equb or join one with an invite code.'
           action={
             <Link to={ROUTES.GROUP_CREATE} className='btn btn-primary btn-md'>
-              Create equb
+              {t('Create equb')}
             </Link>
           }
         />
