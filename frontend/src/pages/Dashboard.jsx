@@ -4,6 +4,7 @@ import ErrorMessage from '../components/common/ErrorMessage'
 import Loader from '../components/common/Loader'
 import StatsCard from '../components/dashboard/StatsCard'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../hooks/useLanguage'
 import { reportService } from '../services/reportService'
 import { getErrorMessage } from '../utils/errors'
 import { formatMoney } from '../utils/formatCurrency'
@@ -11,6 +12,7 @@ import { formatNumber, formatPercent } from '../utils/formatNumber'
 
 export default function Dashboard () {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [statement, setStatement] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -38,8 +40,10 @@ export default function Dashboard () {
   return (
     <div className='page'>
       <header className='page-header'>
-        <h1>Hello, {user?.fullName?.split(' ')[0]}</h1>
-        <p className='muted'>Your equb activity at a glance</p>
+        <h1>
+          {t('Hello, {name}', { name: user?.fullName?.split(' ')[0] ?? '' })}
+        </h1>
+        <p className='muted'>{t('Your equb activity at a glance')}</p>
       </header>
 
       {loading && <Loader label='Loading your summary' />}
@@ -47,7 +51,7 @@ export default function Dashboard () {
 
       {statement && (
         <>
-          <section className='stats-grid' aria-label='Summary'>
+          <section className='stats-grid' aria-label={t('Summary')}>
             <StatsCard
               label='Active equbs'
               value={formatNumber(statement.activeGroups)}
@@ -70,9 +74,9 @@ export default function Dashboard () {
               label='Outstanding'
               value={formatMoney(contributions.outstanding)}
               tone={contributions.outstanding > 0 ? 'warning' : 'neutral'}
-              hint={`${formatNumber(
-                contributions.pending
-              )} pending contributions`}
+              hint={t('{count} pending contributions', {
+                count: formatNumber(contributions.pending)
+              })}
             />
             <StatsCard
               label='Overdue'
@@ -83,7 +87,9 @@ export default function Dashboard () {
             <StatsCard
               label='On-time rate'
               value={formatPercent(contributions.onTimeRate)}
-              hint={`${formatNumber(contributions.late)} late payments`}
+              hint={t('{count} late payments', {
+                count: formatNumber(contributions.late)
+              })}
             />
             <StatsCard
               label='Penalties paid'
