@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
+import { useLanguage } from '../../hooks/useLanguage'
 import { authService } from '../../services/authService'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
 import {
@@ -15,6 +16,7 @@ import Input from '../common/Input'
 
 export default function ResetPasswordForm () {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const [searchParams] = useSearchParams()
   const [values, setValues] = useState({
     token: searchParams.get('token') ?? '',
@@ -69,39 +71,39 @@ export default function ResetPasswordForm () {
 
   return (
     <form className='form' onSubmit={handleSubmit} noValidate>
-      <ErrorMessage message={submitError} />
+      <ErrorMessage message={t(submitError)} />
       <Input
-        label='Reset code'
+        label={t('Reset code')}
         name='token'
         autoComplete='one-time-code'
         value={values.token}
         onChange={handleChange}
-        error={errors.token}
+        error={t(errors.token)}
         required
       />
       <Input
-        label='New password'
+        label={t('New password')}
         name='newPassword'
         type='password'
         autoComplete='new-password'
-        hint='At least 8 characters with a letter and a number'
+        hint={t('At least 8 characters with a letter and a number')}
         value={values.newPassword}
         onChange={handleChange}
-        error={errors.newPassword}
+        error={t(errors.newPassword)}
         required
       />
       <Input
-        label='Confirm new password'
+        label={t('Confirm new password')}
         name='confirmPassword'
         type='password'
         autoComplete='new-password'
         value={values.confirmPassword}
         onChange={handleChange}
-        error={errors.confirmPassword}
+        error={t(errors.confirmPassword)}
         required
       />
       <Button type='submit' fullWidth loading={submitting}>
-        Reset password
+        {t('Reset password')}
       </Button>
     </form>
   )
