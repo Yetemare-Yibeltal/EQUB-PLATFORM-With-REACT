@@ -1,4 +1,5 @@
 import { forwardRef, useId } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 
 const Textarea = forwardRef(function Textarea (
   {
@@ -13,8 +14,10 @@ const Textarea = forwardRef(function Textarea (
   },
   ref
 ) {
+  const { t } = useLanguage()
   const generatedId = useId()
   const areaId = id || generatedId
+  const translate = value => (typeof value === 'string' ? t(value) : value)
   const describedBy = error
     ? `${areaId}-error`
     : hint
@@ -29,7 +32,7 @@ const Textarea = forwardRef(function Textarea (
     >
       {label && (
         <label htmlFor={areaId} className='field-label'>
-          {label}
+          {translate(label)}
           {required && <span aria-hidden='true'> *</span>}
         </label>
       )}
@@ -45,11 +48,11 @@ const Textarea = forwardRef(function Textarea (
       />
       {error ? (
         <p id={`${areaId}-error`} className='field-error' role='alert'>
-          {error}
+          {translate(error)}
         </p>
       ) : hint ? (
         <p id={`${areaId}-hint`} className='field-hint'>
-          {hint}
+          {translate(hint)}
         </p>
       ) : null}
     </div>
