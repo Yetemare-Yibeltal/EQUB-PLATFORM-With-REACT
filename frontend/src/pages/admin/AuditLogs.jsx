@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import DataTable from '../../components/common/DataTable'
 import EmptyState from '../../components/common/EmptyState'
 import ErrorMessage from '../../components/common/ErrorMessage'
@@ -7,15 +7,9 @@ import Pagination from '../../components/common/Pagination'
 import Select from '../../components/common/Select'
 import { AUDIT_ACTION_LABELS } from '../../constants/auditActions'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { adminService } from '../../services/adminService'
 import { formatDateTime } from '../../utils/formatDate'
-
-const ACTION_OPTIONS = Object.entries(AUDIT_ACTION_LABELS).map(
-  ([value, label]) => ({
-    value,
-    label
-  })
-)
 
 const summarize = metadata => {
   const text = JSON.stringify(metadata ?? {})
@@ -24,8 +18,18 @@ const summarize = metadata => {
 }
 
 export default function AuditLogs () {
+  const { t } = useLanguage()
   const [action, setAction] = useState('')
   const [page, setPage] = useState(1)
+
+  const actionOptions = useMemo(
+    () =>
+      Object.entries(AUDIT_ACTION_LABELS).map(([value, label]) => ({
+        value,
+        label: t(label)
+      })),
+    [t]
+  )
 
   const loader = useCallback(
     () =>
@@ -52,7 +56,7 @@ export default function AuditLogs () {
     {
       key: 'action',
       header: 'Action',
-      render: entry => AUDIT_ACTION_LABELS[entry.action] ?? entry.action
+      render: entry => t(AUDIT_ACTION_LABELS[entry.action] ?? entry.action)
     },
     { key: 'entity', header: 'Entity', render: entry => entry.entityType },
     {
@@ -71,7 +75,7 @@ export default function AuditLogs () {
           label='Action'
           name='action'
           placeholder='All actions'
-          options={ACTION_OPTIONS}
+          options={actionOptions}
           value={action}
           onChange={event => {
             setAction(event.target.value)
