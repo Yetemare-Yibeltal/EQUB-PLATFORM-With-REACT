@@ -5,11 +5,13 @@ import Loader from '../../components/common/Loader'
 import StatsCard from '../../components/dashboard/StatsCard'
 import { ROUTES } from '../../constants/routes'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { adminService } from '../../services/adminService'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatNumber } from '../../utils/formatNumber'
 
 export default function AdminDashboard () {
+  const { t } = useLanguage()
   const loader = useCallback(() => adminService.overview(), [])
   const { data, loading, error, reload } = useAsyncData(loader)
 
@@ -21,7 +23,7 @@ export default function AdminDashboard () {
 
       {data && (
         <>
-          <section className='stats-grid' aria-label='Attention'>
+          <section className='stats-grid' aria-label={t('Attention')}>
             <StatsCard
               label='Payments needing review'
               value={formatNumber(data.attention.paymentsNeedingReview)}
@@ -48,16 +50,31 @@ export default function AdminDashboard () {
             />
           </section>
 
-          <section className='stats-grid' aria-label='Platform totals'>
+          <section className='stats-grid' aria-label={t('Platform totals')}>
             <StatsCard
               label='Users'
               value={formatNumber(data.users.total)}
-              hint={`${data.users.active} active, ${data.users.suspended} suspended, ${data.users.admins} admins`}
+              hint={t(
+                '{active} active, {suspended} suspended, {admins} admins',
+                {
+                  active: data.users.active,
+                  suspended: data.users.suspended,
+                  admins: data.users.admins
+                }
+              )}
             />
             <StatsCard
               label='Equbs'
               value={formatNumber(data.groups.total)}
-              hint={`${data.groups.open} open, ${data.groups.active} active, ${data.groups.completed} completed, ${data.groups.cancelled} cancelled`}
+              hint={t(
+                '{open} open, {active} active, {completed} completed, {cancelled} cancelled',
+                {
+                  open: data.groups.open,
+                  active: data.groups.active,
+                  completed: data.groups.completed,
+                  cancelled: data.groups.cancelled
+                }
+              )}
             />
             <StatsCard
               label='Collected'
@@ -79,7 +96,7 @@ export default function AdminDashboard () {
           </section>
 
           <p>
-            <Link to={ROUTES.ADMIN_PAYMENTS}>Go to payment review</Link>
+            <Link to={ROUTES.ADMIN_PAYMENTS}>{t('Go to payment review')}</Link>
           </p>
         </>
       )}
