@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useMemo, useState } from 'react'
 import { MANUAL_PAYMENT_METHODS } from '../../constants/paymentMethods'
 import { useLanguage } from '../../hooks/useLanguage'
 import { localInputToIso, nowLocalInputValue } from '../../utils/dateInput'
@@ -28,6 +28,15 @@ export default function RecordPaymentModal ({
   const [errors, setErrors] = useState({})
   const [submitError, setSubmitError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  const methodOptions = useMemo(
+    () =>
+      MANUAL_PAYMENT_METHODS.map(option => ({
+        ...option,
+        label: t(option.label)
+      })),
+    [t]
+  )
 
   useEffect(() => {
     if (open) {
@@ -94,7 +103,7 @@ export default function RecordPaymentModal ({
         <Select
           label='Payment method'
           name='paymentMethod'
-          options={MANUAL_PAYMENT_METHODS}
+          options={methodOptions}
           value={values.paymentMethod}
           onChange={handleChange}
           error={errors.paymentMethod}
