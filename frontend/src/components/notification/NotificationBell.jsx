@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
+import { useLanguage } from '../../hooks/useLanguage'
 import { useNotifications } from '../../hooks/useNotifications'
 import Icon from '../common/Icon'
 
 export default function NotificationBell () {
+  const { t } = useLanguage()
   const { unreadCount, refreshUnreadCount } = useNotifications()
 
   useEffect(() => {
@@ -13,8 +15,8 @@ export default function NotificationBell () {
 
   const label =
     unreadCount > 0
-      ? `Notifications, ${unreadCount} unread`
-      : 'Notifications, none unread'
+      ? t('Notifications, {count} unread', { count: unreadCount })
+      : t('Notifications, none unread')
 
   return (
     <Link
