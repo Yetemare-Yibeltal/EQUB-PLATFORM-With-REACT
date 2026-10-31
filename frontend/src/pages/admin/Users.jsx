@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Button from '../../components/common/Button'
 import ConfirmDialog from '../../components/common/ConfirmDialog'
 import DataTable from '../../components/common/DataTable'
@@ -12,6 +12,7 @@ import StatusBadge from '../../components/common/StatusBadge'
 import { USER_ROLE_LABELS, USER_STATUS_LABELS } from '../../constants/roles'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useAuth } from '../../hooks/useAuth'
+import { useLanguage } from '../../hooks/useLanguage'
 import { userService } from '../../services/userService'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDateTime } from '../../utils/formatDate'
@@ -28,6 +29,7 @@ const STATUS_OPTIONS = [
 
 export default function Users () {
   const { user: currentUser } = useAuth()
+  const { t } = useLanguage()
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [role, setRole] = useState('')
@@ -36,6 +38,15 @@ export default function Users () {
   const [pending, setPending] = useState(null)
   const [busy, setBusy] = useState(false)
   const [actionError, setActionError] = useState('')
+
+  const roleOptions = useMemo(
+    () => ROLE_OPTIONS.map(option => ({ ...option, label: t(option.label) })),
+    [t]
+  )
+  const statusOptions = useMemo(
+    () => STATUS_OPTIONS.map(option => ({ ...option, label: t(option.label) })),
+    [t]
+  )
 
   const loader = useCallback(
     () =>
@@ -101,7 +112,7 @@ export default function Users () {
       key: 'lastLogin',
       header: 'Last login',
       render: row =>
-        row.lastLoginAt ? formatDateTime(row.lastLoginAt) : 'Never'
+        row.lastLoginAt ? formatDateTime(row.lastLoginAt) : t('Never')
     },
     {
       key: 'actions',
@@ -109,7 +120,7 @@ export default function Users () {
       className: 'cell-actions',
       render: row =>
         row.id === currentUser.id ? (
-          <span className='muted'>You</span>
+          <span className='muted'>{t('You')}</span>
         ) : (
           <div className='inline-actions'>
             <Button
@@ -123,7 +134,7 @@ export default function Users () {
                 })
               }
             >
-              {row.status === 'active' ? 'Suspend' : 'Activate'}
+              {row.status === 'active' ? t('Suspend') : t('Activate')}
             </Button>
             <Button
               size='sm'
@@ -136,21 +147,26 @@ export default function Users () {
                 })
               }
             >
-              {row.role === 'admin' ? 'Remove admin' : 'Make admin'}
+              {row.role === 'admin' ? t('Remove admin') : t('Make admin')}
             </Button>
           </div>
         )
     }
   ]
 
+  const confirmName = pending ? { name: pending.user.fullName } : {}
+
   const confirmMessage = pending
     ? pending.kind === 'status'
       ? pending.value === 'suspended'
-        ? `${pending.user.fullName} will be signed out and cannot log in until reactivated.`
-        : `${pending.user.fullName} will be able to log in again.`
+        ? t(
+            '{name} will be signed out and cannot log in until reactivated.',
+            confirmName
+          )
+        : t('{name} will be able to log in again.', confirmName)
       : pending.value === 'admin'
-      ? `${pending.user.fullName} will get full administrator access.`
-      : `${pending.user.fullName} will lose administrator access.`
+      ? t('{name} will get full administrator access.', confirmName)
+      : t('{name} will lose administrator access.', confirmName)
     : ''
 
   return (
@@ -167,7 +183,7 @@ export default function Users () {
           label='Role'
           name='role'
           placeholder='All roles'
-          options={ROLE_OPTIONS}
+          options={roleOptions}
           value={role}
           onChange={event => {
             setRole(event.target.value)
@@ -178,7 +194,7 @@ export default function Users () {
           label='Status'
           name='status'
           placeholder='All statuses'
-          options={STATUS_OPTIONS}
+          options={statusOptions}
           value={status}
           onChange={event => {
             setStatus(event.target.value)
@@ -186,7 +202,7 @@ export default function Users () {
           }}
         />
         <Button type='submit' variant='secondary'>
-          Search
+          {t('Search')}
         </Button>
       </form>
 
