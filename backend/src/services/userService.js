@@ -11,6 +11,11 @@ const SORTABLE_FIELDS = ["createdAt", "fullName", "lastLoginAt"];
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+const EMAIL_VERIFICATION_FIELDS = {
+  emailVerificationTokenHash: "",
+  emailVerificationExpiresAt: "",
+};
+
 export const getProfile = async (userId) => {
   const user = await userRepository.findById(userId);
 
@@ -21,16 +26,25 @@ export const getProfile = async (userId) => {
   return user;
 };
 
-export const updateProfile = async (userId, { fullName, email, avatarUrl }) => {
+export const updateProfile = async (
+  userId,
+  { fullName, email, avatarUrl, language },
+) => {
+  const current = await getProfile(userId);
   const set = {};
   const unset = {};
 
   if (fullName !== undefined) set.fullName = fullName;
   if (avatarUrl !== undefined) set.avatarUrl = avatarUrl;
+  if (language !== undefined) set.language = language;
 
   if (email === null) {
-    unset.email = "";
-  } else if (email !== undefined) {
+    if (current.email) {
+      unset.email = "";
+      set.emailVerified = false;
+      Object.assign(unset, EMAIL_VERIFICATION_FIELDS);
+    }
+  } else if (email !== undefined && email !== current.email) {
     const existing = await userRepository.findByEmail(email);
 
     if (existing && String(existing._id) !== String(userId)) {
@@ -40,6 +54,8 @@ export const updateProfile = async (userId, { fullName, email, avatarUrl }) => {
     }
 
     set.email = email;
+    set.emailVerified = false;
+    Object.assign(unset, EMAIL_VERIFICATION_FIELDS);
   }
 
   const update = {};
@@ -47,7 +63,7 @@ export const updateProfile = async (userId, { fullName, email, avatarUrl }) => {
   if (Object.keys(unset).length > 0) update.$unset = unset;
 
   if (Object.keys(update).length === 0) {
-    return getProfile(userId);
+    return current;
   }
 
   const user = await userRepository.updateById(userId, update);
