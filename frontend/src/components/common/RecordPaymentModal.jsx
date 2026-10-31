@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react'
 import { MANUAL_PAYMENT_METHODS } from '../../constants/paymentMethods'
+import { useLanguage } from '../../hooks/useLanguage'
 import { localInputToIso, nowLocalInputValue } from '../../utils/dateInput'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
 import Button from './Button'
@@ -21,6 +22,7 @@ export default function RecordPaymentModal ({
   onSubmit,
   onClose
 }) {
+  const { t } = useLanguage()
   const formId = useId()
   const [values, setValues] = useState(INITIAL)
   const [errors, setErrors] = useState({})
@@ -47,7 +49,7 @@ export default function RecordPaymentModal ({
     const paidAt = localInputToIso(values.paidAt)
 
     if (paidAt && new Date(paidAt).getTime() > Date.now()) {
-      setErrors({ paidAt: 'Payment time cannot be in the future' })
+      setErrors({ paidAt: t('Payment time cannot be in the future') })
       return
     }
 
@@ -78,10 +80,10 @@ export default function RecordPaymentModal ({
       footer={
         <>
           <Button variant='secondary' onClick={onClose} disabled={submitting}>
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button type='submit' form={formId} loading={submitting}>
-            {submitLabel}
+            {t(submitLabel)}
           </Button>
         </>
       }
