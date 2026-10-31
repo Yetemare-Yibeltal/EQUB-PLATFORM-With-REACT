@@ -10,6 +10,7 @@ import { ROUTES, groupPath } from '../../constants/routes'
 import { FREQUENCY_LABELS, PAYOUT_ORDER_LABELS } from '../../constants/statuses'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { cycleService } from '../../services/cycleService'
 import { groupService } from '../../services/groupService'
 import { getErrorMessage } from '../../utils/errors'
@@ -18,6 +19,7 @@ import { formatDate } from '../../utils/formatDate'
 
 export default function GroupDetail () {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const { group, membership, isOrganizer, version, refresh } = useGroup()
   const [confirm, setConfirm] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -62,12 +64,12 @@ export default function GroupDetail () {
     if (confirm === 'start') {
       await runAction(
         () => groupService.start(group.id),
-        'The equb has started'
+        t('The equb has started')
       )
     } else if (confirm === 'regenerate') {
       await runAction(
         () => groupService.regenerateInviteCode(group.id),
-        'A new invite code was generated, the old one no longer works'
+        t('A new invite code was generated, the old one no longer works')
       )
     } else if (confirm === 'leave') {
       setBusy(true)
@@ -86,23 +88,28 @@ export default function GroupDetail () {
 
   const confirmCopy = {
     start: {
-      title: 'Start this equb?',
-      message: `The member list is fixed at ${group.memberCount} members, ${group.memberCount} cycles are scheduled, and nobody can join or leave afterwards.`,
-      label: 'Start equb',
+      title: t('Start this equb?'),
+      message: t(
+        'The member list is fixed at {count} members, {count} cycles are scheduled, and nobody can join or leave afterwards.',
+        { count: group.memberCount }
+      ),
+      label: t('Start equb'),
       variant: 'primary'
     },
     regenerate: {
-      title: 'Generate a new invite code?',
-      message:
-        'The current code stops working immediately. Share the new one with people you want to invite.',
-      label: 'Generate new code',
+      title: t('Generate a new invite code?'),
+      message: t(
+        'The current code stops working immediately. Share the new one with people you want to invite.'
+      ),
+      label: t('Generate new code'),
       variant: 'primary'
     },
     leave: {
-      title: 'Leave this equb?',
-      message:
-        'You can rejoin later with the invite code while the group is still open.',
-      label: 'Leave equb',
+      title: t('Leave this equb?'),
+      message: t(
+        'You can rejoin later with the invite code while the group is still open.'
+      ),
+      label: t('Leave equb'),
       variant: 'danger'
     }
   }[confirm]
@@ -118,7 +125,7 @@ export default function GroupDetail () {
       )}
       <ErrorMessage message={error} />
 
-      <section className='stats-grid' aria-label='Group summary'>
+      <section className='stats-grid' aria-label={t('Group summary')}>
         <StatsCard
           label='Contribution'
           value={formatMoney(group.contributionAmount)}
@@ -127,7 +134,11 @@ export default function GroupDetail () {
         <StatsCard
           label='Members'
           value={`${group.memberCount} / ${group.maxMembers}`}
-          hint={isOpen ? `${group.spotsLeft} spots left` : undefined}
+          hint={
+            isOpen
+              ? t('{count} spots left', { count: group.spotsLeft })
+              : undefined
+          }
         />
         <StatsCard label='Pot per cycle' value={formatMoney(group.potAmount)} />
         <StatsCard label='Start date' value={formatDate(group.startDate)} />
@@ -136,39 +147,39 @@ export default function GroupDetail () {
           value={
             group.latePenaltyAmount > 0
               ? formatMoney(group.latePenaltyAmount)
-              : 'None'
+              : t('None')
           }
-          hint={`Grace period: ${group.gracePeriodDays} days`}
+          hint={t('Grace period: {days} days', { days: group.gracePeriodDays })}
         />
         <StatsCard
           label='Payout order'
-          value={PAYOUT_ORDER_LABELS[group.payoutOrderMethod]}
+          value={t(PAYOUT_ORDER_LABELS[group.payoutOrderMethod])}
         />
       </section>
 
       {isOrganizer && isOpen && (
         <section className='card'>
-          <h2>Invite members</h2>
+          <h2>{t('Invite members')}</h2>
           <p className='muted'>
-            Share this code or link. Only people you give it to can join.
+            {t('Share this code or link. Only people you give it to can join.')}
           </p>
           <div className='inline-actions'>
             <code className='code-block code-large'>{group.inviteCode}</code>
-            <CopyButton value={group.inviteCode} label='Copy code' />
-            <CopyButton value={joinLink} label='Copy link' />
+            <CopyButton value={group.inviteCode} label={t('Copy code')} />
+            <CopyButton value={joinLink} label={t('Copy link')} />
             <Button
               variant='ghost'
               size='sm'
               onClick={() => setConfirm('regenerate')}
             >
-              New code
+              {t('New code')}
             </Button>
           </div>
           {group.requireApproval && (
             <p>
-              Approval is required.{' '}
+              {t('Approval is required.')}{' '}
               <Link to={groupPath(group.id, 'members')}>
-                Review join requests
+                {t('Review join requests')}
               </Link>
             </p>
           )}
@@ -177,11 +188,11 @@ export default function GroupDetail () {
               onClick={() => setConfirm('start')}
               disabled={group.memberCount < 2}
             >
-              Start equb
+              {t('Start equb')}
             </Button>
             {group.memberCount < 2 && (
               <p className='field-hint'>
-                At least 2 active members are needed to start.
+                {t('At least 2 active members are needed to start.')}
               </p>
             )}
           </div>
@@ -190,14 +201,17 @@ export default function GroupDetail () {
 
       {group.status === 'cancelled' && (
         <p className='alert alert-error'>
-          This equb was cancelled
-          {group.cancelReason ? `: ${group.cancelReason}` : '.'}
+          {group.cancelReason
+            ? t('This equb was cancelled: {reason}', {
+                reason: group.cancelReason
+              })
+            : t('This equb was cancelled.')}
         </p>
       )}
 
       {group.status === 'completed' && (
         <p className='alert alert-success'>
-          Every member has received a payout. This equb is complete.
+          {t('Every member has received a payout. This equb is complete.')}
         </p>
       )}
 
@@ -212,7 +226,7 @@ export default function GroupDetail () {
       {canLeave && (
         <div>
           <Button variant='ghost' onClick={() => setConfirm('leave')}>
-            Leave this equb
+            {t('Leave this equb')}
           </Button>
         </div>
       )}
