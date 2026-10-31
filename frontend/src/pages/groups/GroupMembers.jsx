@@ -7,6 +7,7 @@ import Pagination from '../../components/common/Pagination'
 import MemberList from '../../components/member/MemberList'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { memberService } from '../../services/memberService'
 import { getErrorMessage } from '../../utils/errors'
 
@@ -16,6 +17,7 @@ const VIEWS = [
 ]
 
 export default function GroupMembers () {
+  const { t } = useLanguage()
   const { group, isOrganizer, version, refresh } = useGroup()
   const [view, setView] = useState('active')
   const [page, setPage] = useState(1)
@@ -57,7 +59,7 @@ export default function GroupMembers () {
   return (
     <div className='stack'>
       {isOrganizer && (
-        <div className='tabs' role='tablist' aria-label='Member views'>
+        <div className='tabs' role='tablist' aria-label={t('Member views')}>
           {VIEWS.map(item => (
             <button
               key={item.value}
@@ -67,7 +69,7 @@ export default function GroupMembers () {
               className={view === item.value ? 'tab active' : 'tab'}
               onClick={() => changeView(item.value)}
             >
-              {item.label}
+              {t(item.label)}
             </button>
           ))}
         </div>
@@ -108,9 +110,9 @@ export default function GroupMembers () {
       <ConfirmDialog
         open={Boolean(removeTarget)}
         title='Remove this member?'
-        message={`${
-          removeTarget?.user?.fullName ?? 'This member'
-        } is removed from the group and cannot rejoin.`}
+        message={t('{name} is removed from the group and cannot rejoin.', {
+          name: removeTarget?.user?.fullName ?? t('This member')
+        })}
         confirmLabel='Remove member'
         variant='danger'
         loading={busyId === removeTarget?.id}
