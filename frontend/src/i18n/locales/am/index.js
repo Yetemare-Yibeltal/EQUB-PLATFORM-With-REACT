@@ -1,3 +1,4 @@
+import account from "./account";
 import base from "./base";
 import cycles from "./cycles";
 import detail from "./detail";
@@ -9,6 +10,7 @@ import reports from "./reports";
 import shared from "./shared";
 
 export default {
+  ...account,
   ...reports,
   ...record,
   ...base,
