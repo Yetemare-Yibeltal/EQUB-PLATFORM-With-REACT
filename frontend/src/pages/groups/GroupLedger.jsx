@@ -10,6 +10,7 @@ import { PAYMENT_METHOD_LABELS } from '../../constants/paymentMethods'
 import { TRANSACTION_TYPE_LABELS } from '../../constants/transactions'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { transactionService } from '../../services/transactionService'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDateTime } from '../../utils/formatDate'
@@ -21,6 +22,7 @@ const FILTERS = [
 ]
 
 export default function GroupLedger () {
+  const { t } = useLanguage()
   const { group, version } = useGroup()
   const [type, setType] = useState('')
   const [page, setPage] = useState(1)
@@ -82,7 +84,8 @@ export default function GroupLedger () {
     {
       key: 'method',
       header: 'Method',
-      render: entry => PAYMENT_METHOD_LABELS[entry.method] ?? entry.method
+      render: entry =>
+        t(PAYMENT_METHOD_LABELS[entry.method] ?? entry.method ?? '—')
     },
     {
       key: 'reference',
@@ -95,7 +98,7 @@ export default function GroupLedger () {
     <div className='stack'>
       <ErrorMessage message={summaryError} />
       {summary && (
-        <section className='stats-grid' aria-label='Ledger summary'>
+        <section className='stats-grid' aria-label={t('Ledger summary')}>
           <StatsCard
             label='Collected'
             value={formatMoney(summary.totalIn)}
@@ -109,12 +112,12 @@ export default function GroupLedger () {
           <StatsCard
             label='Penalties collected'
             value={formatMoney(summary.penaltiesCollected)}
-            hint={`${summary.entryCount} ledger entries`}
+            hint={t('{count} ledger entries', { count: summary.entryCount })}
           />
         </section>
       )}
 
-      <div className='tabs' role='tablist' aria-label='Ledger filter'>
+      <div className='tabs' role='tablist' aria-label={t('Ledger filter')}>
         {FILTERS.map(filter => (
           <button
             key={filter.value || 'all'}
@@ -124,7 +127,7 @@ export default function GroupLedger () {
             className={type === filter.value ? 'tab active' : 'tab'}
             onClick={() => changeType(filter.value)}
           >
-            {filter.label}
+            {t(filter.label)}
           </button>
         ))}
       </div>
