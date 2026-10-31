@@ -3,6 +3,7 @@ import Button from '../components/common/Button'
 import ErrorMessage from '../components/common/ErrorMessage'
 import Loader from '../components/common/Loader'
 import NotificationList from '../components/notification/NotificationList'
+import { useLanguage } from '../hooks/useLanguage'
 import { useNotifications } from '../hooks/useNotifications'
 import { notificationService } from '../services/notificationService'
 import { getErrorMessage } from '../utils/errors'
@@ -10,6 +11,7 @@ import { getErrorMessage } from '../utils/errors'
 const PAGE_SIZE = 20
 
 export default function Notifications () {
+  const { t } = useLanguage()
   const { unreadCount, lastReceived, markRead, markAllRead, remove } =
     useNotifications()
   const [filter, setFilter] = useState('all')
@@ -123,19 +125,23 @@ export default function Notifications () {
     <div className='page'>
       <header className='page-header page-header-row'>
         <div>
-          <h1>Notifications</h1>
-          <p className='muted'>{unreadCount} unread</p>
+          <h1>{t('Notifications')}</h1>
+          <p className='muted'>{t('{count} unread', { count: unreadCount })}</p>
         </div>
         <Button
           variant='secondary'
           onClick={handleReadAll}
           disabled={unreadCount === 0}
         >
-          Mark all as read
+          {t('Mark all as read')}
         </Button>
       </header>
 
-      <div className='tabs' role='tablist' aria-label='Notification filter'>
+      <div
+        className='tabs'
+        role='tablist'
+        aria-label={t('Notification filter')}
+      >
         {['all', 'unread'].map(value => (
           <button
             key={value}
@@ -145,7 +151,7 @@ export default function Notifications () {
             className={filter === value ? 'tab active' : 'tab'}
             onClick={() => setFilter(value)}
           >
-            {value === 'all' ? 'All' : 'Unread'}
+            {value === 'all' ? t('All') : t('Unread')}
           </button>
         ))}
       </div>
@@ -161,8 +167,8 @@ export default function Notifications () {
           onDelete={handleDelete}
           emptyTitle={
             filter === 'unread'
-              ? 'No unread notifications'
-              : 'No notifications yet'
+              ? t('No unread notifications')
+              : t('No notifications yet')
           }
         />
       )}
@@ -170,7 +176,7 @@ export default function Notifications () {
       {meta?.hasNextPage && !loading && (
         <div className='center-row'>
           <Button variant='secondary' onClick={loadMore} loading={loadingMore}>
-            Load more
+            {t('Load more')}
           </Button>
         </div>
       )}
