@@ -6,6 +6,7 @@ import { GROUP_STATUS_LABELS } from '../../constants/statuses'
 import { SOCKET_EVENTS } from '../../constants/socketEvents'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useAuth } from '../../hooks/useAuth'
+import { useLanguage } from '../../hooks/useLanguage'
 import { useSocket } from '../../hooks/useSocket'
 import { groupService } from '../../services/groupService'
 import ErrorMessage from '../common/ErrorMessage'
@@ -24,6 +25,7 @@ const LIVE_EVENTS = [
 export default function GroupShell () {
   const { groupId } = useParams()
   const { isAdmin } = useAuth()
+  const { t } = useLanguage()
   const { socket } = useSocket()
   const [version, setVersion] = useState(0)
 
@@ -31,7 +33,7 @@ export default function GroupShell () {
     () => groupService.get(groupId),
     [groupId, version]
   )
-const { data, error, reload } = useAsyncData(loader)
+  const { data, error, reload } = useAsyncData(loader)
 
   const group = data && data.id === groupId ? data : null
   const membership = group?.membership ?? null
@@ -79,7 +81,7 @@ const { data, error, reload } = useAsyncData(loader)
       return (
         <div className='page'>
           <ErrorMessage message={error} onRetry={reload} />
-          <Link to={ROUTES.GROUPS}>Back to my equbs</Link>
+          <Link to={ROUTES.GROUPS}>{t('Back to my equbs')}</Link>
         </div>
       )
     }
@@ -102,7 +104,7 @@ const { data, error, reload } = useAsyncData(loader)
     <div className='page'>
       <header className='page-header'>
         <p>
-          <Link to={ROUTES.GROUPS}>My equbs</Link>
+          <Link to={ROUTES.GROUPS}>{t('My equbs')}</Link>
         </p>
         <div className='title-row'>
           <h1>{group.name}</h1>
@@ -118,7 +120,7 @@ const { data, error, reload } = useAsyncData(loader)
         {group.description && <p className='muted'>{group.description}</p>}
       </header>
 
-      <nav className='tabs' aria-label='Group sections'>
+      <nav className='tabs' aria-label={t('Group sections')}>
         {tabs.map(tab => (
           <NavLink
             key={tab.to || 'overview'}
@@ -126,7 +128,7 @@ const { data, error, reload } = useAsyncData(loader)
             end={tab.end}
             className={({ isActive }) => (isActive ? 'tab active' : 'tab')}
           >
-            {tab.label}
+            {t(tab.label)}
           </NavLink>
         ))}
       </nav>
