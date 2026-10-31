@@ -1,3 +1,4 @@
+import { useLanguage } from '../../hooks/useLanguage'
 import EmptyState from '../common/EmptyState'
 import NotificationItem from './NotificationItem'
 
@@ -7,11 +8,15 @@ export default function NotificationList ({
   onDelete,
   emptyTitle
 }) {
+  const { t } = useLanguage()
+
   if (notifications.length === 0) {
     return (
       <EmptyState
         title={emptyTitle}
-        description='Updates about your groups, contributions, draws, and payouts appear here.'
+        description={t(
+          'Updates about your groups, contributions, draws, and payouts appear here.'
+        )}
       />
     )
   }
