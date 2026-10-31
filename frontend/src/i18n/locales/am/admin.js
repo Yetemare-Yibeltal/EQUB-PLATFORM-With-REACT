@@ -1,0 +1,57 @@
+export default {
+  "Mark read": "እንደተነበበ አድርግ",
+  Delete: "ሰርዝ",
+  "Updates about your groups, contributions, draws, and payouts appear here.":
+    "ስለ እቁቦችዎ፣ መዋጮዎችዎ፣ ዕጣዎችና ክፍያዎች ዝማኔዎች እዚህ ይታያሉ።",
+  "Notifications, {count} unread": "ማሳወቂያዎች፣ {count} ያልተነበቡ",
+  "Notifications, none unread": "ማሳወቂያዎች፣ ያልተነበበ የለም",
+
+  "Skip to content": "ወደ ዋናው ይዘት ዝለል",
+  Administration: "አስተዳደር",
+  "Platform oversight, payments review, audit trail, and jobs":
+    "የመድረኩ ቁጥጥር፣ የክፍያ ግምገማ፣ የኦዲት መዝገብና ሥራዎች",
+  "Administration sections": "የአስተዳደር ክፍሎች",
+  Users: "ተጠቃሚዎች",
+  Groups: "እቁቦች",
+  Payments: "ክፍያዎች",
+  "Audit log": "የኦዲት መዝገብ",
+  Jobs: "ሥራዎች",
+
+  "Loading overview": "አጠቃላይ እይታን በመጫን ላይ",
+  Attention: "ትኩረት የሚሹ",
+  "Payments needing review": "ግምገማ የሚሹ ክፍያዎች",
+  "Review them on the Payments tab": "በ«ክፍያዎች» ትር ይገምግሟቸው",
+  "Pending payouts": "በመጠባበቅ ላይ ያሉ ክፍያዎች",
+  "Overdue contributions": "ጊዜያቸው ያለፈ መዋጮዎች",
+  "Cycles awaiting a draw": "ዕጣ የሚጠብቁ ዙሮች",
+  "Platform totals": "የመድረኩ ድምሮች",
+  Equbs: "እቁቦች",
+  "{active} active, {suspended} suspended, {admins} admins":
+    "{active} ንቁ፣ {suspended} የታገዱ፣ {admins} አስተዳዳሪዎች",
+  "{open} open, {active} active, {completed} completed, {cancelled} cancelled":
+    "{open} ክፍት፣ {active} ንቁ፣ {completed} የተጠናቀቁ፣ {cancelled} የተሰረዙ",
+  "Go to payment review": "ወደ ክፍያ ግምገማ ሂድ",
+
+  Name: "ስም",
+  Email: "ኢሜይል",
+  "Last login": "መጨረሻ የገቡበት",
+  Never: "በጭራሽ",
+  You: "እርስዎ",
+  Suspend: "አግድ",
+  Activate: "አንቃ",
+  "Remove admin": "አስተዳዳሪነትን አስወግድ",
+  "Make admin": "አስተዳዳሪ አድርግ",
+  "{name} will be signed out and cannot log in until reactivated.":
+    "{name} ይወጣል፤ እስኪነቃ ድረስ መግባት አይችልም።",
+  "{name} will be able to log in again.": "{name} እንደገና መግባት ይችላል።",
+  "{name} will get full administrator access.": "{name} ሙሉ የአስተዳዳሪ መብት ያገኛል።",
+  "{name} will lose administrator access.": "{name} የአስተዳዳሪ መብቱን ያጣል።",
+  Search: "ፈልግ",
+  "Name, phone, or email": "ስም፣ ስልክ ወይም ኢሜይል",
+  "All roles": "ሁሉም ሚናዎች",
+  "All statuses": "ሁሉም ሁኔታዎች",
+  "Loading users": "ተጠቃሚዎችን በመጫን ላይ",
+  "No users match": "ምንም ተጠቃሚ አልተገኘም",
+  "Confirm change": "ለውጡን አረጋግጥ",
+  Confirm: "አረጋግጥ",
+};
