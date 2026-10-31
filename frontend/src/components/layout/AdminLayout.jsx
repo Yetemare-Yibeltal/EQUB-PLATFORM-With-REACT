@@ -1,16 +1,19 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { ADMIN_TABS } from '../../constants/navigation'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function AdminLayout () {
+  const { t } = useLanguage()
+
   return (
     <div className='page'>
       <header className='page-header'>
-        <h1>Administration</h1>
+        <h1>{t('Administration')}</h1>
         <p className='muted'>
-          Platform oversight, payments review, audit trail, and jobs
+          {t('Platform oversight, payments review, audit trail, and jobs')}
         </p>
       </header>
-      <nav className='tabs' aria-label='Administration sections'>
+      <nav className='tabs' aria-label={t('Administration sections')}>
         {ADMIN_TABS.map(tab => (
           <NavLink
             key={tab.to}
@@ -18,7 +21,7 @@ export default function AdminLayout () {
             end={tab.end}
             className={({ isActive }) => (isActive ? 'tab active' : 'tab')}
           >
-            {tab.label}
+            {t(tab.label)}
           </NavLink>
         ))}
       </nav>
