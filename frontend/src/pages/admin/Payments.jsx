@@ -9,6 +9,7 @@ import ReasonModal from '../../components/common/ReasonModal'
 import StatusBadge from '../../components/common/StatusBadge'
 import { PAYMENT_STATUS_LABELS } from '../../constants/statuses'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { adminService } from '../../services/adminService'
 import { paymentService } from '../../services/paymentService'
 import { formatMoney } from '../../utils/formatCurrency'
@@ -23,6 +24,7 @@ const FILTERS = [
 ]
 
 export default function Payments () {
+  const { t } = useLanguage()
   const [filterId, setFilterId] = useState('review')
   const [page, setPage] = useState(1)
   const [target, setTarget] = useState(null)
@@ -43,7 +45,7 @@ export default function Payments () {
   const handleResolve = async note => {
     await adminService.resolvePaymentReview(target.id, note)
     setTarget(null)
-    setNotice('Review resolved and recorded in the audit log')
+    setNotice(t('Review resolved and recorded in the audit log'))
     reload()
   }
 
@@ -88,7 +90,11 @@ export default function Payments () {
     {
       key: 'note',
       header: 'Note',
-      render: payment => payment.reviewNote || payment.failureReason || '—'
+      render: payment => {
+        const note = payment.reviewNote || payment.failureReason
+
+        return note ? t(note) : '—'
+      }
     },
     {
       key: 'reference',
@@ -102,7 +108,7 @@ export default function Payments () {
       render: payment =>
         payment.requiresReview ? (
           <Button size='sm' onClick={() => setTarget(payment)}>
-            Resolve
+            {t('Resolve')}
           </Button>
         ) : null
     }
@@ -111,11 +117,12 @@ export default function Payments () {
   return (
     <div className='stack'>
       <p className='muted'>
-        Resolving a review records that you handled it, for example by refunding
-        the payer through Chapa. It does not move money by itself.
+        {t(
+          'Resolving a review records that you handled it, for example by refunding the payer through Chapa. It does not move money by itself.'
+        )}
       </p>
 
-      <div className='tabs' role='tablist' aria-label='Payment filter'>
+      <div className='tabs' role='tablist' aria-label={t('Payment filter')}>
         {FILTERS.map(filter => (
           <button
             key={filter.id}
@@ -125,7 +132,7 @@ export default function Payments () {
             className={filterId === filter.id ? 'tab active' : 'tab'}
             onClick={() => changeFilter(filter.id)}
           >
-            {filter.label}
+            {t(filter.label)}
           </button>
         ))}
       </div>
