@@ -20,6 +20,9 @@ export const NOTIFICATION_TYPES = Object.freeze({
   DRAW_REMINDER: "draw_reminder",
   PAYOUT_PAID: "payout_paid",
   PAYOUT_REMINDER: "payout_reminder",
+  DISPUTE_OPENED: "dispute_opened",
+  DISPUTE_UPDATED: "dispute_updated",
+  DISPUTE_RESOLVED: "dispute_resolved",
 });
 
 export const NOTIFICATION_TYPE_VALUES = Object.freeze(
