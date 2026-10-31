@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
 import { useLanguage } from '../../hooks/useLanguage'
+import LegalLinks from '../common/LegalLinks'
 import '../../styles/footer.css'
 
 function LinkColumn ({ title, links }) {
@@ -75,6 +76,7 @@ export default function Footer () {
               name: t('brand.name')
             })}
           </p>
+          <LegalLinks />
           <p>{t('footer.currency')}</p>
         </div>
       </div>
