@@ -8,6 +8,7 @@ import ContributionTable from '../../components/contribution/ContributionTable'
 import { ROUTES } from '../../constants/routes'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useAuth } from '../../hooks/useAuth'
+import { useLanguage } from '../../hooks/useLanguage'
 import { usePayOnline } from '../../hooks/usePayOnline'
 import { contributionService } from '../../services/contributionService'
 
@@ -20,6 +21,7 @@ const FILTERS = [
 
 export default function Contributions () {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const { pay, payingId, error: payError } = usePayOnline()
   const [filterId, setFilterId] = useState('pending')
   const [page, setPage] = useState(1)
@@ -40,22 +42,26 @@ export default function Contributions () {
     <div className='page'>
       <header className='page-header page-header-row'>
         <div>
-          <h1>My contributions</h1>
+          <h1>{t('My contributions')}</h1>
           <p className='muted'>
-            What you owe and what you have paid across all equbs
+            {t('What you owe and what you have paid across all equbs')}
           </p>
         </div>
         <div className='inline-actions'>
           <Link to={ROUTES.PAYMENTS} className='btn btn-secondary btn-md'>
-            My payments
+            {t('My payments')}
           </Link>
           <Link to={ROUTES.PAYOUTS} className='btn btn-secondary btn-md'>
-            My payouts
+            {t('My payouts')}
           </Link>
         </div>
       </header>
 
-      <div className='tabs' role='tablist' aria-label='Contribution filter'>
+      <div
+        className='tabs'
+        role='tablist'
+        aria-label={t('Contribution filter')}
+      >
         {FILTERS.map(filter => (
           <button
             key={filter.id}
@@ -65,7 +71,7 @@ export default function Contributions () {
             className={filterId === filter.id ? 'tab active' : 'tab'}
             onClick={() => changeFilter(filter.id)}
           >
-            {filter.label}
+            {t(filter.label)}
           </button>
         ))}
       </div>
