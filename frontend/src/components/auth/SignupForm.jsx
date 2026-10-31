@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { ROUTES } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
@@ -21,6 +23,9 @@ const INITIAL_VALUES = {
   password: '',
   confirmPassword: ''
 }
+
+const TERMS_MARK = '[[terms]]'
+const PRIVACY_MARK = '[[privacy]]'
 
 export default function SignupForm () {
   const { register } = useAuth()
@@ -71,6 +76,41 @@ export default function SignupForm () {
       setSubmitting(false)
     }
   }
+
+  const consent = t(
+    'By creating an account you accept the {terms} and the {privacy}.',
+    { terms: TERMS_MARK, privacy: PRIVACY_MARK }
+  )
+    .split(/(\[\[terms\]\]|\[\[privacy\]\])/)
+    .map((part, index) => {
+      if (part === TERMS_MARK) {
+        return (
+          <Link
+            key={index}
+            to={ROUTES.TERMS}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            {t('Terms of use')}
+          </Link>
+        )
+      }
+
+      if (part === PRIVACY_MARK) {
+        return (
+          <Link
+            key={index}
+            to={ROUTES.PRIVACY}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            {t('Privacy policy')}
+          </Link>
+        )
+      }
+
+      return part
+    })
 
   return (
     <form className='form' onSubmit={handleSubmit} noValidate>
@@ -134,6 +174,7 @@ export default function SignupForm () {
       <Button type='submit' fullWidth loading={submitting}>
         {t('Create account')}
       </Button>
+      <p className='field-hint'>{consent}</p>
     </form>
   )
 }
