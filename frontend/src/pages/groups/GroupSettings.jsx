@@ -5,10 +5,12 @@ import ReasonModal from '../../components/common/ReasonModal'
 import GroupForm from '../../components/group/GroupForm'
 import { ROUTES, groupPath } from '../../constants/routes'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { groupService } from '../../services/groupService'
 
 export default function GroupSettings () {
   const navigate = useNavigate()
+  const { t } = useLanguage()
   const { group, isOrganizer, refresh } = useGroup()
   const [notice, setNotice] = useState('')
   const [cancelOpen, setCancelOpen] = useState(false)
@@ -21,7 +23,7 @@ export default function GroupSettings () {
 
   const handleUpdate = async payload => {
     await groupService.update(group.id, payload)
-    setNotice('Changes saved')
+    setNotice(t('Changes saved'))
     refresh()
   }
 
@@ -39,31 +41,32 @@ export default function GroupSettings () {
       )}
 
       <section className='card'>
-        <h2>Group settings</h2>
+        <h2>{t('Group settings')}</h2>
         {isOpen ? (
           <GroupForm
             key={group.updatedAt}
             group={group}
             onSubmit={handleUpdate}
-            submitLabel='Save changes'
+            submitLabel={t('Save changes')}
           />
         ) : (
           <p className='muted'>
-            Settings can only be changed while the group is open.
+            {t('Settings can only be changed while the group is open.')}
           </p>
         )}
       </section>
 
       {isOpen && (
         <section className='card'>
-          <h2>Cancel this equb</h2>
+          <h2>{t('Cancel this equb')}</h2>
           <p className='muted'>
-            Cancelling stops the group before it starts. Members are notified
-            and pending requests are rejected. This cannot be undone.
+            {t(
+              'Cancelling stops the group before it starts. Members are notified and pending requests are rejected. This cannot be undone.'
+            )}
           </p>
           <div>
             <Button variant='danger' onClick={() => setCancelOpen(true)}>
-              Cancel equb
+              {t('Cancel equb')}
             </Button>
           </div>
         </section>
