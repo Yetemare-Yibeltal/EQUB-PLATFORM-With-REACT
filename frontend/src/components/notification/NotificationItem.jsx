@@ -1,7 +1,9 @@
+import { useLanguage } from '../../hooks/useLanguage'
 import { formatRelative } from '../../utils/formatDate'
 import Button from '../common/Button'
 
 export default function NotificationItem ({ notification, onRead, onDelete }) {
+  const { t } = useLanguage()
   const unread = !notification.readAt
 
   return (
@@ -10,8 +12,8 @@ export default function NotificationItem ({ notification, onRead, onDelete }) {
     >
       <span className='notification-dot' aria-hidden='true' />
       <div className='notification-body'>
-        <p className='notification-title'>{notification.title}</p>
-        <p>{notification.message}</p>
+        <p className='notification-title'>{t(notification.title)}</p>
+        <p>{t(notification.message)}</p>
         <p className='muted notification-time'>
           {formatRelative(notification.createdAt)}
         </p>
@@ -23,7 +25,7 @@ export default function NotificationItem ({ notification, onRead, onDelete }) {
             size='sm'
             onClick={() => onRead(notification.id)}
           >
-            Mark read
+            {t('Mark read')}
           </Button>
         )}
         <Button
@@ -31,7 +33,7 @@ export default function NotificationItem ({ notification, onRead, onDelete }) {
           size='sm'
           onClick={() => onDelete(notification.id)}
         >
-          Delete
+          {t('Delete')}
         </Button>
       </div>
     </li>
