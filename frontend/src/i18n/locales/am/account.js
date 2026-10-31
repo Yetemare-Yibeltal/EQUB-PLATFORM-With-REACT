@@ -1,0 +1,62 @@
+export default {
+  Notifications: "ማሳወቂያዎች",
+  "{count} unread": "{count} ያልተነበቡ",
+  "Mark all as read": "ሁሉንም እንደተነበበ አድርግ",
+  "Notification filter": "የማሳወቂያ ማጣሪያ",
+  Unread: "ያልተነበቡ",
+  "Loading notifications": "ማሳወቂያዎችን በመጫን ላይ",
+  "No unread notifications": "ያልተነበበ ማሳወቂያ የለም",
+  "No notifications yet": "እስካሁን ምንም ማሳወቂያ የለም",
+  "Load more": "ተጨማሪ ጫን",
+
+  Profile: "መገለጫ",
+  "Member since {date}": "አባል የሆኑበት ቀን፦ {date}",
+  "Personal details": "የግል መረጃ",
+  "Phone number": "ስልክ ቁጥር",
+  "Full name": "ሙሉ ስም",
+  "Email (optional)": "ኢሜይል (አማራጭ)",
+  "Save changes": "ለውጦችን አስቀምጥ",
+  "There are no changes to save": "የሚቀመጥ ለውጥ የለም",
+  "Profile updated": "መገለጫው ተዘምኗል",
+  "Change password": "የይለፍ ቃል ቀይር",
+  "Current password": "የአሁኑ የይለፍ ቃል",
+  "Current password is required": "የአሁኑ የይለፍ ቃል ያስፈልጋል",
+  "New password": "አዲስ የይለፍ ቃል",
+  "At least 8 characters with a letter and a number":
+    "ቢያንስ 8 ቁምፊዎች፣ ፊደልና ቁጥር የያዙ",
+  "Confirm new password": "አዲሱን የይለፍ ቃል ያረጋግጡ",
+  "Password changed, other devices were signed out":
+    "የይለፍ ቃል ተቀይሯል፤ ሌሎች መሣሪያዎች ወጥተዋል",
+
+  Settings: "ቅንብሮች",
+  "Appearance, connection, and sessions": "መልክ፣ ግንኙነትና ክፍለ ጊዜዎች",
+  Language: "ቋንቋ",
+  "Choose the language of the platform": "የመድረኩን ቋንቋ ይምረጡ",
+  Appearance: "መልክ",
+  Theme: "ገጽታ",
+  Light: "ብሩህ",
+  Dark: "ጨለማ",
+  "Live updates": "ቀጥታ ማሻሻያዎች",
+  "Connected, notifications arrive instantly": "ተገናኝቷል፤ ማሳወቂያዎች ወዲያውኑ ይደርሳሉ",
+  "Not connected, reconnecting": "አልተገናኘም፤ እንደገና በመገናኘት ላይ",
+  Sessions: "ክፍለ ጊዜዎች",
+  "Sign out of this device and every other device where you are logged in.":
+    "ከዚህ መሣሪያና ከገቡበት ከሌሎች መሣሪያዎች ሁሉ ይውጡ።",
+  "Log out of all devices": "ከሁሉም መሣሪያዎች ውጣ",
+  "Log out of all devices?": "ከሁሉም መሣሪያዎች ይውጡ?",
+  "You will need to log in again everywhere, including this device.":
+    "ይህን መሣሪያ ጨምሮ በሁሉም ቦታ እንደገና መግባት ያስፈልግዎታል።",
+  "Log out everywhere": "በሁሉም ቦታ ውጣ",
+
+  "Page not found": "ገጹ አልተገኘም",
+  "The page you are looking for does not exist or has moved.":
+    "የሚፈልጉት ገጽ የለም ወይም ተንቀሳቅሷል።",
+  "Back to home": "ወደ መነሻ ተመለስ",
+
+  "Draw performed": "ዕጣ ወጥቷል",
+  "Payout recorded": "ክፍያ ተመዝግቧል",
+  "User status changed": "የተጠቃሚ ሁኔታ ተቀይሯል",
+  "User role changed": "የተጠቃሚ ሚና ተቀይሯል",
+  "Payment review resolved": "የክፍያ ግምገማ ተፈትቷል",
+  "Job run": "ሥራ ተከናውኗል",
+};
