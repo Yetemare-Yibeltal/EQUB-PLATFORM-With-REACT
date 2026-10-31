@@ -1,5 +1,6 @@
 import account from "./account";
 import admin from "./admin";
+import adminPages from "./adminPages";
 import base from "./base";
 import cycles from "./cycles";
 import detail from "./detail";
@@ -11,6 +12,7 @@ import reports from "./reports";
 import shared from "./shared";
 
 export default {
+  ...adminPages,
   ...admin,
   ...account,
   ...reports,
