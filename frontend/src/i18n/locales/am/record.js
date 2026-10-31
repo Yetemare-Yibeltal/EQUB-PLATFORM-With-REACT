@@ -11,4 +11,15 @@ export default {
   Cancel: "ይቅር",
   Copy: "ቅዳ",
   Copied: "ተቀድቷል",
+
+  Cash: "ጥሬ ገንዘብ",
+  "Bank transfer": "የባንክ ዝውውር",
+  Telebirr: "ቴሌብር",
+  "CBE Birr": "ሲቢኢ ብር",
+  Chapa: "ቻፓ",
+  Other: "ሌላ",
+
+  Due: "የሚከፈልበት",
+  Late: "የዘገየ",
+  Overdue: "ጊዜው ያለፈበት",
 };
