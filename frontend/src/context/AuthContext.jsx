@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
+import LanguageSync from '../i18n/LanguageSync'
 import { refreshSession } from '../services/api'
 import { authService } from '../services/authService'
 import { userService } from '../services/userService'
@@ -98,5 +99,10 @@ export function AuthProvider ({ children }) {
     ]
   )
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      <LanguageSync />
+      {children}
+    </AuthContext.Provider>
+  )
 }
