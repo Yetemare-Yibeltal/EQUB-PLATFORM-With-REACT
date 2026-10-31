@@ -4,9 +4,11 @@ import detail from "./detail";
 import groups from "./groups";
 import home from "./home";
 import money from "./money";
+import record from "./record";
 import shared from "./shared";
 
 export default {
+  ...record,
   ...base,
   ...shared,
   ...groups,
