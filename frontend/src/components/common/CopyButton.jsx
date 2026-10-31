@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 import Button from './Button'
 
 const copyWithFallback = value => {
@@ -19,6 +20,7 @@ export default function CopyButton ({
   label = 'Copy',
   variant = 'secondary'
 }) {
+  const { t } = useLanguage()
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function CopyButton ({
 
   return (
     <Button variant={variant} size='sm' onClick={handleCopy}>
-      {copied ? 'Copied' : label}
+      {copied ? t('Copied') : t(label)}
     </Button>
   )
 }
