@@ -8,12 +8,14 @@ import Pagination from '../../components/common/Pagination'
 import StatusBadge from '../../components/common/StatusBadge'
 import { PAYMENT_STATUS_LABELS } from '../../constants/statuses'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { paymentService } from '../../services/paymentService'
 import { getErrorMessage } from '../../utils/errors'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDateTime } from '../../utils/formatDate'
 
 export default function Payments () {
+  const { t } = useLanguage()
   const [page, setPage] = useState(1)
   const [checkingRef, setCheckingRef] = useState(null)
   const [actionError, setActionError] = useState('')
@@ -61,7 +63,7 @@ export default function Payments () {
         <>
           {formatMoney(payment.amount)}
           {payment.penaltyAmount > 0 && (
-            <span className='muted'> incl. penalty</span>
+            <span className='muted'> {t('incl. penalty')}</span>
           )}
         </>
       )
@@ -92,7 +94,7 @@ export default function Payments () {
           <div className='inline-actions'>
             {payment.checkoutUrl && (
               <a className='btn btn-primary btn-sm' href={payment.checkoutUrl}>
-                Continue
+                {t('Continue')}
               </a>
             )}
             <Button
@@ -101,7 +103,7 @@ export default function Payments () {
               onClick={() => handleCheck(payment)}
               loading={checkingRef === payment.txRef}
             >
-              Check status
+              {t('Check status')}
             </Button>
           </div>
         ) : null
@@ -111,8 +113,8 @@ export default function Payments () {
   return (
     <div className='page'>
       <header className='page-header'>
-        <h1>My payments</h1>
-        <p className='muted'>Online payments made through Chapa</p>
+        <h1>{t('My payments')}</h1>
+        <p className='muted'>{t('Online payments made through Chapa')}</p>
       </header>
 
       <ErrorMessage message={error} onRetry={reload} />
