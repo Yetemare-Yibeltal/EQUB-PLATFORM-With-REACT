@@ -7,11 +7,13 @@ import detail from "./detail";
 import groups from "./groups";
 import home from "./home";
 import money from "./money";
+import notices from "./notices";
 import record from "./record";
 import reports from "./reports";
 import shared from "./shared";
 
 export default {
+  ...notices,
   ...adminPages,
   ...admin,
   ...account,
