@@ -1,6 +1,8 @@
 import { translate } from "./translate";
 
 const TITLES = {
+  "New join request": "አዲስ የመቀላቀል ጥያቄ",
+  "New member joined": "አዲስ አባል ተቀላቅሏል",
   "Join request approved": "የመቀላቀል ጥያቄ ተፈቅዷል",
   "Join request declined": "የመቀላቀል ጥያቄ ውድቅ ተደርጓል",
   "Removed from group": "ከእቁብ ተወግደዋል",
@@ -20,6 +22,8 @@ const TITLES = {
 };
 
 const TITLE_RULES = [
+  [/^(.+) has started$/, (m) => `${m[1]} ተጀምሯል`],
+  [/^(.+) was cancelled$/, (m) => `${m[1]} ተሰርዟል`],
   [/^Cycle (\d+) contributions open$/, (m) => `የዙር ${m[1]} መዋጮዎች ተከፍተዋል`],
 ];
 
@@ -56,6 +60,19 @@ const capitalize = (value) =>
   value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 
 const MESSAGE_RULES = [
+  [
+    /^Your first contribution of (.+?) is due on (.+)\.$/,
+    (m) => `የመጀመሪያው መዋጮዎ ${m[1]} በ${m[2]} ይከፈላል።`,
+  ],
+  [
+    /^The organizer cancelled (.+) before it started\.$/,
+    (m) => `አደራጁ ${m[1]}ን ከመጀመሩ በፊት ሰርዞታል።`,
+  ],
+  [/^(.+) asked to join (.+)\.$/, (m) => `${m[1]} የ${m[2]} አባል ለመሆን ጠይቋል።`],
+  [
+    /^(.+) joined (.+) \((\d+) of (\d+) members\)\.$/,
+    (m) => `${m[1]} ${m[2]}ን ተቀላቅሏል (${m[3]} ከ${m[4]} አባላት)።`,
+  ],
   [/^You are now a member of (.+)\.$/, (m) => `አሁን የ${m[1]} አባል ሆነዋል።`],
   [
     /^Your request to join (.+) was declined\.$/,
