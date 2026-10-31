@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DEFAULT_LANGUAGE, LANGUAGE_VALUES } from "../constants/languages.js";
 import { USER_ROLES, USER_ROLE_VALUES } from "../constants/roles.js";
 import {
   USER_STATUSES,
@@ -55,6 +56,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: USER_STATUS_VALUES,
       default: USER_STATUSES.ACTIVE,
+    },
+    language: {
+      type: String,
+      enum: LANGUAGE_VALUES,
+      default: DEFAULT_LANGUAGE,
     },
     isPhoneVerified: {
       type: Boolean,
