@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { groupPath } from '../../constants/routes'
 import { PAYMENT_METHOD_LABELS } from '../../constants/paymentMethods'
 import { PAYOUT_STATUS_LABELS } from '../../constants/statuses'
+import { useLanguage } from '../../hooks/useLanguage'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 import Button from '../common/Button'
@@ -15,6 +16,8 @@ export default function PayoutTable ({
   canManage = false,
   onRecord
 }) {
+  const { t } = useLanguage()
+
   const columns = [
     {
       key: 'cycle',
@@ -60,12 +63,13 @@ export default function PayoutTable ({
     {
       key: 'paidAt',
       header: 'Paid',
-      render: payout =>
-        payout.paidAt
-          ? `${formatDate(payout.paidAt)} · ${
-              PAYMENT_METHOD_LABELS[payout.paymentMethod] ?? ''
-            }`
-          : '—'
+      render: payout => {
+        if (!payout.paidAt) return '—'
+
+        const method = PAYMENT_METHOD_LABELS[payout.paymentMethod]
+
+        return `${formatDate(payout.paidAt)} · ${method ? t(method) : ''}`
+      }
     }
   )
 
@@ -77,7 +81,7 @@ export default function PayoutTable ({
       render: payout =>
         payout.status === 'pending' ? (
           <Button size='sm' onClick={() => onRecord(payout)}>
-            Record payout
+            {t('Record payout')}
           </Button>
         ) : null
     })
