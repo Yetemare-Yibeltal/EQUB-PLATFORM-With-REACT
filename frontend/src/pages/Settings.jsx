@@ -3,14 +3,21 @@ import Button from '../components/common/Button'
 import ConfirmDialog from '../components/common/ConfirmDialog'
 import ErrorMessage from '../components/common/ErrorMessage'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../hooks/useLanguage'
 import { useSocket } from '../hooks/useSocket'
 import { useTheme } from '../hooks/useTheme'
 import { getErrorMessage } from '../utils/errors'
+
+const LANGUAGE_CHOICES = [
+  { value: 'en', label: 'English' },
+  { value: 'am', label: 'አማርኛ' }
+]
 
 export default function Settings () {
   const { logoutAll } = useAuth()
   const { theme, setTheme } = useTheme()
   const { connected } = useSocket()
+  const { language, setLanguage, t } = useLanguage()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -31,13 +38,34 @@ export default function Settings () {
   return (
     <div className='page'>
       <header className='page-header'>
-        <h1>Settings</h1>
-        <p className='muted'>Appearance, connection, and sessions</p>
+        <h1>{t('Settings')}</h1>
+        <p className='muted'>{t('Appearance, connection, and sessions')}</p>
       </header>
 
       <section className='card'>
-        <h2>Appearance</h2>
-        <div className='segmented' role='group' aria-label='Theme'>
+        <h2>{t('Language')}</h2>
+        <p className='muted'>{t('Choose the language of the platform')}</p>
+        <div className='segmented' role='group' aria-label={t('Language')}>
+          {LANGUAGE_CHOICES.map(choice => (
+            <button
+              key={choice.value}
+              type='button'
+              className={
+                language === choice.value ? 'segment active' : 'segment'
+              }
+              aria-pressed={language === choice.value}
+              onClick={() => setLanguage(choice.value)}
+              lang={choice.value}
+            >
+              {choice.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className='card'>
+        <h2>{t('Appearance')}</h2>
+        <div className='segmented' role='group' aria-label={t('Theme')}>
           {['light', 'dark'].map(value => (
             <button
               key={value}
@@ -46,14 +74,14 @@ export default function Settings () {
               aria-pressed={theme === value}
               onClick={() => setTheme(value)}
             >
-              {value === 'light' ? 'Light' : 'Dark'}
+              {value === 'light' ? t('Light') : t('Dark')}
             </button>
           ))}
         </div>
       </section>
 
       <section className='card'>
-        <h2>Live updates</h2>
+        <h2>{t('Live updates')}</h2>
         <p>
           <span
             className={
@@ -61,20 +89,21 @@ export default function Settings () {
             }
           />
           {connected
-            ? 'Connected, notifications arrive instantly'
-            : 'Not connected, reconnecting'}
+            ? t('Connected, notifications arrive instantly')
+            : t('Not connected, reconnecting')}
         </p>
       </section>
 
       <section className='card'>
-        <h2>Sessions</h2>
+        <h2>{t('Sessions')}</h2>
         <p className='muted'>
-          Sign out of this device and every other device where you are logged
-          in.
+          {t(
+            'Sign out of this device and every other device where you are logged in.'
+          )}
         </p>
         <ErrorMessage message={error} />
         <Button variant='danger' onClick={() => setConfirmOpen(true)}>
-          Log out of all devices
+          {t('Log out of all devices')}
         </Button>
       </section>
 
