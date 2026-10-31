@@ -4,6 +4,7 @@ export const AUDIT_ACTIONS = Object.freeze({
   USER_STATUS_CHANGED: "user.status_changed",
   USER_ROLE_CHANGED: "user.role_changed",
   PAYMENT_REVIEW_RESOLVED: "payment.review_resolved",
+  DISPUTE_DECIDED: "dispute.decided",
   JOB_RUN: "job.run",
 });
 
