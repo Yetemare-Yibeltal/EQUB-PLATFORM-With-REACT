@@ -6,6 +6,7 @@ import ErrorMessage from '../../components/common/ErrorMessage'
 import Loader from '../../components/common/Loader'
 import StatusBadge from '../../components/common/StatusBadge'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { adminService } from '../../services/adminService'
 import { getErrorMessage } from '../../utils/errors'
 
@@ -16,7 +17,10 @@ const JOB_DESCRIPTIONS = {
   'notification-cleanup': 'Deletes old notifications'
 }
 
+const JOB_STATE_LABELS = { running: 'Running', idle: 'Idle' }
+
 export default function SystemSettings () {
+  const { t } = useLanguage()
   const loader = useCallback(() => adminService.jobs(), [])
   const { data, loading, error, reload } = useAsyncData(loader)
   const [target, setTarget] = useState(null)
@@ -31,7 +35,12 @@ export default function SystemSettings () {
 
     try {
       const result = await adminService.runJob(target.name)
-      setNotice(`${target.name} finished: ${JSON.stringify(result.summary)}`)
+      setNotice(
+        t('{name} finished: {summary}', {
+          name: target.name,
+          summary: JSON.stringify(result.summary)
+        })
+      )
       reload()
     } catch (requestError) {
       setActionError(getErrorMessage(requestError))
@@ -50,7 +59,8 @@ export default function SystemSettings () {
     {
       key: 'description',
       header: 'Purpose',
-      render: job => JOB_DESCRIPTIONS[job.name] ?? '—'
+      render: job =>
+        JOB_DESCRIPTIONS[job.name] ? t(JOB_DESCRIPTIONS[job.name]) : '—'
     },
     {
       key: 'schedule',
@@ -68,6 +78,7 @@ export default function SystemSettings () {
       render: job => (
         <StatusBadge
           status={job.running ? 'running' : 'idle'}
+          labels={JOB_STATE_LABELS}
           tone={job.running ? 'warning' : 'neutral'}
         />
       )
@@ -83,7 +94,7 @@ export default function SystemSettings () {
           disabled={job.running}
           onClick={() => setTarget(job)}
         >
-          Run now
+          {t('Run now')}
         </Button>
       )
     }
@@ -92,8 +103,9 @@ export default function SystemSettings () {
   return (
     <div className='stack'>
       <p className='muted'>
-        Jobs run automatically on their schedule. Running one by hand is safe to
-        repeat, because notifications are deduplicated.
+        {t(
+          'Jobs run automatically on their schedule. Running one by hand is safe to repeat, because notifications are deduplicated.'
+        )}
       </p>
 
       {notice && (
@@ -117,9 +129,10 @@ export default function SystemSettings () {
       <ConfirmDialog
         open={Boolean(target)}
         title='Run this job now?'
-        message={`${
-          target?.name ?? ''
-        } runs immediately and the run is recorded in the audit log.`}
+        message={t(
+          '{name} runs immediately and the run is recorded in the audit log.',
+          { name: target?.name ?? '' }
+        )}
         confirmLabel='Run job'
         loading={busy}
         onConfirm={handleRun}
