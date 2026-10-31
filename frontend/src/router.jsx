@@ -4,6 +4,7 @@ import ProtectedRoute from './components/common/ProtectedRoute'
 import GroupShell from './components/group/GroupShell'
 import AdminLayout from './components/layout/AdminLayout'
 import DashboardLayout from './components/layout/DashboardLayout'
+import PublicLayout from './components/layout/PublicLayout'
 import { ROUTES } from './constants/routes'
 import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
@@ -32,6 +33,9 @@ import GroupMembers from './pages/groups/GroupMembers'
 import GroupReports from './pages/groups/GroupReports'
 import GroupSettings from './pages/groups/GroupSettings'
 import Groups from './pages/groups/Groups'
+import Contact from './pages/legal/Contact'
+import Privacy from './pages/legal/Privacy'
+import Terms from './pages/legal/Terms'
 import PaymentResult from './pages/payments/PaymentResult'
 import Payments from './pages/payments/Payments'
 import GroupPayouts from './pages/payouts/GroupPayouts'
@@ -49,6 +53,14 @@ export const router = createBrowserRouter([
   { path: ROUTES.FORGOT_PASSWORD, element: <ForgotPassword /> },
   { path: ROUTES.RESET_PASSWORD, element: <ResetPassword /> },
   { path: ROUTES.VERIFY_EMAIL, element: <VerifyEmail /> },
+  {
+    element: <PublicLayout />,
+    children: [
+      { path: ROUTES.TERMS, element: <Terms /> },
+      { path: ROUTES.PRIVACY, element: <Privacy /> },
+      { path: ROUTES.CONTACT, element: <Contact /> }
+    ]
+  },
   {
     element: <ProtectedRoute />,
     children: [
