@@ -5,9 +5,11 @@ import Loader from '../../components/common/Loader'
 import Pagination from '../../components/common/Pagination'
 import PayoutTable from '../../components/payout/PayoutTable'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { payoutService } from '../../services/payoutService'
 
 export default function Payouts () {
+  const { t } = useLanguage()
   const [page, setPage] = useState(1)
 
   const loader = useCallback(
@@ -19,8 +21,8 @@ export default function Payouts () {
   return (
     <div className='page'>
       <header className='page-header'>
-        <h1>My payouts</h1>
-        <p className='muted'>Pots you have won in your equbs</p>
+        <h1>{t('My payouts')}</h1>
+        <p className='muted'>{t('Pots you have won in your equbs')}</p>
       </header>
 
       <ErrorMessage message={error} onRetry={reload} />
