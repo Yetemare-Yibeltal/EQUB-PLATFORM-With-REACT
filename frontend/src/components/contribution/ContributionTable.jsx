@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { groupPath } from '../../constants/routes'
 import { CONTRIBUTION_STATUS_LABELS } from '../../constants/statuses'
+import { useLanguage } from '../../hooks/useLanguage'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 import Button from '../common/Button'
@@ -29,6 +30,7 @@ export default function ContributionTable ({
   onRecord,
   onWaive
 }) {
+  const { t } = useLanguage()
   const columns = []
 
   if (showUser) {
@@ -80,7 +82,7 @@ export default function ContributionTable ({
           <>
             {formatMoney(contribution.amountOutstanding)}
             {contribution.amountOutstanding > contribution.amount && (
-              <span className='muted'> incl. penalty</span>
+              <span className='muted'> {t('incl. penalty')}</span>
             )}
           </>
         )
@@ -123,7 +125,7 @@ export default function ContributionTable ({
                 onClick={() => onPayOnline(contribution)}
                 loading={payingId === contribution.id}
               >
-                Pay online
+                {t('Pay online')}
               </Button>
             )}
             {canManage && (
@@ -132,7 +134,7 @@ export default function ContributionTable ({
                 variant='secondary'
                 onClick={() => onRecord(contribution)}
               >
-                Record
+                {t('Record')}
               </Button>
             )}
             {canManage && (
@@ -141,7 +143,7 @@ export default function ContributionTable ({
                 variant='ghost'
                 onClick={() => onWaive(contribution)}
               >
-                Waive
+                {t('Waive')}
               </Button>
             )}
           </div>
