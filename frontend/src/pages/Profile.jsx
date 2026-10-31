@@ -3,6 +3,7 @@ import Button from '../components/common/Button'
 import ErrorMessage from '../components/common/ErrorMessage'
 import Input from '../components/common/Input'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../hooks/useLanguage'
 import { getErrorMessage, getFieldErrors } from '../utils/errors'
 import { formatDate } from '../utils/formatDate'
 import {
@@ -21,6 +22,7 @@ const EMPTY_PASSWORDS = {
 
 export default function Profile () {
   const { user, updateProfile, changePassword } = useAuth()
+  const { t } = useLanguage()
   const [profile, setProfile] = useState({
     fullName: user.fullName,
     email: user.email ?? ''
@@ -62,7 +64,7 @@ export default function Profile () {
     if (email !== (user.email ?? '')) payload.email = email || null
 
     if (Object.keys(payload).length === 0) {
-      setProfileMessage('There are no changes to save')
+      setProfileMessage(t('There are no changes to save'))
       return
     }
 
@@ -72,7 +74,7 @@ export default function Profile () {
 
     try {
       await updateProfile(payload)
-      setProfileMessage('Profile updated')
+      setProfileMessage(t('Profile updated'))
     } catch (error) {
       setProfileErrors(getFieldErrors(error))
       setProfileError(getErrorMessage(error))
@@ -94,7 +96,7 @@ export default function Profile () {
     const nextErrors = {
       currentPassword: passwords.currentPassword
         ? ''
-        : 'Current password is required',
+        : t('Current password is required'),
       newPassword: validatePassword(passwords.newPassword),
       confirmPassword: validatePasswordConfirmation(
         passwords.newPassword,
@@ -115,7 +117,7 @@ export default function Profile () {
         newPassword: passwords.newPassword
       })
       setPasswords(EMPTY_PASSWORDS)
-      setPasswordMessage('Password changed, other devices were signed out')
+      setPasswordMessage(t('Password changed, other devices were signed out'))
     } catch (error) {
       setPasswordErrors(getFieldErrors(error))
       setPasswordError(getErrorMessage(error))
@@ -127,12 +129,14 @@ export default function Profile () {
   return (
     <div className='page'>
       <header className='page-header'>
-        <h1>Profile</h1>
-        <p className='muted'>Member since {formatDate(user.createdAt)}</p>
+        <h1>{t('Profile')}</h1>
+        <p className='muted'>
+          {t('Member since {date}', { date: formatDate(user.createdAt) })}
+        </p>
       </header>
 
       <section className='card'>
-        <h2>Personal details</h2>
+        <h2>{t('Personal details')}</h2>
         <form className='form' onSubmit={handleProfileSubmit} noValidate>
           <ErrorMessage message={profileError} />
           {profileMessage && (
@@ -160,13 +164,13 @@ export default function Profile () {
             error={profileErrors.email}
           />
           <Button type='submit' loading={savingProfile}>
-            Save changes
+            {t('Save changes')}
           </Button>
         </form>
       </section>
 
       <section className='card'>
-        <h2>Change password</h2>
+        <h2>{t('Change password')}</h2>
         <form className='form' onSubmit={handlePasswordSubmit} noValidate>
           <ErrorMessage message={passwordError} />
           {passwordMessage && (
@@ -206,7 +210,7 @@ export default function Profile () {
             required
           />
           <Button type='submit' loading={savingPassword}>
-            Change password
+            {t('Change password')}
           </Button>
         </form>
       </section>
