@@ -12,6 +12,7 @@ import {
 } from '../../constants/statuses'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { groupService } from '../../services/groupService'
 import { reportService } from '../../services/reportService'
 import { formatMoney } from '../../utils/formatCurrency'
@@ -25,6 +26,7 @@ const summarize = metadata => {
 }
 
 export default function GroupReports () {
+  const { t } = useLanguage()
   const { group, canViewPrivate, isOrganizer, version } = useGroup()
   const [auditPage, setAuditPage] = useState(1)
 
@@ -73,9 +75,10 @@ export default function GroupReports () {
       key: 'collected',
       header: 'Collected',
       render: cycle =>
-        `${formatMoney(cycle.collectedAmount)} of ${formatMoney(
-          cycle.potAmount
-        )}`
+        t('{resolved} of {total}', {
+          resolved: formatMoney(cycle.collectedAmount),
+          total: formatMoney(cycle.potAmount)
+        })
     },
     {
       key: 'recipient',
@@ -132,7 +135,7 @@ export default function GroupReports () {
     {
       key: 'action',
       header: 'Action',
-      render: entry => AUDIT_ACTION_LABELS[entry.action] ?? entry.action
+      render: entry => t(AUDIT_ACTION_LABELS[entry.action] ?? entry.action)
     },
     {
       key: 'details',
@@ -150,7 +153,7 @@ export default function GroupReports () {
 
       {statement && (
         <>
-          <section className='stats-grid' aria-label='Statement totals'>
+          <section className='stats-grid' aria-label={t('Statement totals')}>
             <StatsCard
               label='Collected'
               value={formatMoney(statement.totals.totalIn)}
@@ -171,7 +174,7 @@ export default function GroupReports () {
             <StatsCard
               label='Contributions paid'
               value={statement.totals.contributionsPaid}
-              hint={`${statement.totals.latePayments} late`}
+              hint={t('{count} late', { count: statement.totals.latePayments })}
             />
             <StatsCard
               label='Outstanding'
@@ -179,12 +182,14 @@ export default function GroupReports () {
               tone={
                 statement.totals.contributionsOverdue > 0 ? 'danger' : 'neutral'
               }
-              hint={`${statement.totals.contributionsOverdue} overdue`}
+              hint={t('{count} overdue', {
+                count: statement.totals.contributionsOverdue
+              })}
             />
           </section>
 
           <section className='stack'>
-            <h2>Cycles</h2>
+            <h2>{t('Cycles')}</h2>
             <DataTable
               columns={cycleColumns}
               rows={statement.cycles}
@@ -196,14 +201,15 @@ export default function GroupReports () {
 
       {canViewPrivate && (
         <section className='stack'>
-          <h2>Member reliability</h2>
+          <h2>{t('Member reliability')}</h2>
           <ErrorMessage message={reliabilityError} />
           {reliability && (
             <>
               <p className='muted'>
-                Group on-time rate:{' '}
-                {formatPercent(reliability.summary.onTimeRate)}. Waived and
-                not-yet-due contributions are not counted.
+                {t(
+                  'Group on-time rate: {rate}. Waived and not-yet-due contributions are not counted.',
+                  { rate: formatPercent(reliability.summary.onTimeRate) }
+                )}
               </p>
               <DataTable
                 columns={reliabilityColumns}
@@ -218,14 +224,14 @@ export default function GroupReports () {
 
       {canViewPrivate && (
         <section className='stack'>
-          <h2>Audit trail</h2>
+          <h2>{t('Audit trail')}</h2>
           {isOrganizer ? null : (
-            <p className='muted'>Viewing as administrator</p>
+            <p className='muted'>{t('Viewing as administrator')}</p>
           )}
           <ErrorMessage message={auditError} />
           {audit && audit.auditLogs.length === 0 && (
             <p className='muted'>
-              Draws and payouts are recorded here once they happen.
+              {t('Draws and payouts are recorded here once they happen.')}
             </p>
           )}
           {audit && audit.auditLogs.length > 0 && (
