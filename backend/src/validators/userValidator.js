@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { LANGUAGE_VALUES } from "../constants/languages.js";
 import { USER_ROLE_VALUES } from "../constants/roles.js";
 import { USER_STATUS_VALUES } from "../constants/userStatuses.js";
 import { emailField, fullNameField } from "./authValidator.js";
@@ -17,6 +18,7 @@ export const updateProfileSchema = Joi.object({
     .uri({ scheme: ["http", "https"] })
     .max(500)
     .allow(""),
+  language: Joi.string().valid(...LANGUAGE_VALUES),
 })
   .min(1)
   .messages({ "object.min": "Provide at least one field to update" });
