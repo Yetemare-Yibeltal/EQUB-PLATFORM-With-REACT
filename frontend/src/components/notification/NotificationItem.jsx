@@ -1,10 +1,12 @@
 import { useLanguage } from '../../hooks/useLanguage'
+import { translateNotification } from '../../i18n/notificationText'
 import { formatRelative } from '../../utils/formatDate'
 import Button from '../common/Button'
 
 export default function NotificationItem ({ notification, onRead, onDelete }) {
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
   const unread = !notification.readAt
+  const text = translateNotification(language, notification)
 
   return (
     <li
@@ -12,8 +14,8 @@ export default function NotificationItem ({ notification, onRead, onDelete }) {
     >
       <span className='notification-dot' aria-hidden='true' />
       <div className='notification-body'>
-        <p className='notification-title'>{t(notification.title)}</p>
-        <p>{t(notification.message)}</p>
+        <p className='notification-title'>{text.title}</p>
+        <p>{text.message}</p>
         <p className='muted notification-time'>
           {formatRelative(notification.createdAt)}
         </p>
