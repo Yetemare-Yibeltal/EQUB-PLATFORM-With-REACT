@@ -6,10 +6,12 @@ import RecordPaymentModal from '../../components/common/RecordPaymentModal'
 import PayoutTable from '../../components/payout/PayoutTable'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useGroup } from '../../hooks/useGroup'
+import { useLanguage } from '../../hooks/useLanguage'
 import { payoutService } from '../../services/payoutService'
 import { formatMoney } from '../../utils/formatCurrency'
 
 export default function GroupPayouts () {
+  const { t } = useLanguage()
   const { group, isOrganizer, version, refresh } = useGroup()
   const [target, setTarget] = useState(null)
   const [notice, setNotice] = useState('')
@@ -26,10 +28,10 @@ export default function GroupPayouts () {
     setTarget(null)
     setNotice(
       result.groupStatus === 'completed'
-        ? 'Final payout recorded, the equb is complete'
-        : `Payout recorded, cycle ${
-            result.nextCycle?.number ?? ''
-          } contributions are now open`
+        ? t('Final payout recorded, the equb is complete')
+        : t('Payout recorded, cycle {number} contributions are now open', {
+            number: result.nextCycle?.number ?? ''
+          })
     )
     refresh()
   }
@@ -63,17 +65,20 @@ export default function GroupPayouts () {
 
       <RecordPaymentModal
         open={Boolean(target)}
-        title='Record payout'
+        title={t('Record payout')}
         summary={
           target
-            ? `Record how ${target.user?.fullName} received ${formatMoney(
-                target.amount
-              )}. This completes cycle ${
-                target.cycle?.number
-              } and opens the next one.`
+            ? t(
+                'Record how {name} received {amount}. This completes cycle {number} and opens the next one.',
+                {
+                  name: target.user?.fullName,
+                  amount: formatMoney(target.amount),
+                  number: target.cycle?.number
+                }
+              )
             : null
         }
-        submitLabel='Record payout'
+        submitLabel={t('Record payout')}
         onSubmit={handleRecord}
         onClose={() => setTarget(null)}
       />
