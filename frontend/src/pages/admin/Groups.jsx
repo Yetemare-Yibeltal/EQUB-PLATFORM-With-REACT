@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '../../components/common/Button'
 import DataTable from '../../components/common/DataTable'
@@ -12,22 +12,26 @@ import StatusBadge from '../../components/common/StatusBadge'
 import { groupPath } from '../../constants/routes'
 import { GROUP_STATUS_LABELS } from '../../constants/statuses'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useLanguage } from '../../hooks/useLanguage'
 import { adminService } from '../../services/adminService'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 
-const STATUS_OPTIONS = Object.entries(GROUP_STATUS_LABELS).map(
-  ([value, label]) => ({
-    value,
-    label
-  })
-)
-
 export default function Groups () {
+  const { t } = useLanguage()
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
   const [page, setPage] = useState(1)
+
+  const statusOptions = useMemo(
+    () =>
+      Object.entries(GROUP_STATUS_LABELS).map(([value, label]) => ({
+        value,
+        label: t(label)
+      })),
+    [t]
+  )
 
   const loader = useCallback(
     () =>
@@ -97,7 +101,7 @@ export default function Groups () {
           label='Status'
           name='status'
           placeholder='All statuses'
-          options={STATUS_OPTIONS}
+          options={statusOptions}
           value={status}
           onChange={event => {
             setStatus(event.target.value)
@@ -105,7 +109,7 @@ export default function Groups () {
           }}
         />
         <Button type='submit' variant='secondary'>
-          Search
+          {t('Search')}
         </Button>
       </form>
 
