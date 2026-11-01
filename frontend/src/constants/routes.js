@@ -5,6 +5,8 @@ export const ROUTES = Object.freeze({
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password",
   VERIFY_EMAIL: "/verify-email",
+  ABOUT: "/about",
+  RULES: "/rules",
   TERMS: "/terms",
   PRIVACY: "/privacy",
   CONTACT: "/contact",
