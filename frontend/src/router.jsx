@@ -12,6 +12,7 @@ import Notifications from './pages/Notifications'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminDisputes from './pages/admin/Disputes'
 import AdminGroups from './pages/admin/Groups'
 import AdminPayments from './pages/admin/Payments'
 import AuditLogs from './pages/admin/AuditLogs'
@@ -27,6 +28,8 @@ import CycleHistory from './pages/cycles/CycleHistory'
 import DrawPage from './pages/draws/DrawPage'
 import GroupCreate from './pages/groups/GroupCreate'
 import GroupDetail from './pages/groups/GroupDetail'
+import GroupDisputeDetail from './pages/groups/GroupDisputeDetail'
+import GroupDisputes from './pages/groups/GroupDisputes'
 import GroupJoin from './pages/groups/GroupJoin'
 import GroupLedger from './pages/groups/GroupLedger'
 import GroupMembers from './pages/groups/GroupMembers'
@@ -85,6 +88,8 @@ export const router = createBrowserRouter([
               { path: 'payouts', element: <GroupPayouts /> },
               { path: 'ledger', element: <GroupLedger /> },
               { path: 'reports', element: <GroupReports /> },
+              { path: 'disputes', element: <GroupDisputes /> },
+              { path: 'disputes/:disputeId', element: <GroupDisputeDetail /> },
               { path: 'settings', element: <GroupSettings /> }
             ]
           },
@@ -104,6 +109,7 @@ export const router = createBrowserRouter([
               { path: 'users', element: <Users /> },
               { path: 'groups', element: <AdminGroups /> },
               { path: 'payments', element: <AdminPayments /> },
+              { path: 'disputes', element: <AdminDisputes /> },
               { path: 'audit-logs', element: <AuditLogs /> },
               { path: 'jobs', element: <SystemSettings /> }
             ]
