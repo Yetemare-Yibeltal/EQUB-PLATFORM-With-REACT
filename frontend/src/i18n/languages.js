@@ -1,6 +1,6 @@
 export const STORAGE_KEY = "kmem.language";
 
-export const DEFAULT_LANGUAGE = "en";
+export const DEFAULT_LANGUAGE = "am";
 
 export const LANGUAGE_OPTIONS = Object.freeze([
   { code: "en", label: "English", short: "EN" },
