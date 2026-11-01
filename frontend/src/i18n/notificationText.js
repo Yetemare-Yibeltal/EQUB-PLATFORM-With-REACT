@@ -19,6 +19,11 @@ const TITLES = {
   "Overdue contributions": "የዘገዩ መዋጮዎች",
   "Draw is waiting": "ዕጣ እየጠበቀ ነው",
   "Payout is pending": "ክፍያ በመጠባበቅ ላይ ነው",
+  "New dispute reported": "አዲስ ቅሬታ ቀርቧል",
+  "Dispute updated": "ቅሬታ ተሻሽሏል",
+  "Dispute under review": "ቅሬታ በግምገማ ላይ ነው",
+  "Dispute resolved": "ቅሬታ ተፈቷል",
+  "Dispute dismissed": "ቅሬታ ውድቅ ተደርጓል",
 };
 
 const TITLE_RULES = [
@@ -60,6 +65,26 @@ const capitalize = (value) =>
   value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 
 const MESSAGE_RULES = [
+  [
+    /^(.+?) reported a problem in (.+?): (.+)\.$/,
+    (m) => `${m[1]} በ${m[2]} ችግር አሳውቋል፦ ${m[3]}።`,
+  ],
+  [
+    /^(.+?) added a comment to the dispute "(.+)" in (.+)\.$/,
+    (m) => `${m[1]} በ${m[3]} "${m[2]}" ቅሬታ ላይ አስተያየት ጨምሯል።`,
+  ],
+  [
+    /^Your dispute "(.+)" in (.+) is now under review\.$/,
+    (m) => `በ${m[2]} ያቀረቡት "${m[1]}" ቅሬታ አሁን በግምገማ ላይ ነው።`,
+  ],
+  [
+    /^The dispute "(.+)" in (.+) was resolved\.$/,
+    (m) => `በ${m[2]} የቀረበው "${m[1]}" ቅሬታ ተፈቷል።`,
+  ],
+  [
+    /^The dispute "(.+)" in (.+) was dismissed\.$/,
+    (m) => `በ${m[2]} የቀረበው "${m[1]}" ቅሬታ ውድቅ ተደርጓል።`,
+  ],
   [
     /^Your first contribution of (.+?) is due on (.+)\.$/,
     (m) => `የመጀመሪያው መዋጮዎ ${m[1]} በ${m[2]} ይከፈላል።`,
