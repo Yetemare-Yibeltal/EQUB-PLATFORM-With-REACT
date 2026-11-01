@@ -8,6 +8,7 @@ import disputes from "./disputes";
 import groups from "./groups";
 import home from "./home";
 import legal from "./legal";
+import mahber from "./mahber";
 import money from "./money";
 import notices from "./notices";
 import record from "./record";
@@ -15,6 +16,7 @@ import reports from "./reports";
 import shared from "./shared";
 
 export default {
+  ...mahber,
   ...disputes,
   ...legal,
   ...notices,
