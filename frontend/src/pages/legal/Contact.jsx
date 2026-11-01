@@ -2,11 +2,13 @@ import { CONTACT } from '../../constants/legal'
 import { useLanguage } from '../../hooks/useLanguage'
 import '../../styles/legal.css'
 
+const compact = value => value.replace(/\s+/g, '')
+
 const FIELDS = [
   {
     key: 'phone',
     label: 'Phone',
-    href: value => `tel:${value.replace(/\s+/g, '')}`
+    href: value => `tel:${compact(value)}`
   },
   { key: 'email', label: 'Email', href: value => `mailto:${value}` },
   {
@@ -15,7 +17,20 @@ const FIELDS = [
     href: value =>
       value.startsWith('http')
         ? value
-        : `https://t.me/${value.replace(/^@/, '')}`
+        : `https://t.me/${compact(value).replace(/^@/, '')}`
+  },
+  {
+    key: 'whatsapp',
+    label: 'WhatsApp',
+    href: value =>
+      value.startsWith('http')
+        ? value
+        : `https://wa.me/${value.replace(/\D/g, '')}`
+  },
+  {
+    key: 'facebook',
+    label: 'Facebook',
+    href: value => value
   },
   { key: 'address', label: 'Address' },
   { key: 'hours', label: 'Office hours' }
@@ -48,6 +63,7 @@ export default function Contact () {
                   {field.href ? (
                     <a
                       href={field.href(CONTACT[field.key])}
+                      target='_blank'
                       rel='noopener noreferrer'
                     >
                       {CONTACT[field.key]}
