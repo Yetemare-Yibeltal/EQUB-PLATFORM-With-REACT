@@ -36,8 +36,10 @@ import GroupMembers from './pages/groups/GroupMembers'
 import GroupReports from './pages/groups/GroupReports'
 import GroupSettings from './pages/groups/GroupSettings'
 import Groups from './pages/groups/Groups'
+import About from './pages/legal/About'
 import Contact from './pages/legal/Contact'
 import Privacy from './pages/legal/Privacy'
+import Rules from './pages/legal/Rules'
 import Terms from './pages/legal/Terms'
 import PaymentResult from './pages/payments/PaymentResult'
 import Payments from './pages/payments/Payments'
@@ -59,6 +61,8 @@ export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     children: [
+      { path: ROUTES.ABOUT, element: <About /> },
+      { path: ROUTES.RULES, element: <Rules /> },
       { path: ROUTES.TERMS, element: <Terms /> },
       { path: ROUTES.PRIVACY, element: <Privacy /> },
       { path: ROUTES.CONTACT, element: <Contact /> }
