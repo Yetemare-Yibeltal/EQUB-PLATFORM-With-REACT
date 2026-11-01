@@ -1,0 +1,57 @@
+.dispute-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.dispute-item {
+  display: block;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 0.75rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dispute-item:hover,
+.dispute-item:focus-visible {
+  border-color: color-mix(in srgb, currentColor 42%, transparent);
+}
+
+.dispute-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+}
+
+.dispute-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dispute-comments {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.dispute-comment {
+  padding: 0.5rem 0.9rem;
+  border-inline-start: 3px solid
+    color-mix(in srgb, currentColor 25%, transparent);
+}
+
+.dispute-comment p {
+  margin: 0.25rem 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dispute-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

@@ -97,6 +97,7 @@ export default function GroupShell () {
     { to: 'payouts', label: 'Payouts' },
     { to: 'ledger', label: 'Ledger' },
     { to: 'reports', label: 'Reports' },
+    { to: 'disputes', label: 'Disputes' },
     ...(isOrganizer ? [{ to: 'settings', label: 'Settings' }] : [])
   ]
 
