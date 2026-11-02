@@ -23,6 +23,9 @@ export const NOTIFICATION_TYPES = Object.freeze({
   DISPUTE_OPENED: "dispute_opened",
   DISPUTE_UPDATED: "dispute_updated",
   DISPUTE_RESOLVED: "dispute_resolved",
+  PAYMENT_PROOF_SUBMITTED: "payment_proof_submitted",
+  PAYMENT_PROOF_APPROVED: "payment_proof_approved",
+  PAYMENT_PROOF_REJECTED: "payment_proof_rejected",
 });
 
 export const NOTIFICATION_TYPE_VALUES = Object.freeze(
