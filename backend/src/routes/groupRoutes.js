@@ -10,6 +10,7 @@ import {
   updateGroup,
 } from "../controllers/groupController.js";
 import { joinGroup, leaveGroup } from "../controllers/memberController.js";
+import { requireAdmin } from "../middleware/adminMiddleware.js";
 import { authenticate } from "../middleware/authMiddleware.js";
 import { sensitiveActionLimiter } from "../middleware/rateLimiter.js";
 import validateRequest from "../middleware/validateRequest.js";
@@ -26,6 +27,7 @@ import cycleRoutes from "./cycleRoutes.js";
 import drawRoutes from "./drawRoutes.js";
 import groupAuditRoutes from "./groupAuditRoutes.js";
 import groupContributionRoutes from "./groupContributionRoutes.js";
+import groupDisputeRoutes from "./groupDisputeRoutes.js";
 import groupPayoutRoutes from "./groupPayoutRoutes.js";
 import groupReportRoutes from "./groupReportRoutes.js";
 import groupTransactionRoutes from "./groupTransactionRoutes.js";
@@ -37,6 +39,7 @@ router.use(authenticate);
 
 router.post(
   "/",
+  requireAdmin,
   sensitiveActionLimiter,
   validateRequest({ body: createGroupSchema }),
   createGroup,
@@ -94,5 +97,6 @@ router.use("/:groupId/draws", drawRoutes);
 router.use("/:groupId/payouts", groupPayoutRoutes);
 router.use("/:groupId/reports", groupReportRoutes);
 router.use("/:groupId/audit-logs", groupAuditRoutes);
+router.use("/:groupId/disputes", groupDisputeRoutes);
 
 export default router;
