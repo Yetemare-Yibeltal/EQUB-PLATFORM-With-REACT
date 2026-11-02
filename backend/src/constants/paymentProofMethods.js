@@ -1,0 +1,7 @@
+import { PAYMENT_METHODS } from "./paymentMethods.js";
+
+export const PAYMENT_PROOF_METHOD_VALUES = Object.freeze([
+  PAYMENT_METHODS.BANK_TRANSFER,
+  PAYMENT_METHODS.TELEBIRR,
+  PAYMENT_METHODS.CBE_BIRR,
+]);
