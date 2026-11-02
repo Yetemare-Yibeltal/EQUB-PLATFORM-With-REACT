@@ -5,8 +5,12 @@ import Loader from '../../components/common/Loader'
 import RecordPaymentModal from '../../components/common/RecordPaymentModal'
 import ReasonModal from '../../components/common/ReasonModal'
 import ContributionTable from '../../components/contribution/ContributionTable'
+import PaymentInstructions from '../../components/contribution/PaymentInstructions'
+import PaymentProofList from '../../components/contribution/PaymentProofList'
+import SubmitProofModal from '../../components/contribution/SubmitProofModal'
 import CycleCard from '../../components/cycle/CycleCard'
 import CycleTimeline from '../../components/cycle/CycleTimeline'
+import { ONLINE_PAYMENT_ENABLED } from '../../constants/mahber'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useAuth } from '../../hooks/useAuth'
 import { useGroup } from '../../hooks/useGroup'
@@ -14,6 +18,8 @@ import { useLanguage } from '../../hooks/useLanguage'
 import { usePayOnline } from '../../hooks/usePayOnline'
 import { contributionService } from '../../services/contributionService'
 import { cycleService } from '../../services/cycleService'
+import { paymentProofService } from '../../services/paymentProofService'
+import { getErrorMessage } from '../../utils/errors'
 import { formatMoney } from '../../utils/formatCurrency'
 
 export default function CycleHistory () {
@@ -24,6 +30,10 @@ export default function CycleHistory () {
   const [selectedId, setSelectedId] = useState(null)
   const [recordTarget, setRecordTarget] = useState(null)
   const [waiveTarget, setWaiveTarget] = useState(null)
+  const [proofTarget, setProofTarget] = useState(null)
+  const [rejectTarget, setRejectTarget] = useState(null)
+  const [busyProofId, setBusyProofId] = useState(null)
+  const [proofError, setProofError] = useState('')
   const [notice, setNotice] = useState('')
 
   const cyclesLoader = useCallback(
@@ -57,14 +67,37 @@ export default function CycleHistory () {
   const { data: contributions, error: contributionsError } =
     useAsyncData(contributionsLoader)
 
+  const proofsLoader = useCallback(async () => {
+    if (group.status !== 'active') return { proofs: [], meta: null }
+
+    return paymentProofService.listByGroup(group.id, {
+      status: 'pending',
+      limit: 100
+    })
+  }, [group.id, group.status, version])
+  const { data: proofData } = useAsyncData(proofsLoader)
+
+  const proofs = proofData?.proofs ?? []
+  const pendingProofs = useMemo(
+    () =>
+      Object.fromEntries(
+        proofs.map(proof => [
+          typeof proof.contribution === 'object'
+            ? proof.contribution.id
+            : proof.contribution,
+          proof
+        ])
+      ),
+    [proofs]
+  )
+
   const rows = contributions?.contributions ?? []
   const overdueCount = rows.filter(
     contribution => contribution.status === 'pending' && contribution.isOverdue
   ).length
-  const canManage =
-    isOrganizer &&
-    group.status === 'active' &&
-    selected?.status === 'collecting'
+  const isCollecting =
+    group.status === 'active' && selected?.status === 'collecting'
+  const canManage = isOrganizer && isCollecting
 
   const handleRecord = async payload => {
     await contributionService.record(group.id, recordTarget.id, payload)
@@ -77,6 +110,35 @@ export default function CycleHistory () {
     await contributionService.waive(group.id, waiveTarget.id, reason)
     setWaiveTarget(null)
     setNotice(t('Contribution waived'))
+    refresh()
+  }
+
+  const handleSubmitProof = async payload => {
+    await paymentProofService.submit(group.id, proofTarget.id, payload)
+    setProofTarget(null)
+    setNotice(t('Your payment proof was sent for approval.'))
+    refresh()
+  }
+
+  const handleApprove = async proof => {
+    setBusyProofId(proof.id)
+    setProofError('')
+
+    try {
+      await paymentProofService.approve(group.id, proof.id)
+      setNotice(t('Payment proof approved'))
+      refresh()
+    } catch (requestError) {
+      setProofError(getErrorMessage(requestError))
+    } finally {
+      setBusyProofId(null)
+    }
+  }
+
+  const handleReject = async reason => {
+    await paymentProofService.reject(group.id, rejectTarget.id, reason)
+    setRejectTarget(null)
+    setNotice(t('Payment proof rejected'))
     refresh()
   }
 
@@ -108,7 +170,31 @@ export default function CycleHistory () {
             </p>
           )}
           <ErrorMessage message={payError} />
+          <ErrorMessage message={proofError} />
           <ErrorMessage message={contributionsError} />
+
+          {isCollecting && (
+            <section className='card'>
+              <PaymentInstructions />
+            </section>
+          )}
+
+          {canManage && proofs.length > 0 && (
+            <section className='card'>
+              <h2>{t('Payment proofs waiting for approval')}</h2>
+              <p className='muted'>
+                {t(
+                  'Check each reference in your CBE or Telebirr record before approving.'
+                )}
+              </p>
+              <PaymentProofList
+                proofs={proofs}
+                busyId={busyProofId}
+                onApprove={handleApprove}
+                onReject={setRejectTarget}
+              />
+            </section>
+          )}
 
           {selected.status === 'upcoming' ? (
             <EmptyState
@@ -122,7 +208,15 @@ export default function CycleHistory () {
               currentUserId={user.id}
               canManage={canManage}
               payingId={payingId}
-              onPayOnline={group.status === 'active' ? pay : undefined}
+              pendingProofs={pendingProofs}
+              onPayOnline={
+                ONLINE_PAYMENT_ENABLED && group.status === 'active'
+                  ? pay
+                  : undefined
+              }
+              onSubmitProof={
+                group.status === 'active' ? setProofTarget : undefined
+              }
               onRecord={setRecordTarget}
               onWaive={setWaiveTarget}
             />
@@ -146,6 +240,25 @@ export default function CycleHistory () {
         }
         onSubmit={handleRecord}
         onClose={() => setRecordTarget(null)}
+      />
+
+      <SubmitProofModal
+        open={Boolean(proofTarget)}
+        contribution={proofTarget}
+        onSubmit={handleSubmitProof}
+        onClose={() => setProofTarget(null)}
+      />
+
+      <ReasonModal
+        open={Boolean(rejectTarget)}
+        title='Reject this payment proof?'
+        description='The member will see the reason you give and can send a new proof.'
+        label='Reason'
+        submitLabel='Reject'
+        variant='danger'
+        maxLength={300}
+        onSubmit={handleReject}
+        onClose={() => setRejectTarget(null)}
       />
 
       <ReasonModal
