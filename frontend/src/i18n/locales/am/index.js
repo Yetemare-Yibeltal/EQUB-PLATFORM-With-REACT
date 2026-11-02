@@ -11,11 +11,13 @@ import legal from "./legal";
 import mahber from "./mahber";
 import money from "./money";
 import notices from "./notices";
+import paymentProof from "./paymentProof";
 import record from "./record";
 import reports from "./reports";
 import shared from "./shared";
 
 export default {
+  ...paymentProof,
   ...mahber,
   ...disputes,
   ...legal,
