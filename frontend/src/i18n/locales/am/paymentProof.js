@@ -1,0 +1,40 @@
+export default {
+  "How to pay": "እንዴት እንደሚከፍሉ",
+  "Pay only to the mahber account below, then send the transaction reference for approval.":
+    "ከታች ባለው የማኅበሩ ሂሳብ ብቻ ይክፈሉ፤ ከዚያም ለማጽደቅ የግብይቱን ማጣቀሻ ቁጥር ይላኩ።",
+  "Commercial Bank of Ethiopia (CBE)": "የኢትዮጵያ ንግድ ባንክ (CBE)",
+  Telebirr: "ቴሌብር",
+  "Account holder": "የሂሳብ ባለቤት",
+  "Send payment proof": "የክፍያ ማረጋገጫ ላክ",
+  "Under review": "በግምገማ ላይ",
+  Approved: "ጸድቋል",
+  Rejected: "ውድቅ ተደርጓል",
+  "Bank transfer or CBE mobile banking": "የባንክ ዝውውር ወይም የCBE ሞባይል ባንኪንግ",
+  "CBE Birr": "CBE ብር",
+  "Payment method": "የክፍያ ዘዴ",
+  "Choose how you paid": "የከፈሉበትን ዘዴ ይምረጡ",
+  "Choose a payment method": "የክፍያ ዘዴ ይምረጡ",
+  "Transaction reference": "የግብይት ማጣቀሻ ቁጥር",
+  "Enter the reference number shown on your payment receipt.":
+    "በክፍያ ደረሰኝዎ ላይ የሚታየውን ማጣቀሻ ቁጥር ያስገቡ።",
+  "Write the transaction reference": "የግብይት ማጣቀሻ ቁጥሩን ያስገቡ",
+  "Note (optional)": "ማስታወሻ (አማራጭ)",
+  "You owe {amount}. Pay it first, then send the proof here.":
+    "የሚከፍሉት {amount} ነው። መጀመሪያ ይክፈሉ፤ ከዚያ ማረጋገጫውን እዚህ ይላኩ።",
+  "Send for approval": "ለማጽደቅ ላክ",
+  "Your payment proof was sent for approval.": "የክፍያ ማረጋገጫዎ ለማጽደቅ ተልኳል።",
+  "Payment proofs waiting for approval": "ለማጽደቅ የሚጠባበቁ የክፍያ ማረጋገጫዎች",
+  "Check each reference in your CBE or Telebirr record before approving.":
+    "ከማጽደቅዎ በፊት እያንዳንዱን ማጣቀሻ በCBE ወይም በቴሌብር መዝገብዎ ያረጋግጡ።",
+  Approve: "አጽድቅ",
+  Reject: "ውድቅ አድርግ",
+  Reference: "ማጣቀሻ",
+  Method: "ዘዴ",
+  Sent: "የተላከበት",
+  "Payment proof approved": "የክፍያ ማረጋገጫ ጸድቋል",
+  "Payment proof rejected": "የክፍያ ማረጋገጫ ውድቅ ተደርጓል",
+  "Payment proof reviewed": "የክፍያ ማረጋገጫ ተገምግሟል",
+  "Reject this payment proof?": "ይህ የክፍያ ማረጋገጫ ውድቅ ይደረግ?",
+  "The member will see the reason you give and can send a new proof.":
+    "አባሉ የሰጡትን ምክንያት ያያል፤ አዲስ ማረጋገጫም መላክ ይችላል።",
+};
