@@ -11,4 +11,6 @@ export default {
   "Rules and contact": "ደንብና አድራሻ",
   "Read the rules and regulations": "ደንብና መመሪያውን ያንብቡ",
   "Contact the Mahber": "ማኅበሩን ያግኙ",
+  "Ask the committee for an invite code, then join your equb.":
+    "ከኮሚቴው የመጋበዣ ኮድ ጠይቀው እቁብዎን ይቀላቀሉ።",
 };
