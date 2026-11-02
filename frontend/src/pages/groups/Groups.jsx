@@ -7,6 +7,7 @@ import Pagination from '../../components/common/Pagination'
 import GroupCard from '../../components/group/GroupCard'
 import { ROUTES } from '../../constants/routes'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
 import { groupService } from '../../services/groupService'
 
@@ -20,6 +21,7 @@ const FILTERS = [
 
 export default function Groups () {
   const { t } = useLanguage()
+  const { isAdmin } = useAuth()
   const [status, setStatus] = useState('')
   const [page, setPage] = useState(1)
 
@@ -34,6 +36,18 @@ export default function Groups () {
     setPage(1)
   }
 
+  const joinLink = (
+    <Link to={ROUTES.GROUP_JOIN} className='btn btn-secondary btn-md'>
+      {t('Join with code')}
+    </Link>
+  )
+
+  const createLink = (
+    <Link to={ROUTES.GROUP_CREATE} className='btn btn-primary btn-md'>
+      {t('Create equb')}
+    </Link>
+  )
+
   return (
     <div className='page'>
       <header className='page-header page-header-row'>
@@ -42,12 +56,8 @@ export default function Groups () {
           <p className='muted'>{t('Groups you organize or belong to')}</p>
         </div>
         <div className='inline-actions'>
-          <Link to={ROUTES.GROUP_JOIN} className='btn btn-secondary btn-md'>
-            {t('Join with code')}
-          </Link>
-          <Link to={ROUTES.GROUP_CREATE} className='btn btn-primary btn-md'>
-            {t('Create equb')}
-          </Link>
+          {joinLink}
+          {isAdmin && createLink}
         </div>
       </header>
 
@@ -76,12 +86,12 @@ export default function Groups () {
       {data && data.groups.length === 0 && (
         <EmptyState
           title='No equbs here yet'
-          description='Create a new equb or join one with an invite code.'
-          action={
-            <Link to={ROUTES.GROUP_CREATE} className='btn btn-primary btn-md'>
-              {t('Create equb')}
-            </Link>
+          description={
+            isAdmin
+              ? 'Create a new equb or join one with an invite code.'
+              : 'Ask the committee for an invite code, then join your equb.'
           }
+          action={isAdmin ? createLink : joinLink}
         />
       )}
 
