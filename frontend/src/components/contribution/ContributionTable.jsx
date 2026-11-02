@@ -11,7 +11,8 @@ import StatusBadge from '../common/StatusBadge'
 const STATUS_LABELS = {
   ...CONTRIBUTION_STATUS_LABELS,
   overdue: 'Overdue',
-  late: 'Late'
+  late: 'Late',
+  review: 'Under review'
 }
 
 const ownerOf = contribution =>
@@ -26,7 +27,9 @@ export default function ContributionTable ({
   currentUserId,
   canManage = false,
   payingId = null,
+  pendingProofs = {},
   onPayOnline,
+  onSubmitProof,
   onRecord,
   onWaive
 }) {
@@ -104,6 +107,10 @@ export default function ContributionTable ({
             {contribution.status === 'paid' && contribution.isLate && (
               <StatusBadge status='late' labels={STATUS_LABELS} />
             )}
+            {contribution.status === 'pending' &&
+              pendingProofs[contribution.id] && (
+                <StatusBadge status='review' labels={STATUS_LABELS} />
+              )}
           </span>
         )
       }
@@ -116,6 +123,7 @@ export default function ContributionTable ({
         if (contribution.status !== 'pending') return null
 
         const own = ownerOf(contribution) === currentUserId
+        const underReview = Boolean(pendingProofs[contribution.id])
 
         return (
           <div className='inline-actions'>
@@ -126,6 +134,11 @@ export default function ContributionTable ({
                 loading={payingId === contribution.id}
               >
                 {t('Pay online')}
+              </Button>
+            )}
+            {own && onSubmitProof && !underReview && (
+              <Button size='sm' onClick={() => onSubmitProof(contribution)}>
+                {t('Send payment proof')}
               </Button>
             )}
             {canManage && (
