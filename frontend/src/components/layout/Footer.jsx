@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
+import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
+import BrandLogo from '../common/BrandLogo'
 import LegalLinks from '../common/LegalLinks'
 import '../../styles/footer.css'
 
@@ -21,11 +23,14 @@ function LinkColumn ({ title, links }) {
 
 export default function Footer () {
   const { t } = useLanguage()
+  const { isAdmin } = useAuth()
 
   const platformLinks = [
     { label: t('nav.dashboard'), to: ROUTES.DASHBOARD },
     { label: t('nav.groups'), to: ROUTES.GROUPS },
-    { label: t('footer.createEqub'), to: ROUTES.GROUP_CREATE },
+    ...(isAdmin
+      ? [{ label: t('footer.createEqub'), to: ROUTES.GROUP_CREATE }]
+      : []),
     { label: t('footer.joinEqub'), to: ROUTES.GROUP_JOIN }
   ]
 
@@ -49,7 +54,7 @@ export default function Footer () {
         <div className='site-footer-grid'>
           <div className='site-footer-intro'>
             <Link to={ROUTES.DASHBOARD} className='site-footer-brand'>
-              <span className='site-footer-logo'>K</span>
+              <BrandLogo />
               {t('brand.name')}
             </Link>
             <p className='site-footer-about'>{t('footer.about')}</p>
