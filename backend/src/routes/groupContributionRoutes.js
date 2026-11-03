@@ -4,6 +4,8 @@ import {
   recordContribution,
   waiveContribution,
 } from "../controllers/contributionController.js";
+import { submitProof } from "../controllers/paymentProofController.js";
+import { sensitiveActionLimiter } from "../middleware/rateLimiter.js";
 import validateRequest from "../middleware/validateRequest.js";
 import {
   contributionParamsSchema,
@@ -12,6 +14,10 @@ import {
   recordContributionSchema,
   waiveContributionSchema,
 } from "../validators/contributionValidator.js";
+import {
+  contributionProofParamsSchema,
+  submitProofSchema,
+} from "../validators/paymentProofValidator.js";
 
 const router = Router({ mergeParams: true });
 
@@ -30,6 +36,15 @@ router.post(
     body: recordContributionSchema,
   }),
   recordContribution,
+);
+router.post(
+  "/:contributionId/proof",
+  sensitiveActionLimiter,
+  validateRequest({
+    params: contributionProofParamsSchema,
+    body: submitProofSchema,
+  }),
+  submitProof,
 );
 router.post(
   "/:contributionId/waive",
