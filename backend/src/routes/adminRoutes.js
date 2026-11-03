@@ -13,6 +13,7 @@ import {
   getDispute,
   listAllDisputes,
 } from "../controllers/disputeController.js";
+import { listAllProofs } from "../controllers/paymentProofController.js";
 import { requireAdmin } from "../middleware/adminMiddleware.js";
 import { authenticate } from "../middleware/authMiddleware.js";
 import { sensitiveActionLimiter } from "../middleware/rateLimiter.js";
@@ -30,6 +31,7 @@ import {
   disputeIdParamSchema,
   listDisputesQuerySchema,
 } from "../validators/disputeValidator.js";
+import { listProofsQuerySchema } from "../validators/paymentProofValidator.js";
 
 const router = Router();
 
@@ -55,6 +57,11 @@ router.post(
     body: resolvePaymentReviewSchema,
   }),
   resolvePaymentReview,
+);
+router.get(
+  "/payment-proofs",
+  validateRequest({ query: listProofsQuerySchema }),
+  listAllProofs,
 );
 router.get(
   "/disputes",
