@@ -39,6 +39,7 @@ import GroupSettings from './pages/groups/GroupSettings'
 import Groups from './pages/groups/Groups'
 import About from './pages/legal/About'
 import Contact from './pages/legal/Contact'
+import Help from './pages/legal/Help'
 import Privacy from './pages/legal/Privacy'
 import Rules from './pages/legal/Rules'
 import Terms from './pages/legal/Terms'
@@ -63,6 +64,7 @@ export const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { path: ROUTES.ABOUT, element: <About /> },
+      { path: ROUTES.HELP, element: <Help /> },
       { path: ROUTES.RULES, element: <Rules /> },
       { path: ROUTES.TERMS, element: <Terms /> },
       { path: ROUTES.PRIVACY, element: <Privacy /> },
