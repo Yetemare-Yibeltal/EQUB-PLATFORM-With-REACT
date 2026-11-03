@@ -9,6 +9,7 @@ export default {
   Secretary: "ጸሐፊ",
   "Member oversight": "የአባላት ቁጥጥር",
   "Rules and contact": "ደንብና አድራሻ",
+  "How to use the platform": "መድረኩን እንዴት እንደሚጠቀሙ",
   "Read the rules and regulations": "ደንብና መመሪያውን ያንብቡ",
   "Contact the Mahber": "ማኅበሩን ያግኙ",
   "Ask the committee for an invite code, then join your equb.":
