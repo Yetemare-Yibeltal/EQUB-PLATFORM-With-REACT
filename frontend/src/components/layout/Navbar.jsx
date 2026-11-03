@@ -4,6 +4,7 @@ import { ROUTES } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
 import { useTheme } from '../../hooks/useTheme'
+import BrandLogo from '../common/BrandLogo'
 import Button from '../common/Button'
 import Icon from '../common/Icon'
 import LanguageSwitcher from '../common/LanguageSwitcher'
@@ -25,7 +26,7 @@ export default function Navbar () {
   return (
     <header className='navbar'>
       <Link to={ROUTES.DASHBOARD} className='brand navbar-brand'>
-        <span className='brand-mark'>K</span>
+        <BrandLogo size={32} />
         <span>{t('brand.short')}</span>
       </Link>
       <div className='navbar-actions'>
