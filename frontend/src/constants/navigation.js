@@ -42,6 +42,7 @@ export const ADMIN_TABS = Object.freeze([
   { to: ROUTES.ADMIN, label: "Overview", end: true },
   { to: ROUTES.ADMIN_USERS, label: "Users" },
   { to: ROUTES.ADMIN_GROUPS, label: "Groups" },
+  { to: ROUTES.ADMIN_PAYMENT_PROOFS, label: "Payment proofs" },
   { to: ROUTES.ADMIN_PAYMENTS, label: "Payments" },
   { to: ROUTES.ADMIN_DISPUTES, label: "Disputes" },
   { to: ROUTES.ADMIN_AUDIT, label: "Audit log" },
