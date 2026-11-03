@@ -1,19 +1,35 @@
-import { PROOF_METHOD_LABELS } from '../../constants/paymentProof'
+import {
+  PROOF_METHOD_LABELS,
+  PROOF_STATUS_LABELS
+} from '../../constants/paymentProof'
 import { useLanguage } from '../../hooks/useLanguage'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDateTime } from '../../utils/formatDate'
 import Button from '../common/Button'
 import DataTable from '../common/DataTable'
+import StatusBadge from '../common/StatusBadge'
 
 export default function PaymentProofList ({
   proofs,
+  showGroup = false,
+  showStatus = false,
   busyId = null,
   onApprove,
   onReject
 }) {
   const { t } = useLanguage()
 
-  const columns = [
+  const columns = []
+
+  if (showGroup) {
+    columns.push({
+      key: 'group',
+      header: 'Equb',
+      render: proof => proof.group?.name ?? '—'
+    })
+  }
+
+  columns.push(
     {
       key: 'member',
       header: 'Member',
@@ -41,12 +57,27 @@ export default function PaymentProofList ({
       key: 'sent',
       header: 'Sent',
       render: proof => formatDateTime(proof.createdAt)
-    },
-    {
-      key: 'actions',
-      header: '',
-      className: 'cell-actions',
+    }
+  )
+
+  if (showStatus) {
+    columns.push({
+      key: 'status',
+      header: 'Status',
       render: proof => (
+        <StatusBadge status={proof.status} labels={PROOF_STATUS_LABELS} />
+      )
+    })
+  }
+
+  columns.push({
+    key: 'actions',
+    header: '',
+    className: 'cell-actions',
+    render: proof => {
+      if (proof.status !== 'pending') return null
+
+      return (
         <div className='inline-actions'>
           <Button
             size='sm'
@@ -66,7 +97,7 @@ export default function PaymentProofList ({
         </div>
       )
     }
-  ]
+  })
 
   return (
     <DataTable
