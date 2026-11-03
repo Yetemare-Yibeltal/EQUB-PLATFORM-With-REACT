@@ -28,6 +28,7 @@ import drawRoutes from "./drawRoutes.js";
 import groupAuditRoutes from "./groupAuditRoutes.js";
 import groupContributionRoutes from "./groupContributionRoutes.js";
 import groupDisputeRoutes from "./groupDisputeRoutes.js";
+import groupPaymentProofRoutes from "./groupPaymentProofRoutes.js";
 import groupPayoutRoutes from "./groupPayoutRoutes.js";
 import groupReportRoutes from "./groupReportRoutes.js";
 import groupTransactionRoutes from "./groupTransactionRoutes.js";
@@ -92,6 +93,7 @@ router.post(
 router.use("/:groupId/members", memberRoutes);
 router.use("/:groupId/cycles", cycleRoutes);
 router.use("/:groupId/contributions", groupContributionRoutes);
+router.use("/:groupId/payment-proofs", groupPaymentProofRoutes);
 router.use("/:groupId/transactions", groupTransactionRoutes);
 router.use("/:groupId/draws", drawRoutes);
 router.use("/:groupId/payouts", groupPayoutRoutes);
