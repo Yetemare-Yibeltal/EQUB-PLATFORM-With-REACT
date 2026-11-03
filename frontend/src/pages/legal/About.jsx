@@ -46,6 +46,7 @@ export default function About () {
       <section className='card'>
         <h2>{t('Rules and contact')}</h2>
         <div className='about-links'>
+          <Link to={ROUTES.HELP}>{t('How to use the platform')}</Link>
           <Link to={ROUTES.RULES}>{t('Read the rules and regulations')}</Link>
           <Link to={ROUTES.CONTACT}>{t('Contact the Mahber')}</Link>
         </div>
