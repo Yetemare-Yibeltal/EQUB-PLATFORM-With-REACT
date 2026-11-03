@@ -7,6 +7,9 @@ export default function LegalLinks () {
   const { t } = useLanguage()
 
   const links = [
+    { to: ROUTES.ABOUT, label: t('About the Mahber') },
+    { to: ROUTES.HELP, label: t('Help') },
+    { to: ROUTES.RULES, label: t('Rules') },
     { to: ROUTES.TERMS, label: t('Terms of use') },
     { to: ROUTES.PRIVACY, label: t('Privacy policy') },
     { to: ROUTES.CONTACT, label: t('Contact') }
