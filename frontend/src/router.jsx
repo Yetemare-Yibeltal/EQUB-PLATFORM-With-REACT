@@ -14,6 +14,7 @@ import Settings from './pages/Settings'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminDisputes from './pages/admin/Disputes'
 import AdminGroups from './pages/admin/Groups'
+import AdminPaymentProofs from './pages/admin/PaymentProofs'
 import AdminPayments from './pages/admin/Payments'
 import AuditLogs from './pages/admin/AuditLogs'
 import SystemSettings from './pages/admin/SystemSettings'
@@ -112,6 +113,7 @@ export const router = createBrowserRouter([
               { index: true, element: <AdminDashboard /> },
               { path: 'users', element: <Users /> },
               { path: 'groups', element: <AdminGroups /> },
+              { path: 'payment-proofs', element: <AdminPaymentProofs /> },
               { path: 'payments', element: <AdminPayments /> },
               { path: 'disputes', element: <AdminDisputes /> },
               { path: 'audit-logs', element: <AuditLogs /> },
