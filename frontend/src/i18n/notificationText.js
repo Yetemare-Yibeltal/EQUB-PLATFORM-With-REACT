@@ -24,6 +24,9 @@ const TITLES = {
   "Dispute under review": "ቅሬታ በግምገማ ላይ ነው",
   "Dispute resolved": "ቅሬታ ተፈቷል",
   "Dispute dismissed": "ቅሬታ ውድቅ ተደርጓል",
+  "Payment proof submitted": "የክፍያ ማረጋገጫ ቀርቧል",
+  "Payment proof approved": "የክፍያ ማረጋገጫ ጸድቋል",
+  "Payment proof rejected": "የክፍያ ማረጋገጫ ውድቅ ተደርጓል",
 };
 
 const TITLE_RULES = [
@@ -65,6 +68,18 @@ const capitalize = (value) =>
   value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 
 const MESSAGE_RULES = [
+  [
+    /^(.+?) sent a payment proof \(reference (.+)\) for (.+)\.$/,
+    (m) => `${m[1]} ለ${m[3]} የክፍያ ማረጋገጫ ልኳል (ማጣቀሻ ${m[2]})።`,
+  ],
+  [
+    /^Your payment proof for (.+) was approved\.$/,
+    (m) => `ለ${m[1]} ያቀረቡት የክፍያ ማረጋገጫ ጸድቋል።`,
+  ],
+  [
+    /^Your payment proof for (.+?) was rejected: (.+)$/,
+    (m) => `ለ${m[1]} ያቀረቡት የክፍያ ማረጋገጫ ውድቅ ተደርጓል፦ ${m[2]}`,
+  ],
   [
     /^(.+?) reported a problem in (.+?): (.+)\.$/,
     (m) => `${m[1]} በ${m[2]} ችግር አሳውቋል፦ ${m[3]}።`,
