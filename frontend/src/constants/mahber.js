@@ -2,6 +2,7 @@ export const MAHBER = Object.freeze({
   name: "Kidane Mihret Equb Mahber",
   nameAm: "ኪዳነ ምሕረት እቁብ ማኅበር",
   logo: "/kmem-logo.webp",
+  logoSmall: "/kmem-logo-96.webp",
 });
 
 export const COMMITTEE = Object.freeze([
