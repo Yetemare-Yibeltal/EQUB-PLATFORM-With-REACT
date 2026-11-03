@@ -32,9 +32,12 @@ export default {
         items: [
           "Every member pays the full contribution fixed for the equb in every round.",
           "Payment is made only by mobile banking, Telebirr or Commercial Bank of Ethiopia (CBE). Cash or any other way of paying is not accepted.",
-          "Pay only to the account or phone number the committee has announced for your equb. Do not pay to any personal account the committee has not announced.",
-          "After you pay, keep the transaction reference or a screenshot of the payment.",
-          "A contribution counts as paid only after the committee or the organizer has confirmed that the money arrived and has recorded it on the platform. Until then it is treated as unpaid.",
+          "Pay only to the account or phone number the committee has announced. Do not pay to any personal account the committee has not announced.",
+          "After you pay, keep the transaction reference or a screenshot. Then open your contribution in the app, choose Send payment proof, and send the payment method and the transaction reference.",
+          "Send the proof right after you pay. A contribution counts as on time or late by the moment you send the proof, not the moment it is approved.",
+          "Each transaction reference can be used only once.",
+          "A contribution counts as paid only after the committee or the organizer has checked the payment and approved your proof on the platform. Until then it is treated as unpaid. A rejected proof can be corrected and sent again.",
+          "A committee member's own payment is approved by another committee member.",
         ],
       },
       {
@@ -126,9 +129,12 @@ export default {
         items: [
           "እያንዳንዱ አባል ለእቁቡ የተወሰነውን መዋጮ በየዙሩ ሙሉ በሙሉ ይከፍላል።",
           "ክፍያ የሚፈጸመው በሞባይል ባንኪንግ፣ በቴሌብር ወይም በኢትዮጵያ ንግድ ባንክ (CBE) ብቻ ነው። በጥሬ ገንዘብ ወይም በሌላ መንገድ የሚደረግ ክፍያ አይቀበልም።",
-          "ክፍያ የሚልኩት ኮሚቴው ለእቁቡ ባሳወቀው የሂሳብ ቁጥር ወይም ስልክ ቁጥር ብቻ ነው። ኮሚቴው ባላሳወቀው የግለሰብ ሂሳብ አይክፈሉ።",
-          "ከከፈሉ በኋላ የግብይቱን ማጣቀሻ ቁጥር ወይም የክፍያውን ስክሪንሾት ያስቀምጡ።",
-          "ኮሚቴው ወይም አደራጁ ገንዘቡ መድረሱን አረጋግጦ በመድረኩ ላይ ሲመዘግብ ብቻ መዋጮው እንደተከፈለ ይቆጠራል። እስከዚያ ድረስ እንዳልተከፈለ ይያዛል።",
+          "ክፍያ የሚልኩት ኮሚቴው ባሳወቀው የሂሳብ ቁጥር ወይም ስልክ ቁጥር ብቻ ነው። ኮሚቴው ባላሳወቀው የግለሰብ ሂሳብ አይክፈሉ።",
+          "ከከፈሉ በኋላ የግብይቱን ማጣቀሻ ቁጥር ወይም ስክሪንሾት ያስቀምጡ፤ ከዚያም በመድረኩ ላይ መዋጮዎን ከፍተው «የክፍያ ማረጋገጫ ላክ» የሚለውን ይምረጡና የክፍያ ዘዴውንና የግብይቱን ማጣቀሻ ቁጥር ይላኩ።",
+          "ማረጋገጫውን ከከፈሉ በኋላ ወዲያውኑ ይላኩ። መዋጮው በጊዜ ወይም በመዘግየት የሚቆጠረው ማረጋገጫውን በላኩበት ሰዓት ነው፤ በሚጸድቅበት ሰዓት አይደለም።",
+          "አንድ የግብይት ማጣቀሻ ቁጥር አንድ ጊዜ ብቻ መጠቀም ይቻላል።",
+          "ኮሚቴው ወይም አደራጁ ክፍያውን አረጋግጦ ማረጋገጫዎን በመድረኩ ላይ ሲያጸድቅ ብቻ መዋጮው እንደተከፈለ ይቆጠራል። እስከዚያ ድረስ እንዳልተከፈለ ይያዛል። ውድቅ የተደረገ ማረጋገጫ ተስተካክሎ እንደገና ሊላክ ይችላል።",
+          "የኮሚቴ አባል የራሱን ክፍያ ሌላ የኮሚቴ አባል ያጸድቅለታል።",
         ],
       },
       {
