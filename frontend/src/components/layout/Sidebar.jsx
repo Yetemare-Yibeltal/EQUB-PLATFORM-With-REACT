@@ -3,6 +3,7 @@ import { ADMIN_NAV_ITEM, NAV_ITEMS } from '../../constants/navigation'
 import { ROUTES } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
+import BrandLogo from '../common/BrandLogo'
 import Icon from '../common/Icon'
 
 export default function Sidebar () {
@@ -13,7 +14,7 @@ export default function Sidebar () {
   return (
     <aside className='sidebar'>
       <Link to={ROUTES.DASHBOARD} className='brand'>
-        <span className='brand-mark'>K</span>
+        <BrandLogo size={40} />
         <span className='brand-text'>
           <span>{t('brand.short')}</span>
           <small>{t('brand.group')}</small>
