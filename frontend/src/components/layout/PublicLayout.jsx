@@ -1,6 +1,7 @@
 import { Link, Outlet } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
 import { useLanguage } from '../../hooks/useLanguage'
+import BrandLogo from '../common/BrandLogo'
 import LanguageSwitcher from '../common/LanguageSwitcher'
 import LegalLinks from '../common/LegalLinks'
 import '../../styles/footer.css'
@@ -13,7 +14,7 @@ export default function PublicLayout () {
     <div className='public-shell'>
       <header className='public-header'>
         <Link to={ROUTES.HOME} className='public-brand'>
-          <span className='site-footer-logo'>K</span>
+          <BrandLogo />
           {t('brand.name')}
         </Link>
         <div className='public-actions'>
