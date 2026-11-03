@@ -24,6 +24,7 @@ export const ROUTES = Object.freeze({
   ADMIN_USERS: "/admin/users",
   ADMIN_GROUPS: "/admin/groups",
   ADMIN_PAYMENTS: "/admin/payments",
+  ADMIN_PAYMENT_PROOFS: "/admin/payment-proofs",
   ADMIN_DISPUTES: "/admin/disputes",
   ADMIN_AUDIT: "/admin/audit-logs",
   ADMIN_JOBS: "/admin/jobs",
