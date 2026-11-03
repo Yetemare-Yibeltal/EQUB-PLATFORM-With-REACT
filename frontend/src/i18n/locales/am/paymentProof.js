@@ -23,7 +23,10 @@ export default {
     "የሚከፍሉት {amount} ነው። መጀመሪያ ይክፈሉ፤ ከዚያ ማረጋገጫውን እዚህ ይላኩ።",
   "Send for approval": "ለማጽደቅ ላክ",
   "Your payment proof was sent for approval.": "የክፍያ ማረጋገጫዎ ለማጽደቅ ተልኳል።",
+  "Payment proofs": "የክፍያ ማረጋገጫዎች",
   "Payment proofs waiting for approval": "ለማጽደቅ የሚጠባበቁ የክፍያ ማረጋገጫዎች",
+  "No payment proofs": "ምንም የክፍያ ማረጋገጫ የለም",
+  "Loading payment proofs": "የክፍያ ማረጋገጫዎችን በመጫን ላይ",
   "Check each reference in your CBE or Telebirr record before approving.":
     "ከማጽደቅዎ በፊት እያንዳንዱን ማጣቀሻ በCBE ወይም በቴሌብር መዝገብዎ ያረጋግጡ።",
   Approve: "አጽድቅ",
