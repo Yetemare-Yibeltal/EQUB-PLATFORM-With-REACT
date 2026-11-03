@@ -6,6 +6,7 @@ export const ROUTES = Object.freeze({
   RESET_PASSWORD: "/reset-password",
   VERIFY_EMAIL: "/verify-email",
   ABOUT: "/about",
+  HELP: "/help",
   RULES: "/rules",
   TERMS: "/terms",
   PRIVACY: "/privacy",
