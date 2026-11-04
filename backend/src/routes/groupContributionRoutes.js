@@ -6,6 +6,7 @@ import {
 } from "../controllers/contributionController.js";
 import { submitProof } from "../controllers/paymentProofController.js";
 import { sensitiveActionLimiter } from "../middleware/rateLimiter.js";
+import { uploadImage } from "../middleware/uploadMiddleware.js";
 import validateRequest from "../middleware/validateRequest.js";
 import {
   contributionParamsSchema,
@@ -40,6 +41,7 @@ router.post(
 router.post(
   "/:contributionId/proof",
   sensitiveActionLimiter,
+  uploadImage("screenshot"),
   validateRequest({
     params: contributionProofParamsSchema,
     body: submitProofSchema,
