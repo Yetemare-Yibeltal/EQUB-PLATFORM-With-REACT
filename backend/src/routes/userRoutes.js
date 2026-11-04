@@ -1,5 +1,10 @@
 import { Router } from "express";
 import {
+  deleteAvatar,
+  getAvatar,
+  uploadAvatar,
+} from "../controllers/avatarController.js";
+import {
   getMe,
   getUser,
   listUsers,
@@ -9,7 +14,10 @@ import {
 } from "../controllers/userController.js";
 import { requireAdmin } from "../middleware/adminMiddleware.js";
 import { authenticate } from "../middleware/authMiddleware.js";
+import { sensitiveActionLimiter } from "../middleware/rateLimiter.js";
+import { uploadImage } from "../middleware/uploadMiddleware.js";
 import validateRequest from "../middleware/validateRequest.js";
+import { fileIdParamSchema } from "../validators/fileValidator.js";
 import {
   listUsersQuerySchema,
   updateProfileSchema,
@@ -20,10 +28,23 @@ import {
 
 const router = Router();
 
+router.get(
+  "/avatars/:fileId",
+  validateRequest({ params: fileIdParamSchema }),
+  getAvatar,
+);
+
 router.use(authenticate);
 
 router.get("/me", getMe);
 router.patch("/me", validateRequest({ body: updateProfileSchema }), updateMe);
+router.put(
+  "/me/avatar",
+  sensitiveActionLimiter,
+  uploadImage("avatar"),
+  uploadAvatar,
+);
+router.delete("/me/avatar", deleteAvatar);
 
 router.get(
   "/",
