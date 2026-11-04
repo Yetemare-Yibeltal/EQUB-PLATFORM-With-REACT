@@ -50,6 +50,10 @@ const paymentProofSchema = new mongoose.Schema(
       maxlength: 300,
       default: "",
     },
+    screenshot: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "StoredFile",
+    },
     status: {
       type: String,
       enum: PAYMENT_PROOF_STATUS_VALUES,
@@ -79,7 +83,9 @@ const paymentProofSchema = new mongoose.Schema(
       versionKey: false,
       transform: (doc, ret) => {
         ret.id = ret._id.toString();
+        ret.hasScreenshot = Boolean(ret.screenshot);
         delete ret._id;
+        delete ret.screenshot;
         return ret;
       },
     },
