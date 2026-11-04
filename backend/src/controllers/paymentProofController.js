@@ -9,6 +9,7 @@ export const submitProof = asyncHandler(async (req, res) => {
     req.params.groupId,
     req.params.contributionId,
     req.body,
+    req.file,
   );
 
   return sendSuccess(res, {
@@ -42,6 +43,23 @@ export const listAllProofs = asyncHandler(async (req, res) => {
     data: { proofs: items },
     meta,
   });
+});
+
+export const getScreenshot = asyncHandler(async (req, res) => {
+  const image = await paymentProofService.getScreenshot(
+    req.user,
+    req.params.groupId,
+    req.params.proofId,
+  );
+
+  res.set({
+    "Content-Type": image.contentType,
+    "Content-Length": String(image.size),
+    "Cache-Control": "private, max-age=300",
+    "X-Content-Type-Options": "nosniff",
+  });
+
+  return res.status(200).end(image.data);
 });
 
 export const approveProof = asyncHandler(async (req, res) => {
