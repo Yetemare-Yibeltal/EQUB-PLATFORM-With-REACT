@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   approveProof,
+  getScreenshot,
   listProofs,
   rejectProof,
 } from "../controllers/paymentProofController.js";
@@ -22,6 +23,11 @@ router.get(
     query: listProofsQuerySchema,
   }),
   listProofs,
+);
+router.get(
+  "/:proofId/screenshot",
+  validateRequest({ params: proofParamsSchema }),
+  getScreenshot,
 );
 router.post(
   "/:proofId/approve",
