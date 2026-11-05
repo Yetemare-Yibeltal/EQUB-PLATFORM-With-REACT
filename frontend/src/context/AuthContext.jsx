@@ -72,6 +72,18 @@ export function AuthProvider ({ children }) {
     return data.user
   }, [])
 
+  const updateAvatar = useCallback(async file => {
+    const data = await userService.uploadAvatar(file)
+    useAuthStore.getState().setUser(data.user)
+    return data.user
+  }, [])
+
+  const removeAvatar = useCallback(async () => {
+    const data = await userService.removeAvatar()
+    useAuthStore.getState().setUser(data.user)
+    return data.user
+  }, [])
+
   const value = useMemo(
     () => ({
       status,
@@ -84,6 +96,8 @@ export function AuthProvider ({ children }) {
       logoutAll,
       changePassword,
       updateProfile,
+      updateAvatar,
+      removeAvatar,
       retry
     }),
     [
@@ -95,6 +109,8 @@ export function AuthProvider ({ children }) {
       logoutAll,
       changePassword,
       updateProfile,
+      updateAvatar,
+      removeAvatar,
       retry
     ]
   )
