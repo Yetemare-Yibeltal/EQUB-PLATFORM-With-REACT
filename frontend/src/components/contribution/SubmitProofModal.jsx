@@ -4,6 +4,7 @@ import { useLanguage } from '../../hooks/useLanguage'
 import { getErrorMessage } from '../../utils/errors'
 import { formatMoney } from '../../utils/formatCurrency'
 import Button from '../common/Button'
+import ImagePicker from '../common/ImagePicker'
 import Input from '../common/Input'
 import Modal from '../common/Modal'
 import Select from '../common/Select'
@@ -23,6 +24,7 @@ export default function SubmitProofModal ({
   const [method, setMethod] = useState('')
   const [reference, setReference] = useState('')
   const [note, setNote] = useState('')
+  const [screenshot, setScreenshot] = useState(null)
   const [errors, setErrors] = useState({})
   const [submitError, setSubmitError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -41,6 +43,7 @@ export default function SubmitProofModal ({
       setMethod('')
       setReference('')
       setNote('')
+      setScreenshot(null)
       setErrors({})
       setSubmitError('')
     }
@@ -71,7 +74,8 @@ export default function SubmitProofModal ({
       await onSubmit({
         method,
         reference: reference.trim(),
-        ...(note.trim() ? { note: note.trim() } : {})
+        ...(note.trim() ? { note: note.trim() } : {}),
+        ...(screenshot ? { screenshot } : {})
       })
     } catch (error) {
       setSubmitError(getErrorMessage(error))
@@ -125,6 +129,13 @@ export default function SubmitProofModal ({
           required
           error={errors.reference}
           onChange={event => setReference(event.target.value)}
+        />
+        <ImagePicker
+          label='Payment screenshot (optional)'
+          hint='Attach a photo or screenshot of your payment receipt. JPEG, PNG or WebP.'
+          file={screenshot}
+          disabled={submitting}
+          onChange={setScreenshot}
         />
         <Textarea
           label='Note (optional)'
