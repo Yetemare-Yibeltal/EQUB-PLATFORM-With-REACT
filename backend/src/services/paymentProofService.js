@@ -5,6 +5,7 @@ import { MEMBER_ROLES } from "../constants/memberRoles.js";
 import { MEMBER_STATUSES } from "../constants/memberStatuses.js";
 import { PAYMENT_PROOF_STATUSES } from "../constants/paymentProofStatuses.js";
 import { USER_ROLES } from "../constants/roles.js";
+import { STORED_FILE_KINDS } from "../constants/storedFileKinds.js";
 import * as contributionRepository from "../repositories/contributionRepository.js";
 import * as paymentProofRepository from "../repositories/paymentProofRepository.js";
 import ApiError from "../utils/apiError.js";
@@ -12,6 +13,7 @@ import { parsePagination, parseSort } from "../utils/pagination.js";
 import withTransaction from "../utils/transaction.js";
 import * as auditService from "./auditService.js";
 import { applyResolution } from "./contributionService.js";
+import * as fileService from "./fileService.js";
 import { requireAccess } from "./groupService.js";
 import * as notificationEventService from "./notificationEventService.js";
 import * as paymentProofNotificationService from "./paymentProofNotificationService.js";
@@ -75,6 +77,7 @@ export const submitProof = async (
   groupId,
   contributionId,
   { method, reference, note },
+  file,
 ) => {
   const { group, membership } = await requireAccess(actor, groupId);
 
@@ -110,6 +113,14 @@ export const submitProof = async (
     );
   }
 
+  const screenshot = file
+    ? await fileService.storeImage(
+        actor.id,
+        STORED_FILE_KINDS.PAYMENT_PROOF,
+        file,
+      )
+    : null;
+
   let proof;
 
   try {
@@ -121,8 +132,11 @@ export const submitProof = async (
       method,
       reference,
       note: note ?? "",
+      ...(screenshot ? { screenshot: screenshot._id } : {}),
     });
   } catch (error) {
+    if (screenshot) await fileService.removeImage(screenshot._id, actor.id);
+
     if (error?.code === 11000) {
       throw ApiError.conflict(
         "This transaction reference has already been used",
@@ -157,6 +171,24 @@ export const listGroupProofs = async (actor, groupId, query = {}) => {
   });
 
   return { items: items.map((item) => item.toJSON()), meta };
+};
+
+export const getScreenshot = async (actor, groupId, proofId) => {
+  const { membership } = await requireAccess(actor, groupId);
+  const proof = await loadProof(groupId, proofId);
+
+  if (!canReview(actor, membership) && !isSame(proof.user, actor.id)) {
+    throw ApiError.forbidden("You cannot view this payment screenshot");
+  }
+
+  if (!proof.screenshot) {
+    throw ApiError.notFound("This payment proof has no screenshot");
+  }
+
+  return fileService.getImage(
+    proof.screenshot,
+    STORED_FILE_KINDS.PAYMENT_PROOF,
+  );
 };
 
 export const approveProof = async (actor, groupId, proofId) => {
