@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Button from '../components/common/Button'
 import ErrorMessage from '../components/common/ErrorMessage'
 import Input from '../components/common/Input'
+import AvatarUploader from '../components/profile/AvatarUploader'
 import { useAuth } from '../hooks/useAuth'
 import { useLanguage } from '../hooks/useLanguage'
 import { getErrorMessage, getFieldErrors } from '../utils/errors'
@@ -134,6 +135,11 @@ export default function Profile () {
           {t('Member since {date}', { date: formatDate(user.createdAt) })}
         </p>
       </header>
+
+      <section className='card'>
+        <h2>{t('Profile photo')}</h2>
+        <AvatarUploader />
+      </section>
 
       <section className='card'>
         <h2>{t('Personal details')}</h2>
