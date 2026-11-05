@@ -4,6 +4,7 @@ import { ROUTES } from '../../constants/routes'
 import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
 import { useTheme } from '../../hooks/useTheme'
+import Avatar from '../common/Avatar'
 import BrandLogo from '../common/BrandLogo'
 import Button from '../common/Button'
 import Icon from '../common/Icon'
@@ -20,8 +21,6 @@ export default function Navbar () {
     setLoggingOut(true)
     await logout()
   }
-
-  const initial = (user?.fullName || '?').trim().charAt(0).toUpperCase()
 
   return (
     <header className='navbar'>
@@ -45,9 +44,7 @@ export default function Navbar () {
         </button>
         <NotificationBell />
         <Link to={ROUTES.PROFILE} className='navbar-user'>
-          <span className='avatar' aria-hidden='true'>
-            {initial}
-          </span>
+          <Avatar name={user?.fullName} src={user?.avatarUrl} />
           <span className='navbar-name'>{user?.fullName}</span>
         </Link>
         <Button
