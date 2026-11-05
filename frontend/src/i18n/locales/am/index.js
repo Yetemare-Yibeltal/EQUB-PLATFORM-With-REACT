@@ -15,8 +15,10 @@ import paymentProof from "./paymentProof";
 import record from "./record";
 import reports from "./reports";
 import shared from "./shared";
+import uploads from "./uploads";
 
 export default {
+  ...uploads,
   ...paymentProof,
   ...mahber,
   ...disputes,
