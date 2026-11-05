@@ -2,6 +2,11 @@ import { api } from "./api";
 
 const unwrapOne = (response) => response.data.data.proof;
 
+const unwrapList = (response) => ({
+  proofs: response.data.data.proofs,
+  meta: response.data.meta,
+});
+
 const toFormData = ({ screenshot, ...fields }) => {
   const form = new FormData();
 
@@ -15,12 +20,12 @@ const toFormData = ({ screenshot, ...fields }) => {
 
 export const paymentProofService = {
   listByGroup: (groupId, params = {}) =>
-    api
-      .get(`/groups/${groupId}/payment-proofs`, { params })
-      .then((response) => ({
-        proofs: response.data.data.proofs,
-        meta: response.data.meta,
-      })),
+    api.get(`/groups/${groupId}/payment-proofs`, { params }).then(unwrapList),
+
+  admin: {
+    list: (params = {}) =>
+      api.get("/admin/payment-proofs", { params }).then(unwrapList),
+  },
 
   submit: (groupId, contributionId, payload) => {
     const url = `/groups/${groupId}/contributions/${contributionId}/proof`;
