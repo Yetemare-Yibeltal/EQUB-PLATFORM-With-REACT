@@ -35,7 +35,16 @@ const servesClient = config.env === "production" && fs.existsSync(clientIndex);
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": ["'self'", "data:", "blob:"],
+      },
+    },
+  }),
+);
 
 app.use(
   cors({
