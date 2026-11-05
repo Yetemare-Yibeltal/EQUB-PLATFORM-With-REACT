@@ -7,6 +7,20 @@ export const userService = {
 
   updateMe: (payload) => api.patch("/users/me", payload).then(unwrap),
 
+  uploadAvatar: (file) => {
+    const form = new FormData();
+    form.append("avatar", file);
+
+    return api
+      .put("/users/me/avatar", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 60000,
+      })
+      .then(unwrap);
+  },
+
+  removeAvatar: () => api.delete("/users/me/avatar").then(unwrap),
+
   list: (params = {}) =>
     api.get("/users", { params }).then((response) => ({
       users: response.data.data.users,
