@@ -8,9 +8,11 @@ import { formatDateTime } from '../../utils/formatDate'
 import Button from '../common/Button'
 import DataTable from '../common/DataTable'
 import StatusBadge from '../common/StatusBadge'
+import ProofScreenshot from './ProofScreenshot'
 
 export default function PaymentProofList ({
   proofs,
+  groupId,
   showGroup = false,
   showStatus = false,
   busyId = null,
@@ -52,6 +54,16 @@ export default function PaymentProofList ({
       key: 'reference',
       header: 'Reference',
       render: proof => <code className='code-inline'>{proof.reference}</code>
+    },
+    {
+      key: 'screenshot',
+      header: 'Screenshot',
+      render: proof =>
+        proof.hasScreenshot ? (
+          <ProofScreenshot proof={proof} groupId={groupId} />
+        ) : (
+          '—'
+        )
     },
     {
       key: 'sent',
