@@ -7,6 +7,9 @@ import { PAYOUT_ORDER_METHOD_VALUES } from "../constants/payoutOrderMethods.js";
 
 const objectId = Joi.string().hex().length(24);
 
+const MAX_START_DAYS_AHEAD = 365;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 const inviteCodeField = Joi.string()
   .trim()
   .min(6)
@@ -26,12 +29,18 @@ const startDateField = Joi.date()
       now.getUTCMonth(),
       now.getUTCDate(),
     );
-    return value.getTime() < startOfTodayUtc
-      ? helpers.error("any.invalid")
-      : value;
+
+    if (value.getTime() < startOfTodayUtc) return helpers.error("any.invalid");
+
+    if (value.getTime() > startOfTodayUtc + MAX_START_DAYS_AHEAD * DAY_MS) {
+      return helpers.error("any.tooFar");
+    }
+
+    return value;
   })
   .messages({
     "any.invalid": "Start date cannot be in the past",
+    "any.tooFar": "Start date must be within the next 365 days",
     "date.format": "Start date must be a valid ISO date",
   });
 
