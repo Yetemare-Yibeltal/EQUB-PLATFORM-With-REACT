@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   listContributions,
-  recordContribution,
   waiveContribution,
 } from "../controllers/contributionController.js";
 import { submitProof } from "../controllers/paymentProofController.js";
@@ -12,7 +11,6 @@ import {
   contributionParamsSchema,
   groupContributionsParamsSchema,
   listContributionsQuerySchema,
-  recordContributionSchema,
   waiveContributionSchema,
 } from "../validators/contributionValidator.js";
 import {
@@ -29,14 +27,6 @@ router.get(
     query: listContributionsQuerySchema,
   }),
   listContributions,
-);
-router.post(
-  "/:contributionId/pay",
-  validateRequest({
-    params: contributionParamsSchema,
-    body: recordContributionSchema,
-  }),
-  recordContribution,
 );
 router.post(
   "/:contributionId/proof",
