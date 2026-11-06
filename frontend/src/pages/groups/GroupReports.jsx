@@ -15,6 +15,7 @@ import { useGroup } from '../../hooks/useGroup'
 import { useLanguage } from '../../hooks/useLanguage'
 import { groupService } from '../../services/groupService'
 import { reportService } from '../../services/reportService'
+import { describeAudit } from '../../utils/auditSentence'
 import { formatMoney } from '../../utils/formatCurrency'
 import { formatDate, formatDateTime } from '../../utils/formatDate'
 import { formatPercent } from '../../utils/formatNumber'
@@ -140,9 +141,10 @@ export default function GroupReports () {
     {
       key: 'details',
       header: 'Details',
-      render: entry => (
-        <code className='code-inline'>{summarize(entry.metadata)}</code>
-      )
+      render: entry =>
+        describeAudit(entry, t) ?? (
+          <code className='code-inline'>{summarize(entry.metadata)}</code>
+        )
     }
   ]
 
