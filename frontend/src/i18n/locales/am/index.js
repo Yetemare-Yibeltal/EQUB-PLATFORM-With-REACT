@@ -12,12 +12,14 @@ import mahber from "./mahber";
 import money from "./money";
 import notices from "./notices";
 import paymentProof from "./paymentProof";
+import payoutRules from "./payoutRules";
 import record from "./record";
 import reports from "./reports";
 import shared from "./shared";
 import uploads from "./uploads";
 
 export default {
+  ...payoutRules,
   ...uploads,
   ...paymentProof,
   ...mahber,
