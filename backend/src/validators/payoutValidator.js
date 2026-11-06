@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { MANUAL_PAYMENT_METHOD_VALUES } from "../constants/paymentMethods.js";
+import { PAYOUT_METHOD_VALUES } from "../constants/payoutMethods.js";
 import { PAYOUT_STATUS_VALUES } from "../constants/payoutStatuses.js";
 
 const objectId = Joi.string().hex().length(24);
@@ -31,9 +31,18 @@ export const listMyPayoutsQuerySchema = Joi.object({
 
 export const recordPayoutSchema = Joi.object({
   paymentMethod: Joi.string()
-    .valid(...MANUAL_PAYMENT_METHOD_VALUES)
+    .valid(...PAYOUT_METHOD_VALUES)
     .required(),
-  reference: Joi.string().trim().max(100).allow(""),
+  reference: Joi.string()
+    .trim()
+    .min(4)
+    .max(100)
+    .pattern(/^[A-Za-z0-9\-_/ ]+$/)
+    .required()
+    .messages({
+      "string.pattern.base":
+        "Reference may contain only letters, numbers, spaces, - _ and /",
+    }),
   note: Joi.string().trim().max(500).allow(""),
   paidAt: Joi.date().iso().max("now").messages({
     "date.max": "Payment time cannot be in the future",
