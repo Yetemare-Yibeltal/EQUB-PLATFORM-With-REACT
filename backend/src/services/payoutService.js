@@ -1,6 +1,9 @@
 import { AUDIT_ACTIONS } from "../constants/auditActions.js";
 import { GROUP_STATUSES } from "../constants/groupStatuses.js";
+import { MEMBER_ROLES } from "../constants/memberRoles.js";
+import { MEMBER_STATUSES } from "../constants/memberStatuses.js";
 import { PAYOUT_STATUSES } from "../constants/payoutStatuses.js";
+import { USER_ROLES } from "../constants/roles.js";
 import {
   TRANSACTION_DIRECTIONS,
   TRANSACTION_TYPES,
@@ -9,10 +12,12 @@ import * as contributionRepository from "../repositories/contributionRepository.
 import * as cycleRepository from "../repositories/cycleRepository.js";
 import * as groupRepository from "../repositories/groupRepository.js";
 import * as memberRepository from "../repositories/memberRepository.js";
+import * as paymentProofRepository from "../repositories/paymentProofRepository.js";
 import * as payoutRepository from "../repositories/payoutRepository.js";
 import * as transactionRepository from "../repositories/transactionRepository.js";
 import ApiError from "../utils/apiError.js";
 import { parsePagination, parseSort } from "../utils/pagination.js";
+import { normalizeReference } from "../utils/reference.js";
 import { lateThreshold } from "../utils/schedule.js";
 import withTransaction from "../utils/transaction.js";
 import * as auditService from "./auditService.js";
@@ -37,6 +42,33 @@ const loadTarget = async (groupId, payoutId) => {
   }
 
   return payout;
+};
+
+const requireRecorder = async (actor, groupId) => {
+  const { group, membership } = await requireAccess(actor, groupId);
+
+  const isOrganizer =
+    membership?.status === MEMBER_STATUSES.ACTIVE &&
+    membership.role === MEMBER_ROLES.ORGANIZER;
+
+  if (actor.role !== USER_ROLES.ADMIN && !isOrganizer) {
+    throw ApiError.forbidden(
+      "Only the group organizer or an administrator can record payouts",
+    );
+  }
+
+  return group;
+};
+
+const requireUnusedReference = async (reference) => {
+  const [inLedger, inProofs] = await Promise.all([
+    transactionRepository.existsByReference(reference),
+    paymentProofRepository.existsActiveByReference(reference),
+  ]);
+
+  if (inLedger || inProofs) {
+    throw ApiError.conflict("This transaction reference has already been used");
+  }
 };
 
 export const listGroupPayouts = async (actor, groupId, query = {}) => {
@@ -97,9 +129,7 @@ export const recordPayout = async (
   payoutId,
   { paymentMethod, reference, note, paidAt },
 ) => {
-  const { group } = await requireAccess(actor, groupId, {
-    organizerOnly: true,
-  });
+  const group = await requireRecorder(actor, groupId);
 
   if (group.status !== GROUP_STATUSES.ACTIVE) {
     throw ApiError.conflict(
@@ -113,6 +143,12 @@ export const recordPayout = async (
     throw ApiError.conflict("This payout has already been recorded");
   }
 
+  if (String(target.user) === String(actor.id)) {
+    throw ApiError.forbidden(
+      "You cannot record your own payout. Another administrator must record it",
+    );
+  }
+
   const paymentTime = paidAt ? new Date(paidAt) : new Date();
 
   if (paymentTime.getTime() > Date.now()) {
@@ -120,6 +156,10 @@ export const recordPayout = async (
       { field: "paidAt", message: "Payment time cannot be in the future" },
     ]);
   }
+
+  const payoutReference = normalizeReference(reference);
+
+  await requireUnusedReference(payoutReference);
 
   const result = await withTransaction(async (session) => {
     const paid = await payoutRepository.transitionPending(
@@ -129,7 +169,7 @@ export const recordPayout = async (
           status: PAYOUT_STATUSES.PAID,
           paidAt: paymentTime,
           paymentMethod,
-          reference: reference ?? "",
+          reference: payoutReference,
           note: note ?? "",
           recordedBy: actor.id,
         },
@@ -166,7 +206,7 @@ export const recordPayout = async (
         direction: TRANSACTION_DIRECTIONS.OUT,
         amount: paid.amount,
         method: paymentMethod,
-        reference: reference ?? "",
+        reference: payoutReference,
         recordedBy: actor.id,
         occurredAt: paymentTime,
       },
@@ -236,7 +276,7 @@ export const recordPayout = async (
         metadata: {
           amount: paid.amount,
           paymentMethod,
-          reference: reference ?? "",
+          reference: payoutReference,
           recipientUser: String(paid.user),
           cycleNumber: cycle.number,
           groupStatus,
