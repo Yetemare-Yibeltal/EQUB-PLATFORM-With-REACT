@@ -1,5 +1,8 @@
 import { CONTRIBUTION_STATUSES } from "../constants/contributionStatuses.js";
 import { GROUP_STATUSES } from "../constants/groupStatuses.js";
+import { MEMBER_ROLES } from "../constants/memberRoles.js";
+import { MEMBER_STATUSES } from "../constants/memberStatuses.js";
+import { USER_ROLES } from "../constants/roles.js";
 import {
   TRANSACTION_DIRECTIONS,
   TRANSACTION_TYPES,
@@ -93,13 +96,21 @@ const resolveContribution = async (
   contributionId,
   buildResolution,
 ) => {
-  const { group } = await requireAccess(actor, groupId, {
-    organizerOnly: true,
-  });
+  const { group, membership } = await requireAccess(actor, groupId);
+
+  const isOrganizer =
+    membership?.status === MEMBER_STATUSES.ACTIVE &&
+    membership.role === MEMBER_ROLES.ORGANIZER;
+
+  if (actor.role !== USER_ROLES.ADMIN && !isOrganizer) {
+    throw ApiError.forbidden(
+      "Only the group organizer or an administrator can resolve contributions",
+    );
+  }
 
   if (group.status !== GROUP_STATUSES.ACTIVE) {
     throw ApiError.conflict(
-      "Contributions can only be recorded while the group is active",
+      "Contributions can only be resolved while the group is active",
     );
   }
 
@@ -107,6 +118,10 @@ const resolveContribution = async (
 
   if (target.status !== CONTRIBUTION_STATUSES.PENDING) {
     throw ApiError.conflict("This contribution has already been resolved");
+  }
+
+  if (String(target.user) === String(actor.id)) {
+    throw ApiError.forbidden("You cannot waive your own contribution");
   }
 
   const resolution = buildResolution(target);
@@ -119,50 +134,6 @@ const resolveContribution = async (
 
   return resolved.toJSON();
 };
-
-export const recordContribution = (
-  actor,
-  groupId,
-  contributionId,
-  { paymentMethod, reference, note, paidAt },
-) =>
-  resolveContribution(actor, groupId, contributionId, (target) => {
-    const paymentTime = paidAt ? new Date(paidAt) : new Date();
-
-    if (paymentTime.getTime() > Date.now()) {
-      throw ApiError.badRequest("Payment time cannot be in the future", [
-        { field: "paidAt", message: "Payment time cannot be in the future" },
-      ]);
-    }
-
-    const isLate = paymentTime.getTime() >= target.lateAfter.getTime();
-    const penaltyAmount = isLate ? target.latePenaltyAmount : 0;
-    const amountPaid = target.amount + penaltyAmount;
-
-    return {
-      collectedAmount: amountPaid,
-      update: {
-        $set: {
-          status: CONTRIBUTION_STATUSES.PAID,
-          isLate,
-          amountPaid,
-          paidAt: paymentTime,
-          paymentMethod,
-          reference: reference ?? "",
-          note: note ?? "",
-          recordedBy: actor.id,
-        },
-      },
-      ledger: {
-        amount: amountPaid,
-        penaltyAmount,
-        method: paymentMethod,
-        reference: reference ?? "",
-        recordedBy: actor.id,
-        occurredAt: paymentTime,
-      },
-    };
-  });
 
 export const waiveContribution = (actor, groupId, contributionId, reason) =>
   resolveContribution(actor, groupId, contributionId, () => ({
