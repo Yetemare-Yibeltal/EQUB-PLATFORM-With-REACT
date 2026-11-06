@@ -17,11 +17,6 @@ export const contributionService = {
       meta: response.data.meta,
     })),
 
-  record: (groupId, contributionId, payload) =>
-    api
-      .post(`/groups/${groupId}/contributions/${contributionId}/pay`, payload)
-      .then(unwrapContribution),
-
   waive: (groupId, contributionId, reason) =>
     api
       .post(`/groups/${groupId}/contributions/${contributionId}/waive`, {
