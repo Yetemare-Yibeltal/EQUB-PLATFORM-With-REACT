@@ -1,10 +1,12 @@
 import * as auditLogRepository from "../repositories/auditLogRepository.js";
+import * as userNameRepository from "../repositories/userNameRepository.js";
 import ApiError from "../utils/apiError.js";
 import { parsePagination, parseSort } from "../utils/pagination.js";
 import { canManage, requireAccess } from "./groupService.js";
 
 const SORTABLE_FIELDS = ["createdAt"];
 const ACTOR_POPULATE = { path: "actor", select: "fullName" };
+const OBJECT_ID = /^[a-f0-9]{24}$/;
 
 export const record = (
   { actorId, action, groupId, cycleId, entityType, entityId, metadata = {} },
@@ -22,6 +24,18 @@ export const record = (
     },
     { session },
   );
+
+const subjectIdOf = (entry) => {
+  const data = entry.metadata ?? {};
+  const id =
+    data.member ??
+    data.recipientUser ??
+    data.winnerUser ??
+    (entry.entityType === "User" ? entry.entityId : null);
+  const text = id ? String(id) : "";
+
+  return OBJECT_ID.test(text) ? text : null;
+};
 
 const search = async (query, groupId) => {
   const { page, limit, skip } = parsePagination(query, { defaultLimit: 50 });
@@ -49,7 +63,18 @@ const search = async (query, groupId) => {
     populate: ACTOR_POPULATE,
   });
 
-  return { items: items.map((item) => item.toJSON()), meta };
+  const entries = items.map((item) => item.toJSON());
+  const names = await userNameRepository.findNamesByIds([
+    ...new Set(entries.map(subjectIdOf).filter(Boolean)),
+  ]);
+
+  return {
+    items: entries.map((entry) => ({
+      ...entry,
+      subjectName: names.get(subjectIdOf(entry)) ?? null,
+    })),
+    meta,
+  };
 };
 
 export const listLogs = (query = {}) => search(query, query.groupId);
