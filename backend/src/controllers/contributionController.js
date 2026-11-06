@@ -30,22 +30,6 @@ export const listMyContributions = asyncHandler(async (req, res) => {
   });
 });
 
-export const recordContribution = asyncHandler(async (req, res) => {
-  const contribution = await contributionService.recordContribution(
-    req.user,
-    req.params.groupId,
-    req.params.contributionId,
-    req.body,
-  );
-
-  await notificationEventService.notifyContributionResolved(contribution.id);
-
-  return sendSuccess(res, {
-    message: "Contribution recorded successfully",
-    data: { contribution },
-  });
-});
-
 export const waiveContribution = asyncHandler(async (req, res) => {
   const contribution = await contributionService.waiveContribution(
     req.user,
