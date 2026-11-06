@@ -7,6 +7,9 @@ export const create = async (data, { session } = {}) => {
   return transaction;
 };
 
+export const existsByReference = async (reference) =>
+  Boolean(await Transaction.exists({ reference }));
+
 export const summarizeByGroup = (groupId) =>
   Transaction.aggregate([
     { $match: { group: new mongoose.Types.ObjectId(groupId) } },
