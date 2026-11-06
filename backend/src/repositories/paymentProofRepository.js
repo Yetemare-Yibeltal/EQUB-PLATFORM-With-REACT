@@ -16,6 +16,9 @@ export const findPendingByContribution = (contributionId) =>
     status: PAYMENT_PROOF_STATUSES.PENDING,
   });
 
+export const existsActiveByReference = async (reference) =>
+  Boolean(await PaymentProof.exists({ reference, isActive: true }));
+
 export const transition = (id, fromStatuses, update, { session } = {}) =>
   PaymentProof.findOneAndUpdate(
     { _id: id, status: { $in: fromStatuses } },
