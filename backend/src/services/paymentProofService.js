@@ -8,8 +8,10 @@ import { USER_ROLES } from "../constants/roles.js";
 import { STORED_FILE_KINDS } from "../constants/storedFileKinds.js";
 import * as contributionRepository from "../repositories/contributionRepository.js";
 import * as paymentProofRepository from "../repositories/paymentProofRepository.js";
+import * as transactionRepository from "../repositories/transactionRepository.js";
 import ApiError from "../utils/apiError.js";
 import { parsePagination, parseSort } from "../utils/pagination.js";
+import { normalizeReference } from "../utils/reference.js";
 import withTransaction from "../utils/transaction.js";
 import * as auditService from "./auditService.js";
 import { applyResolution } from "./contributionService.js";
@@ -111,6 +113,14 @@ export const submitProof = async (
     throw ApiError.conflict(
       "A payment proof for this contribution is already waiting for approval",
     );
+  }
+
+  const usedInLedger = await transactionRepository.existsByReference(
+    normalizeReference(reference),
+  );
+
+  if (usedInLedger) {
+    throw ApiError.conflict("This transaction reference has already been used");
   }
 
   const screenshot = file
