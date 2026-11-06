@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react'
 import EmptyState from '../../components/common/EmptyState'
 import ErrorMessage from '../../components/common/ErrorMessage'
 import Loader from '../../components/common/Loader'
-import RecordPaymentModal from '../../components/common/RecordPaymentModal'
 import ReasonModal from '../../components/common/ReasonModal'
 import ContributionTable from '../../components/contribution/ContributionTable'
 import PaymentInstructions from '../../components/contribution/PaymentInstructions'
@@ -20,15 +19,13 @@ import { contributionService } from '../../services/contributionService'
 import { cycleService } from '../../services/cycleService'
 import { paymentProofService } from '../../services/paymentProofService'
 import { getErrorMessage } from '../../utils/errors'
-import { formatMoney } from '../../utils/formatCurrency'
 
 export default function CycleHistory () {
   const { user } = useAuth()
   const { t } = useLanguage()
-  const { group, isOrganizer, version, refresh } = useGroup()
+  const { group, isOrganizer, isAdmin, version, refresh } = useGroup()
   const { pay, payingId, error: payError } = usePayOnline()
   const [selectedId, setSelectedId] = useState(null)
-  const [recordTarget, setRecordTarget] = useState(null)
   const [waiveTarget, setWaiveTarget] = useState(null)
   const [proofTarget, setProofTarget] = useState(null)
   const [rejectTarget, setRejectTarget] = useState(null)
@@ -97,14 +94,7 @@ export default function CycleHistory () {
   ).length
   const isCollecting =
     group.status === 'active' && selected?.status === 'collecting'
-  const canManage = isOrganizer && isCollecting
-
-  const handleRecord = async payload => {
-    await contributionService.record(group.id, recordTarget.id, payload)
-    setRecordTarget(null)
-    setNotice(t('Contribution recorded'))
-    refresh()
-  }
+  const canManage = (isOrganizer || isAdmin) && isCollecting
 
   const handleWaive = async reason => {
     await contributionService.waive(group.id, waiveTarget.id, reason)
@@ -189,6 +179,7 @@ export default function CycleHistory () {
               </p>
               <PaymentProofList
                 proofs={proofs}
+                groupId={group.id}
                 busyId={busyProofId}
                 onApprove={handleApprove}
                 onReject={setRejectTarget}
@@ -217,30 +208,11 @@ export default function CycleHistory () {
               onSubmitProof={
                 group.status === 'active' ? setProofTarget : undefined
               }
-              onRecord={setRecordTarget}
               onWaive={setWaiveTarget}
             />
           )}
         </>
       )}
-
-      <RecordPaymentModal
-        open={Boolean(recordTarget)}
-        title={t('Record contribution')}
-        summary={
-          recordTarget
-            ? t(
-                '{name} owes {amount}. A late penalty is added automatically if the payment time is after the grace period.',
-                {
-                  name: recordTarget.user?.fullName,
-                  amount: formatMoney(recordTarget.amountOutstanding)
-                }
-              )
-            : null
-        }
-        onSubmit={handleRecord}
-        onClose={() => setRecordTarget(null)}
-      />
 
       <SubmitProofModal
         open={Boolean(proofTarget)}
