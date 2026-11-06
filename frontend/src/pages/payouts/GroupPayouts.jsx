@@ -2,17 +2,19 @@ import { useCallback, useState } from 'react'
 import EmptyState from '../../components/common/EmptyState'
 import ErrorMessage from '../../components/common/ErrorMessage'
 import Loader from '../../components/common/Loader'
-import RecordPaymentModal from '../../components/common/RecordPaymentModal'
 import PayoutTable from '../../components/payout/PayoutTable'
+import RecordPayoutModal from '../../components/payout/RecordPayoutModal'
 import { useAsyncData } from '../../hooks/useAsyncData'
+import { useAuth } from '../../hooks/useAuth'
 import { useGroup } from '../../hooks/useGroup'
 import { useLanguage } from '../../hooks/useLanguage'
 import { payoutService } from '../../services/payoutService'
 import { formatMoney } from '../../utils/formatCurrency'
 
 export default function GroupPayouts () {
+  const { user } = useAuth()
   const { t } = useLanguage()
-  const { group, isOrganizer, version, refresh } = useGroup()
+  const { group, isOrganizer, isAdmin, version, refresh } = useGroup()
   const [target, setTarget] = useState(null)
   const [notice, setNotice] = useState('')
 
@@ -58,12 +60,13 @@ export default function GroupPayouts () {
         <PayoutTable
           payouts={data.payouts}
           showRecipient
-          canManage={isOrganizer && group.status === 'active'}
+          canManage={(isOrganizer || isAdmin) && group.status === 'active'}
+          currentUserId={user.id}
           onRecord={setTarget}
         />
       )}
 
-      <RecordPaymentModal
+      <RecordPayoutModal
         open={Boolean(target)}
         title={t('Record payout')}
         summary={
@@ -78,7 +81,6 @@ export default function GroupPayouts () {
               )
             : null
         }
-        submitLabel={t('Record payout')}
         onSubmit={handleRecord}
         onClose={() => setTarget(null)}
       />
