@@ -1,6 +1,7 @@
 import account from "./account";
 import admin from "./admin";
 import adminPages from "./adminPages";
+import auditText from "./auditText";
 import base from "./base";
 import cycles from "./cycles";
 import detail from "./detail";
@@ -19,6 +20,7 @@ import shared from "./shared";
 import uploads from "./uploads";
 
 export default {
+  ...auditText,
   ...payoutRules,
   ...uploads,
   ...paymentProof,
