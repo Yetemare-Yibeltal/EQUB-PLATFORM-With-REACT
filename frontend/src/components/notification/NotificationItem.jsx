@@ -1,12 +1,36 @@
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../../hooks/useLanguage'
 import { translateNotification } from '../../i18n/notificationText'
 import { formatRelative } from '../../utils/formatDate'
 import Button from '../common/Button'
 
+const groupIdOf = notification => {
+  const group = notification.groupId ?? notification.group
+
+  if (!group) return null
+
+  return String(typeof group === 'object' ? group.id ?? group._id : group)
+}
+
+const targetOf = notification => {
+  const groupId = groupIdOf(notification)
+
+  if (!groupId) return null
+
+  return String(notification.type ?? '').includes('member')
+    ? `/groups/${groupId}/members`
+    : `/groups/${groupId}`
+}
+
 export default function NotificationItem ({ notification, onRead, onDelete }) {
   const { language, t } = useLanguage()
   const unread = !notification.readAt
   const text = translateNotification(language, notification)
+  const target = targetOf(notification)
+
+  const handleOpen = () => {
+    if (unread) onRead(notification.id)
+  }
 
   return (
     <li
@@ -14,7 +38,15 @@ export default function NotificationItem ({ notification, onRead, onDelete }) {
     >
       <span className='notification-dot' aria-hidden='true' />
       <div className='notification-body'>
-        <p className='notification-title'>{text.title}</p>
+        <p className='notification-title'>
+          {target ? (
+            <Link to={target} onClick={handleOpen}>
+              {text.title}
+            </Link>
+          ) : (
+            text.title
+          )}
+        </p>
         <p>{text.message}</p>
         <p className='muted notification-time'>
           {formatRelative(notification.createdAt)}
