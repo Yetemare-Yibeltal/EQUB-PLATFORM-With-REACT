@@ -30,7 +30,6 @@ export default function ContributionTable ({
   pendingProofs = {},
   onPayOnline,
   onSubmitProof,
-  onRecord,
   onWaive
 }) {
   const { t } = useLanguage()
@@ -141,16 +140,7 @@ export default function ContributionTable ({
                 {t('Send payment proof')}
               </Button>
             )}
-            {canManage && (
-              <Button
-                size='sm'
-                variant='secondary'
-                onClick={() => onRecord(contribution)}
-              >
-                {t('Record')}
-              </Button>
-            )}
-            {canManage && (
+            {canManage && !own && (
               <Button
                 size='sm'
                 variant='ghost'
