@@ -9,6 +9,7 @@ import { AUDIT_ACTION_LABELS } from '../../constants/auditActions'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { useLanguage } from '../../hooks/useLanguage'
 import { adminService } from '../../services/adminService'
+import { describeAudit } from '../../utils/auditSentence'
 import { formatDateTime } from '../../utils/formatDate'
 
 const summarize = metadata => {
@@ -62,9 +63,10 @@ export default function AuditLogs () {
     {
       key: 'details',
       header: 'Details',
-      render: entry => (
-        <code className='code-inline'>{summarize(entry.metadata)}</code>
-      )
+      render: entry =>
+        describeAudit(entry, t) ?? (
+          <code className='code-inline'>{summarize(entry.metadata)}</code>
+        )
     }
   ]
 
