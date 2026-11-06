@@ -1,6 +1,5 @@
 import Joi from "joi";
 import { CONTRIBUTION_STATUS_VALUES } from "../constants/contributionStatuses.js";
-import { MANUAL_PAYMENT_METHOD_VALUES } from "../constants/paymentMethods.js";
 
 const objectId = Joi.string().hex().length(24);
 
@@ -30,17 +29,6 @@ export const listMyContributionsQuerySchema = Joi.object({
   status: Joi.string().valid(...CONTRIBUTION_STATUS_VALUES),
   overdue: Joi.boolean(),
   sort: Joi.string().trim().max(100),
-});
-
-export const recordContributionSchema = Joi.object({
-  paymentMethod: Joi.string()
-    .valid(...MANUAL_PAYMENT_METHOD_VALUES)
-    .required(),
-  reference: Joi.string().trim().max(100).allow(""),
-  note: Joi.string().trim().max(500).allow(""),
-  paidAt: Joi.date().iso().max("now").messages({
-    "date.max": "Payment time cannot be in the future",
-  }),
 });
 
 export const waiveContributionSchema = Joi.object({
