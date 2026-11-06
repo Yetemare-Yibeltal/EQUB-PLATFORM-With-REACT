@@ -14,7 +14,6 @@ export const NAV_ITEMS = Object.freeze([
     icon: "wallet",
     mobile: true,
   },
-  { to: ROUTES.PAYMENTS, label: "nav.payments", icon: "card", mobile: false },
   { to: ROUTES.PAYOUTS, label: "nav.payouts", icon: "gift", mobile: false },
   {
     to: ROUTES.NOTIFICATIONS,
